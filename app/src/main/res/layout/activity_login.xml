@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              >
+    <include layout="@layout/titlebar"/>
+    
+    <ImageView
+            android:id="@+id/ip"
+            android:layout_width="130dp"
+            android:layout_height="86dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/logo"
+    />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="诚信 创新 勤奋 爱人"
+    />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="担当 激情 开放 包容"
+    />
+    <com.xuexiang.xui.widget.edittext.ClearEditText
+            android:id="@+id/code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_name"
+            android:text=""
+            android:layout_margin="5dp" />
+    <com.xuexiang.xui.widget.edittext.PasswordEditText
+            android:id="@+id/password"
+            fontPath="fonts/Roboto-Thin.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:hint="@string/login_password"
+            android:text=""
+            android:inputType="textPassword"
+            android:textAlignment="viewStart"
+            app:pet_enableIconAlpha="true"
+            app:pet_hoverShowsPw="true" />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="请选择班组"
+        />
+        <Spinner
+                android:id="@+id/shift"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textAlignment="center"
+                android:spinnerMode="dialog"
+        /><!--android:entries="@array/shift"-->
+    </LinearLayout>
+    <com.xuexiang.xui.widget.button.ButtonView
+            style="@style/ButtonView.Blue"
+            android:background="@color/xui_config_color_titlebar"
+            android:text="@string/login"
+            android:layout_width="match_parent"
+            android:onClick="login"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"/>
+</LinearLayout>

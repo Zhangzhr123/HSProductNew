@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">华盛条码系统</string>
+    <string name="title_home">我的</string>
+    <string name="title_dashboard">控制台</string>
+
+    <!--登录-->
+    <string name="login_name">请输入登录名</string>
+    <string name="login_password">请输入密码</string>
+    <string name="login">登录</string>
+
+    <!--页面名称-->
+    <string name="Function">华盛条码系统:功能菜单</string>
+    <string name="vul_name">硫化</string>
+    <string name="vul_product">硫化生产</string>
+    <string name="vul_barcode_replace">条码更换</string>
+    <string name="vul_barcode_supplement">条码补录</string>
+    <string name="vul_detail_change">明细变更</string>
+    <string name="load_name">装车</string>
+    <string name="load_factory">装车出厂</string>
+    <string name="load_scanning">退厂扫描</string>
+
+    <!--硫化计划-->
+    <string name="code">条码</string>
+    <string name="vul_scan_mchid">请扫描机台码</string>
+    <string name="vul_get_plan">获取计划</string>
+    <string name="vul_pdate">计划日期</string>
+    <string name="vul_itnbr">规格编码</string>
+    <string name="vul_itdsc">规格名称</string>
+    <string name="vul_pnum">计划数量</string>
+    <string name="vul_anum">生产数量</string>
+    <string name="vul_barcode_start">开始条码</string>
+    <string name="vul_barcode_end">结束条码</string>
+    <string name="vul_start">开始生产</string>
+    <string name="vul_end">结束生产</string>
+    <string name="vul_confirm">确定</string>
+    <string name="vul_cancel">取消</string>
+    <string name="vul_barcode_scan">请扫描轮胎条码</string>
+    <string name="search">搜索</string>
+    <string name="old_barcode_scan">请扫描原条码</string>
+    <string name="new_barcode_scan">请扫描新条码</string>
+    <string name="replace">更换</string>
+    <string name="in_plan">绑定生产计划</string>
+
+
+    <!-- Strings related to login -->
+    <string name="lab_please_select">请选择班组</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

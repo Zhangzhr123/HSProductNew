@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="shift">
+        <item>早班</item>
+        <item>中班</item>
+        <item>晚班</item>
+    </string-array>
+    <string-array name="lr">
+        <item>L</item>
+        <item>R</item>
+    </string-array>
+    <string-array name="vul">
+        <item>请选择</item>
+        <item>硫化生产</item>
+        <item>条码更换</item>
+        <item>条码补录</item>
+        <item>明细变更</item>
+    </string-array>
+    <string-array name="load">
+        <item>请选择</item>
+        <item>装车出厂</item>
+        <item>退厂扫描</item>
+    </string-array>
+    <string-array name="scan">
+        <item>请选择</item>
+        <item>连续扫描</item>
+        <item>首尾扫描</item>
+    </string-array>
+
+</resources>

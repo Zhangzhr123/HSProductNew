@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context=".fragment.VulcanizationFragment">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <com.xuexiang.xui.widget.edittext.ClearEditText
+                style="@style/EditText.Normal"
+                android:id="@+id/mchid"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:hint="@string/vul_scan_mchid"
+                android:layout_margin="5dp" />
+        <com.xuexiang.xui.widget.button.ButtonView
+                style="@style/ButtonView.Blue"
+                android:id="@+id/bt_getPlan"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="@string/vul_get_plan"
+                android:layout_margin="5dp"/>
+    </LinearLayout>
+
+
+    <ListView
+            android:id="@+id/lv_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    </ListView>
+
+
+</LinearLayout>
