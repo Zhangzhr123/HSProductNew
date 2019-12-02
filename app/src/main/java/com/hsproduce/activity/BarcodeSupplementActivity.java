@@ -267,7 +267,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                                     }
                                 }).create();
                         alertDialog.show();
-                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(BarcodeSupplementActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
                     }else{
@@ -328,7 +328,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                                     }
                                 }).create();
                         alertDialog.show();
-                        Toast.makeText(BarcodeSupplementActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(BarcodeSupplementActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(BarcodeSupplementActivity.this, "查询成功，没有匹配的规格！", Toast.LENGTH_LONG).show();
                     }else{
@@ -388,7 +388,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                                 }).create();
                         alertDialog.show();
                         //显示绑定条码数量
-                        Toast.makeText(BarcodeSupplementActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(BarcodeSupplementActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("300")){
                         Toast.makeText(BarcodeSupplementActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("500")){
@@ -526,7 +526,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 21){
             tofunction(); //BaseActivity  返回功能页面函数
-            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }

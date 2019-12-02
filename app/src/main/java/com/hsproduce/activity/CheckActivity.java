@@ -146,7 +146,7 @@ public class CheckActivity extends BaseActivity {
                             errorlist.add(map.get(i).get("itemname"));
                         }
                         error.setAdapter(adapter);
-                        Toast.makeText(CheckActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(CheckActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(CheckActivity.this, "查询成功，没有匹配的信息！", Toast.LENGTH_LONG).show();
                     }else{
@@ -196,7 +196,7 @@ public class CheckActivity extends BaseActivity {
                             shift.setText("丁班");
                         }
                         creatuser.setText(datas.get(0).getCreateuser());
-                        Toast.makeText(CheckActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(CheckActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("400")){
                         Toast.makeText(CheckActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
                     }else{
@@ -269,7 +269,7 @@ public class CheckActivity extends BaseActivity {
         }
         if(keyCode == 21){
             tofunction(); //BaseActivity  返回功能页面函数
-            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }

@@ -35,6 +35,9 @@ public class LoadScanningActivity extends BaseActivity {
     private List<String> list = new ArrayList<>();
     //条码计数初始值
     private int number=0;
+    //添加条码防止重复扫描
+    private List<String> codelist = new ArrayList<>();
+    private Boolean isNew = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,20 @@ public class LoadScanningActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(scanbarcode)){
             Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         }else{
-            String parm = "TYRE_CODE="+scanbarcode+"&USER_NAME="+App.username;
-            new OutsVLoadTask().execute(parm);
+            codelist.add(scanbarcode);
+            for (int i = 0; i < codelist.size(); i++) {
+                if (scanbarcode.equals(codelist.get(i))) {
+                    isNew = false;
+                    return;
+                }
+            }
+            if(isNew){
+                String parm = "TYRE_CODE="+scanbarcode+"&USER_NAME="+App.username;
+                new OutsVLoadTask().execute(parm);
+            }else{
+                Toast.makeText(LoadScanningActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+            }
+
         }
         //barcode.setText("");
     }
@@ -154,6 +169,7 @@ public class LoadScanningActivity extends BaseActivity {
         if(keyCode == 0){
             barcode.setText("");
         }
+        //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 4){
             if(System.currentTimeMillis() - mExitTime > 2000){
                 Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
@@ -163,10 +179,10 @@ public class LoadScanningActivity extends BaseActivity {
                 System.exit(0);//注销功能
             }
         }
-        //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 21){
+            codelist.clear();
             tofunction(); //BaseActivity  返回功能页面函数
-            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }

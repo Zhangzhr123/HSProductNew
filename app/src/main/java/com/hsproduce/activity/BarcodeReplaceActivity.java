@@ -146,7 +146,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
                             team.setText("丁班");
                         }
                         creatuser.setText(datas.get(0).getCreateuser());
-                        Toast.makeText(BarcodeReplaceActivity.this, "条码查询成功！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(BarcodeReplaceActivity.this, "条码查询成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(BarcodeReplaceActivity.this, "查询成功，没有匹配的条码！", Toast.LENGTH_LONG).show();
                     }else{
@@ -219,7 +219,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
         //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 21){
             tofunction(); //BaseActivity  返回功能页面函数
-            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
