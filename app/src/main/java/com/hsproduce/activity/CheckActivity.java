@@ -140,6 +140,9 @@ public class CheckActivity extends BaseActivity {
                 try{
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
                     List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         for(int i=0;i<map.size();i++){
                             errorid.add(map.get(i));
@@ -152,9 +155,7 @@ public class CheckActivity extends BaseActivity {
                     }else{
                         Toast.makeText(CheckActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -179,6 +180,9 @@ public class CheckActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
+                    if(datas == null || datas.isEmpty()){
+                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         //展示信息
                         mchid.setText(datas.get(0).getMchid());
@@ -203,9 +207,6 @@ public class CheckActivity extends BaseActivity {
                         Toast.makeText(CheckActivity.this, "轮胎查询错误！", Toast.LENGTH_LONG).show();
                     }
 
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -229,6 +230,9 @@ public class CheckActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         Toast.makeText(CheckActivity.this, "标记成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
@@ -239,9 +243,6 @@ public class CheckActivity extends BaseActivity {
                         Toast.makeText(CheckActivity.this, "错误，请重新操作！", Toast.LENGTH_LONG).show();
                     }
 
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(CheckActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.adapter.BarCodeAdapter;
 import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
@@ -121,6 +119,9 @@ public class BarcodeReplaceActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
+                    if(datas == null || datas.isEmpty()){
+                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到条码", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         //获取原条码ID
                         currentid = String.valueOf(datas.get(0).getId());
@@ -152,9 +153,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeReplaceActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到条码", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -178,6 +177,9 @@ public class BarcodeReplaceActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         Toast.makeText(BarcodeReplaceActivity.this, "更换成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
@@ -187,9 +189,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeReplaceActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

@@ -8,6 +8,16 @@
     <string name="login_password">请输入密码</string>
     <string name="login">登录</string>
 
+    <string name="shift1">甲班</string>
+    <string name="shift2">乙班</string>
+    <string name="shift3">丙班</string>
+    <string name="shift4">丁班</string>
+
+    <string name="team1">甲班</string>
+    <string name="team2">乙班</string>
+    <string name="team3">丙班</string>
+    <string name="team4">丁班</string>
+
     <!--页面名称-->
     <string name="Function">华盛条码系统:功能菜单</string>
     <string name="vul_name">硫化</string>

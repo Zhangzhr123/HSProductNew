@@ -181,6 +181,9 @@ public class VulcanizationActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
+                    if (datas == null || datas.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //获取计划ID
                         planid = datas.get(0).getId();
@@ -206,9 +209,7 @@ public class VulcanizationActivity extends BaseActivity {
                     } else {
                         Toast.makeText(VulcanizationActivity.this, "计划查询错误，请重新操作！", Toast.LENGTH_LONG).show();
                     }
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -234,6 +235,9 @@ public class VulcanizationActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         App.Iu = "I";
                         //扫描条码绑定计划
@@ -251,9 +255,7 @@ public class VulcanizationActivity extends BaseActivity {
                     } else {
                         Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG).show();
                     }
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -278,6 +280,9 @@ public class VulcanizationActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -304,9 +309,7 @@ public class VulcanizationActivity extends BaseActivity {
                     } else {
                         Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

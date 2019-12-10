@@ -114,7 +114,7 @@
                     android:id="@+id/detch"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:background="@color/yellow"
+                    android:background="@color/green"
                     android:src="@drawable/btn_detial"
                     android:visibility="visible"/>
             <TextView
@@ -190,6 +190,30 @@
                 />
             </LinearLayout>
 
+            <LinearLayout
+                    android:id="@+id/view13"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="135dp"
+                    android:layout_marginTop="50dp"
+                    android:visibility="gone">
+                <ImageButton
+                        style="@style/ButtonView.Blue"
+                        android:id="@+id/barcodeDetail"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/greenyellow"
+                        android:src="@drawable/barcodedetail"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="生产追溯⑬"
+                        android:textSize="13sp"
+                />
+            </LinearLayout>
+
     </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -255,6 +279,114 @@
                 />
             </LinearLayout>
     </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="550dp"
+                android:orientation="horizontal">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="成型"
+                    android:textSize="25sp"
+            />
+            <View
+                    android:layout_height="1px"
+                    android:layout_width="350dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="35dp"
+                    android:background="@color/black_textview"/>
+            <LinearLayout
+                    android:id="@+id/view9"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="40dp"
+                    android:visibility="gone">
+                <ImageButton
+                        android:id="@+id/forming"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/brown"
+                        android:src="@drawable/btn_vplan"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成型生产⑨"
+                        android:textSize="13sp"
+                />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/view10"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="135dp"
+                    android:layout_marginTop="40dp"
+                    android:visibility="gone">
+                <ImageButton
+                        android:id="@+id/switchforming"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/darkviolet"
+                        android:src="@drawable/formingrepl"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成型规格切换⑩"
+                        android:textSize="10sp"
+                />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/view11"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="240dp"
+                    android:layout_marginTop="40dp"
+                    android:visibility="gone">
+                <ImageButton
+                        android:id="@+id/formingbarcode"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/forestgreen"
+                        android:src="@drawable/outbarcode"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成型胚胎报废⑪"
+                        android:textSize="10sp"
+                />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/view12"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="150dp"
+                    android:visibility="gone">
+                <ImageButton
+                        android:id="@+id/formingchange"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/gold"
+                        android:src="@drawable/btn_detial"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成型生产变更⑫"
+                        android:textSize="10sp"
+                />
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
     </ScrollView>

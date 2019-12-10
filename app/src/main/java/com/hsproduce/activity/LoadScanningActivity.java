@@ -115,6 +115,9 @@ public class LoadScanningActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(LoadScanningActivity.this, "未获取到信息，数据返回异常", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -141,9 +144,7 @@ public class LoadScanningActivity extends BaseActivity {
                     }else{
                         Toast.makeText(LoadScanningActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(LoadScanningActivity.this, "未获取到信息，数据返回异常", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(LoadScanningActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

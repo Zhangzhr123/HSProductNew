@@ -93,7 +93,7 @@ public class UpdateManager {
 		int 当前版本 = 0;
 		try {
 			// 获取软件版本号，对应AndroidManifest.xml下android:versionCode
-			当前版本 = context.getPackageManager().getPackageInfo("com.sunmc.mesterminal", 0).versionCode;
+			当前版本 = context.getPackageManager().getPackageInfo("com.hsproduce", 0).versionCode;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}

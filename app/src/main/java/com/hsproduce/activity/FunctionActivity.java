@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
+import com.hsproduce.adapter.FormingReplAdapter;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -25,8 +26,8 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1,view2,view3,view4,view5,view6,view7,view8;
-    private ImageButton vplan, repl, load,loadsc,barrep,barsup,detch,check;
+    private View view1,view2,view3,view4,view5,view6,view7,view8,view9,view10,view11,view12,view13;
+    private ImageButton vplan, repl, load,loadsc,barrep,barsup,detch,check,forming,switchforming,formingchange,formingbarcode,barcodedetail;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
 
@@ -48,6 +49,11 @@ public class FunctionActivity extends BaseActivity {
         view6 = findViewById(R.id.view6);
         view7 = findViewById(R.id.view7);
         view8 = findViewById(R.id.view8);
+        view9 = findViewById(R.id.view9);
+        view10 = findViewById(R.id.view10);
+        view11 = findViewById(R.id.view11);
+        view12 = findViewById(R.id.view12);
+        view13 = findViewById(R.id.view13);
         //按钮
         vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
         repl = (ImageButton) findViewById(R.id.repl);//规格交替
@@ -57,6 +63,11 @@ public class FunctionActivity extends BaseActivity {
         barrep = (ImageButton) findViewById(R.id.barrep);//条码更换
         barsup = (ImageButton)findViewById(R.id.barsup);//条码补录
         check = (ImageButton)findViewById(R.id.check);//检测
+        forming = (ImageButton)findViewById(R.id.forming);//成型生产
+        switchforming = (ImageButton)findViewById(R.id.switchforming);//成型规格切换
+        formingchange = (ImageButton)findViewById(R.id.formingchange);//成型明细变更
+        formingbarcode = (ImageButton)findViewById(R.id.formingbarcode);//成型胚胎报废
+        barcodedetail = (ImageButton)findViewById(R.id.barcodeDetail);//条码追溯
 
         //菜单权限管理
         String parm = "UserName="+App.username;
@@ -131,6 +142,46 @@ public class FunctionActivity extends BaseActivity {
                 finish();
             }
         });
+        //成型生产
+        forming.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
+                finish();
+            }
+        });
+        //成型规格切换
+        switchforming.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
+                finish();
+            }
+        });
+        //成型明细变更
+        formingchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
+                finish();
+            }
+        });
+        //成型胚胎报废
+        formingbarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
+                finish();
+            }
+        });
+        //条码追溯
+        barcodedetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
+                finish();
+            }
+        });
     }
 
     //菜单权限管理
@@ -153,7 +204,7 @@ public class FunctionActivity extends BaseActivity {
                         if(map.get(0).get("m_CNAME").equals("硫化生产")){
                             startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("规格交替")){
+                        }else if(map.get(0).get("m_CNAME").equals("硫化规格交替")){
                             startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
                             finish();
                         }else if(map.get(0).get("m_CNAME").equals("装车出厂")){
@@ -165,7 +216,7 @@ public class FunctionActivity extends BaseActivity {
                         }else if(map.get(0).get("m_CNAME").equals("条码补录")){
                             startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("明细变更")){
+                        }else if(map.get(0).get("m_CNAME").equals("硫化明细变更")){
                             startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
                             finish();
                         }else if(map.get(0).get("m_CNAME").equals("退厂扫描")){
@@ -173,6 +224,21 @@ public class FunctionActivity extends BaseActivity {
                             finish();
                         }else if(map.get(0).get("m_CNAME").equals("检测")){
                             startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
+                            finish();
+                        }else if(map.get(0).get("m_CNAME").equals("成型生产")){
+                            startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
+                            finish();
+                        }else if(map.get(0).get("m_CNAME").equals("成型规格切换")){
+                            startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
+                            finish();
+                        }else if(map.get(0).get("m_CNAME").equals("成型生产变更")){
+                            startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
+                            finish();
+                        }else if(map.get(0).get("m_CNAME").equals("成型胎胚报废")){
+                            startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
+                            finish();
+                        }else if(map.get(0).get("m_CNAME").equals("生产追溯")){
+                            startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
                             finish();
                         }else{
                             Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_LONG).show();
@@ -186,9 +252,9 @@ public class FunctionActivity extends BaseActivity {
                                 view2.setVisibility(View.VISIBLE);
                             }else if(map.get(i).get("m_CNAME").equals("条码更换")){
                                 view3.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("明细变更")){
+                            }else if(map.get(i).get("m_CNAME").equals("硫化明细变更")){
                                 view4.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("规格交替")){
+                            }else if(map.get(i).get("m_CNAME").equals("硫化规格交替")){
                                 view5.setVisibility(View.VISIBLE);
                             }else if(map.get(i).get("m_CNAME").equals("检测")){
                                 view6.setVisibility(View.VISIBLE);
@@ -196,6 +262,16 @@ public class FunctionActivity extends BaseActivity {
                                 view7.setVisibility(View.VISIBLE);
                             }else if(map.get(i).get("m_CNAME").equals("退厂扫描")){
                                 view8.setVisibility(View.VISIBLE);
+                            }else if(map.get(i).get("m_CNAME").equals("成型生产")){
+                                view9.setVisibility(View.VISIBLE);
+                            }else if(map.get(i).get("m_CNAME").equals("成型规格切换")){
+                                view10.setVisibility(View.VISIBLE);
+                            }else if(map.get(i).get("m_CNAME").equals("成型生产变更")){
+                                view11.setVisibility(View.VISIBLE);
+                            }else if(map.get(i).get("m_CNAME").equals("成型胎胚报废")){
+                                view12.setVisibility(View.VISIBLE);
+                            }else if(map.get(i).get("m_CNAME").equals("生产追溯")){
+                                view13.setVisibility(View.VISIBLE);
                             }else{
                                 Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
                                         +"此功能未在PDA当中", Toast.LENGTH_LONG).show();

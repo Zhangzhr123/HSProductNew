@@ -131,6 +131,9 @@ public class SwitchPlanActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>(){}.getType());
+                    if(datas == null || datas.isEmpty()){
+                        Toast.makeText(SwitchPlanActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         //tvMchid.setText("");
                         for(int i=0;i<datas.size();i++){
@@ -162,9 +165,7 @@ public class SwitchPlanActivity extends BaseActivity {
                     }else{
                         Toast.makeText(SwitchPlanActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(SwitchPlanActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -189,6 +190,9 @@ public class SwitchPlanActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(SwitchPlanActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         getCurrentVPlan();//展示替换后的计划
                         Toast.makeText(SwitchPlanActivity.this, "切换成功！", Toast.LENGTH_LONG).show();
@@ -199,9 +203,7 @@ public class SwitchPlanActivity extends BaseActivity {
                     }else{
                         Toast.makeText(SwitchPlanActivity.this, "错误，请重新操作！", Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(SwitchPlanActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

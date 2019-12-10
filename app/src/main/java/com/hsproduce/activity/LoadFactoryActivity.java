@@ -371,6 +371,9 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     lists = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoad>>() {
                     }.getType());
+                    if (lists == null || lists.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //展示装车单
                         loadAdapter = new LoadAdapter(LoadFactoryActivity.this, lists);
@@ -383,9 +386,6 @@ public class LoadFactoryActivity extends BaseActivity {
                         Toast.makeText(LoadFactoryActivity.this, "查询错误", Toast.LENGTH_LONG).show();
                     }
 
-                    if (lists == null || lists.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -421,6 +421,9 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     List<VLoadHxm> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoadHxm>>() {
                     }.getType());
+                    if (datas == null || datas.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //获取装车单轮胎规格  获取装车单ID
                         for (int i = 0; i < datas.size(); i++) {
@@ -437,9 +440,6 @@ public class LoadFactoryActivity extends BaseActivity {
                         Toast.makeText(LoadFactoryActivity.this, "查询错误", Toast.LENGTH_LONG).show();
                     }
 
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -466,6 +466,9 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
+                    if (datas == null || datas.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //获取条码规格
                         codeitnbr = datas.get(0).getItnbr();
@@ -495,9 +498,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, "错误", Toast.LENGTH_LONG).show();
                     }
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -522,6 +523,9 @@ public class LoadFactoryActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -550,9 +554,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, "错误", Toast.LENGTH_LONG).show();
                     }
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -577,6 +579,9 @@ public class LoadFactoryActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -602,9 +607,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, "错误，请重新操作", Toast.LENGTH_LONG).show();
                     }
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -629,6 +632,9 @@ public class LoadFactoryActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         Toast.makeText(LoadFactoryActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
@@ -640,9 +646,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, "错误！", Toast.LENGTH_LONG).show();
                     }
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

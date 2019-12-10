@@ -246,6 +246,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
                 try{
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
                     List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到机台", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         String search = mchid.getText().toString().trim();
                         for(int i=0;i<map.size();i++){
@@ -273,9 +276,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeSupplementActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到机台", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -300,6 +301,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
+                    if(datas == null || datas.isEmpty()){
+                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         //填入规格信息
                         for(int i=0;i<datas.size();i++){
@@ -334,9 +338,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeSupplementActivity.this, "查询错误", Toast.LENGTH_LONG).show();
                     }
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -361,6 +363,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>(){}.getType());
+                    if(datas == null || datas.isEmpty()){
+                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         for(int i=0;i<datas.size();i++){
                             planlist.add(datas.get(i));
@@ -396,9 +401,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeSupplementActivity.this, "计划查询错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -422,6 +425,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         Toast.makeText(BarcodeSupplementActivity.this, "补录成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
@@ -431,9 +437,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeSupplementActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -486,6 +490,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
             }else{
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    }
                     if(res.get("code").equals("200")){
                         Toast.makeText(BarcodeSupplementActivity.this, "条码插入成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
@@ -495,9 +502,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     }else{
                         Toast.makeText(BarcodeSupplementActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
                     }
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();

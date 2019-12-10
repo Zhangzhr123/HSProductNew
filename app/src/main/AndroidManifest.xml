@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
           package="com.hsproduce">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -78,6 +79,31 @@
                 android:screenOrientation="portrait"
                 android:launchMode="singleInstance"
                 android:name=".activity.CheckActivity">
+        </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.FormingActivity">
+        </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.FormingDetailChangeActivity">
+        </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.FormingBarCodeActivity">
+        </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.SwitchFormingActivity">
+        </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.BarCodeDetailActivity">
         </activity>
     </application>
 

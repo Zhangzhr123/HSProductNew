@@ -69,22 +69,19 @@ public interface PathUtil {
     public static final String OutsVLOAD = SERVER + "api/PDA/BarcordReturn";
 
     //APP更新
-    public static final String 获取最新版本 = SERVER + "终端版本表/获取最新版本";
+    public static final String 获取最新版本 = SERVER + "UpdateVersion/getNewVersion";
     //APK文件下载
     public static final String 文件下载 = SERVER + "file/download?filepath=";
 
-//    public static final String VUL_GET_PLAN = SERVER + "api/vplan/GetList";
-
-//    public static final String LOGIN =  SERVER + "api/Login";
-
-//    public static final String VUL_UPDATE_PLAN = SERVER + "api/vplan/Update";
-
-//    public static final String VUL_START_PLAN = SERVER + "api/vplan/StartPlan";
-
-//    public static final String VUL_COMPLATE_PLAN = SERVER + "api/vplan/Complate";
-
-//    public static final String VUL_END_PLAN = SERVER + "api/vplan/EndPlan";
-
-//    public static final String VUL_IN_RECORD = SERVER + "api/vplan/InRecord";
+    //成型生产
+    public static final String FORMINGPLAN = SERVER + "";
+    //成型规格交替
+    public static final String SWITCHFORMINGPLAN = SERVER + "";
+    //成型胚胎报废
+    public static final String FORMINGBARCODE = SERVER + "";
+    //成型生产变更
+    public static final String FORMINGCHANGE = SERVER + "";
+    //生产追溯
+    public static final String BARCODEDETAIL = SERVER + "";
 
 }

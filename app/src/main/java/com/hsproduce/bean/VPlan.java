@@ -25,6 +25,8 @@ public class VPlan {
     private String anum;
     //班次
     private String shift;
+    //班组
+    private String team;
     //优先级
     private String pro;
     //状态
@@ -242,5 +244,13 @@ public class VPlan {
 
     public void setDeletflag(int deletflag) {
         this.deletflag = deletflag;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 }
