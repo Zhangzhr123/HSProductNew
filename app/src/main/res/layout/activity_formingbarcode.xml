@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+>
+    <!-- 标题 硫化生产 -->
+
+    <com.xuexiang.xui.widget.actionbar.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/xui_btn_blue_normal_color"
+            app:tb_barHeight="40dp"
+            app:tb_dividerColor="@color/xui_config_color_red"
+            app:tb_titleText="成型胚胎报废"/>
+
+
+    <LinearLayout
+            android:id="@+id/ll_mchid"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="机台："
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="20sp"/>
+        <com.xuexiang.xui.widget.edittext.ClearEditText
+                style="@style/EditText.Normal"
+                android:id="@+id/mchid"
+                android:layout_width="160dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:hint="@string/vul_scan_mchid"
+                android:textAlignment="center"/>
+        <ImageButton
+                android:id="@+id/getplan"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@mipmap/searth"
+        />
+    </LinearLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:visibility="visible">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:visibility="visible">
+
+            <View
+                    android:layout_height="1px"
+                    android:layout_width="match_parent"
+                    android:background="@color/black_textview"
+            />
+
+            <LinearLayout
+                    android:id="@+id/ll_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal" android:visibility="visible">
+                <!-- 条码扫描框 -->
+                <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TableRow>
+                        <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="规格"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/spesc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="规格名称"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/spescname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="优先级"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/pro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="状态"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/state"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="数量"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/anum"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="/"
+                                android:textSize="15sp"/>
+                        <TextView
+                                android:id="@+id/pnum"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:textSize="15sp"/>
+                        <com.xuexiang.xui.widget.button.ButtonView
+                                style="@style/ButtonView.Green"
+                                android:id="@+id/barcodeok"
+                                android:layout_width="110dp"
+                                android:layout_height="30dp"
+                                android:background="@color/limegreen"
+                                android:text="报废条码录入"
+                                android:textColor="@color/white"
+                        />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+
+            <View
+                    android:layout_height="1px"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="158dp"
+                    android:background="@color/black_textview"
+            />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="160dp"
+                    android:orientation="horizontal" android:visibility="visible">
+                <!-- 条码扫描框 -->
+                <TextView
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="-10dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="扫描记录"
+                        android:textAlignment="center"
+                        android:textSize="18sp"/>
+                <TextView
+                        android:background="@drawable/edit_background"
+                        android:id="@+id/barcode_log"
+                        android:layout_width="270dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_height="150dp"
+                        android:inputType="textMultiLine"
+                        android:scrollbars="vertical"
+                        android:textSize="15sp"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="-65dp"/>
+                <TextView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginLeft="-50dp"
+                        android:text="0"
+                        android:textColor="@color/blue"
+                        android:textAlignment="center"
+                        android:textSize="30sp"
+                        android:id="@+id/num"
+                        android:visibility="visible"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>
