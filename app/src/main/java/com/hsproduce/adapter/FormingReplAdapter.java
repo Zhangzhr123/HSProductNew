@@ -24,6 +24,7 @@ import java.util.List;
 public class FormingReplAdapter extends BaseAdapter {
     private Context context;
     private List<VPlan> vPlanList = new ArrayList<>();
+    private String preCode = "",nextCode = "";
 
     public FormingReplAdapter(Context context, List<VPlan> vPlanList) {
         this.context = context;
@@ -97,9 +98,13 @@ public class FormingReplAdapter extends BaseAdapter {
                                 //获取控件
                                 EditText pre = dialog.findViewById(R.id.input);
                                 EditText next = dialog.findViewById(R.id.input2);
-
-                                Toast.makeText(context, "上一班结束条码:"+pre.getText().toString()+"当前班开始条码:"+next.getText().toString(), Toast.LENGTH_LONG).show();
-                                ((SwitchFormingActivity) context).repItndes(vPlan.getId(),pre.getText().toString(),next.getText().toString());
+                                preCode = pre.getText().toString();
+                                nextCode = next.getText().toString();
+                                if(preCode == null || preCode.equals("")){
+                                    preCode = String.valueOf(Integer.valueOf(nextCode)-1);
+                                }
+                                Toast.makeText(context, "上一班结束条码:"+preCode+"当前班开始条码:"+nextCode, Toast.LENGTH_LONG).show();
+                                ((SwitchFormingActivity) context).repItndes(vPlan.getId(),preCode,nextCode);
                             }
                         })
                         .cancelable(false)

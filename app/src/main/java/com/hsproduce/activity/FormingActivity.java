@@ -104,7 +104,7 @@ public class FormingActivity extends BaseActivity {
         tvMchid.setText("");
     }
 
-    //切换规格显示列表
+    //切换计划
     public void repItndes(String planid, String preCode, String nextCode) {
         if (StringUtil.isNullOrEmpty(planid)) {
             Toast.makeText(FormingActivity.this, "请选择生产计划", Toast.LENGTH_LONG).show();
@@ -114,7 +114,7 @@ public class FormingActivity extends BaseActivity {
         }
     }
 
-    //获取计划
+    //获取等待中的计划
     class GetFormingPlanTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -159,6 +159,7 @@ public class FormingActivity extends BaseActivity {
         }
     }
 
+    //切换计划
     class StartProductionTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
