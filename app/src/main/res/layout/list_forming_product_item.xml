@@ -64,7 +64,8 @@
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
         </TableRow>
-        <TableRow android:gravity="start">
+        <TableRow android:gravity="start"
+        >
             <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -76,14 +77,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:gravity="start"
                     android:textColor="@color/red"
                     android:textSize="15sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:gravity="start"
                     android:text="/"
                     android:textSize="15sp"/>
             <TextView
@@ -91,15 +90,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:gravity="start"
                     android:textSize="15sp"/>
         </TableRow>
-<!--        <com.xuexiang.xui.widget.button.ButtonView-->
-<!--                android:id="@+id/start"-->
-<!--                style="@style/ButtonView.Blue"-->
-<!--                android:text="开始生产"-->
-<!--                android:layout_marginLeft="150dp"-->
-<!--                android:visibility="visible"-->
-<!--                android:layout_width="60dp"/>-->
+        <com.xuexiang.xui.widget.button.ButtonView
+                android:id="@+id/start"
+                style="@style/ButtonView.Blue"
+                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_marginLeft="200dp"
+                android:text="开始生产"/>
     </TableLayout>
 </LinearLayout>

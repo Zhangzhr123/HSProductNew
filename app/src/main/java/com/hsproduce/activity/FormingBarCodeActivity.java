@@ -21,10 +21,7 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FormingBarCodeActivity extends BaseActivity {
 
@@ -269,8 +266,8 @@ public class FormingBarCodeActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //显示绑定条码数量
-                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        list.add("[" + date + "]" + tvbarcode);
+                        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                        list.add("[" + date + "]" + tvbarcode+"报废成功");
                         //list.add(tvbarcode);
                         barcodelog.setText("");
                         System.out.println(list.size());
@@ -305,6 +302,7 @@ public class FormingBarCodeActivity extends BaseActivity {
     //递归显示
     public String getlog(List<String> list) {
         String logstr = "";
+        Collections.reverse(list);//倒序
         for (int i = 0; i < list.size(); i++) {
             logstr += list.get(i) + "\n";
         }

@@ -27,10 +27,7 @@ import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 
 import java.security.Key;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VulcanizationActivity extends BaseActivity {
 
@@ -321,6 +318,7 @@ public class VulcanizationActivity extends BaseActivity {
     //递归显示
     public String getlog(List<String> list) {
         String logstr = "";
+        Collections.reverse(list);//倒序
         for (int i = 0; i < list.size(); i++) {
             logstr += list.get(i) + "\n";
         }

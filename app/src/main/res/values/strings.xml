@@ -8,10 +8,9 @@
     <string name="login_password">请输入密码</string>
     <string name="login">登录</string>
 
-    <string name="shift1">甲班</string>
-    <string name="shift2">乙班</string>
-    <string name="shift3">丙班</string>
-    <string name="shift4">丁班</string>
+    <string name="shift1">早班</string>
+    <string name="shift2">中班</string>
+    <string name="shift3">晚班</string>
 
     <string name="team1">甲班</string>
     <string name="team2">乙班</string>

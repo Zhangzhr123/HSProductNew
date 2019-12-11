@@ -1,11 +1,11 @@
 package com.hsproduce.activity;
 
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -126,12 +126,12 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String shift = parent.getItemAtPosition(position).toString();
-                System.out.println(R.string.shift1);
-                if (shift.equals("甲班")) {
+                //根据ID获取内容
+                if (shift.equals(getResources().getString(R.string.team1))) {
                     shift = "1";
-                } else if (shift.equals("乙班")) {
+                } else if (shift.equals(getResources().getString(R.string.team2))) {
                     shift = "2";
-                } else if (shift.equals("丙班")) {
+                } else if (shift.equals(getResources().getString(R.string.team3))) {
                     shift = "3";
                 } else {
                     shift = "15";//丁班

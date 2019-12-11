@@ -16,10 +16,7 @@ import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //退厂扫描页面
 public class LoadScanningActivity extends BaseActivity {
@@ -156,6 +153,7 @@ public class LoadScanningActivity extends BaseActivity {
     //递归显示
     public String getlog(List<String> list){
         String logstr = "";
+        Collections.reverse(list);//倒序
         for(int i=0;i<list.size();i++){
             logstr += list.get(i)+"\n";
         }

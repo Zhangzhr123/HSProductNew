@@ -1,12 +1,15 @@
 package com.hsproduce.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.hsproduce.R;
 import com.hsproduce.activity.FormingActivity;
 import com.hsproduce.bean.VPlan;
@@ -42,7 +45,7 @@ public class FormingItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.list_forming_repl_item, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_forming_product_item, null);
         final VPlan vPlan = vPlanList.get(position);
         //设置页面数据
         if (vPlan.getItnbr() != null) {
@@ -67,42 +70,37 @@ public class FormingItemAdapter extends BaseAdapter {
                 ((TextView) convertView.findViewById(R.id.state)).setText("未知状态");
             }
         }
-        if (vPlan.getAnum() != null) {
+        if (vPlan.getAnum() == null) {
+            ((TextView) convertView.findViewById(R.id.anum)).setText("0");
+        }else if(vPlan.getAnum() != null){
             ((TextView) convertView.findViewById(R.id.anum)).setText(vPlan.getAnum());
         }
         if (vPlan.getPnum() != null) {
             ((TextView) convertView.findViewById(R.id.pnum)).setText(vPlan.getPnum());
         }
         convertView.findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 //显示dialog
                 new MaterialDialog.Builder(context)
 //                        .iconRes(R.drawable.icon_warning)
-                        .title("提示")
+                        .title("生产条码录入").titleColor(R.color.theme)
                         .customView(R.layout.dialog_input,true)
-                        .input("上一班结束条码", "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                String barcode = dialog.getInputEditText().getText().toString();
-                            }
-                        })
-                        .input("当前班开始条码", "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                String barcode = dialog.getInputEditText().getText().toString();
-                            }
-                        })
                         .cancelable(false)
                         .positiveText(R.string.vul_confirm)
                         .negativeText(R.string.vul_cancel)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.getInputEditText().setText("");
-                                dialog.findViewById(R.id.input);
-                                dialog.findViewById(R.id.input2);
-                                ((FormingActivity) context).repItndes(vPlan.getId());
+                                //获取控件
+                                EditText pre = dialog.findViewById(R.id.input);
+                                EditText next = dialog.findViewById(R.id.input2);
+                                if(pre.getText().toString().equals("") && !next.getText().toString().equals("")){
+                                    pre.setText(String.valueOf(Integer.valueOf(next.getText().toString())-1));
+                                }
+                                Toast.makeText(context, "上一班结束条码:"+pre.getText().toString()+"当前班开始条码:"+next.getText().toString(), Toast.LENGTH_LONG).show();
+                                ((FormingActivity) context).repItndes(vPlan.getId(),pre.getText().toString(),next.getText().toString());
                             }
                         })
                         .cancelable(false)

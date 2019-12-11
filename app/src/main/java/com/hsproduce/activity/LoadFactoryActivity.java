@@ -668,6 +668,7 @@ public class LoadFactoryActivity extends BaseActivity {
     //递归显示
     public String getlog(List<String> list) {
         String logstr = "";
+        Collections.reverse(list);//倒序
         for (int i = 0; i < list.size(); i++) {
             logstr += list.get(i) + "\n";
         }
@@ -676,6 +677,7 @@ public class LoadFactoryActivity extends BaseActivity {
 
     public String getoutlog(List<String> list) {
         String logstr = "";
+        Collections.reverse(list);//倒序
         for (int i = 0; i < list.size(); i++) {
             logstr += list.get(i) + "\n";
         }

@@ -1,5 +1,6 @@
 package com.hsproduce.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.hsproduce.R;
 import com.hsproduce.activity.FormingActivity;
 import com.hsproduce.activity.SwitchFormingActivity;
@@ -26,6 +28,7 @@ public class FormingReplAdapter extends BaseAdapter {
     public FormingReplAdapter(Context context, List<VPlan> vPlanList) {
         this.context = context;
         this.vPlanList = vPlanList;
+        System.out.println(vPlanList.get(0).getPdate());
     }
 
     @Override
@@ -77,35 +80,26 @@ public class FormingReplAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.pnum)).setText(vPlan.getPnum());
         }
         convertView.findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 //显示dialog
                 new MaterialDialog.Builder(context)
 //                        .iconRes(R.drawable.icon_warning)
-                        .title("提示")
+                        .title("生产条码录入").titleColor(R.color.theme)
                         .customView(R.layout.dialog_input,true)
-                        .input("上一班结束条码", "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                String barcode = dialog.getInputEditText().getText().toString();
-                            }
-                        })
-                        .input("当前班开始条码", "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                String barcode = dialog.getInputEditText().getText().toString();
-                            }
-                        })
                         .cancelable(false)
                         .positiveText(R.string.vul_confirm)
                         .negativeText(R.string.vul_cancel)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.getInputEditText().setText("");
-                                dialog.findViewById(R.id.input);
-                                dialog.findViewById(R.id.input2);
-                                ((SwitchFormingActivity) context).repItndes(vPlan.getId());
+                                //获取控件
+                                EditText pre = dialog.findViewById(R.id.input);
+                                EditText next = dialog.findViewById(R.id.input2);
+
+                                Toast.makeText(context, "上一班结束条码:"+pre.getText().toString()+"当前班开始条码:"+next.getText().toString(), Toast.LENGTH_LONG).show();
+                                ((SwitchFormingActivity) context).repItndes(vPlan.getId(),pre.getText().toString(),next.getText().toString());
                             }
                         })
                         .cancelable(false)

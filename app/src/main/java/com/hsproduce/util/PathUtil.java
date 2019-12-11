@@ -74,9 +74,11 @@ public interface PathUtil {
     public static final String 文件下载 = SERVER + "file/download?filepath=";
 
     //成型生产
-    public static final String FORMINGPLAN = SERVER + "";
+    public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";
+    //成型生产
+    public static final String StartProduction = SERVER + "api/PDA/StartProduction";
     //成型规格交替
-    public static final String SWITCHFORMINGPLAN = SERVER + "";
+    public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
     //成型胚胎报废
     public static final String FORMINGBARCODE = SERVER + "";
     //成型生产变更
