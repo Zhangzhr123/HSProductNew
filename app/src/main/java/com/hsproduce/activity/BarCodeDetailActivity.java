@@ -74,7 +74,7 @@ public class BarCodeDetailActivity extends BaseActivity {
     }
 
     public void initEvent() {
-        //点击当期计划 和 规格交替计划
+        //点击查询成型和硫化条码信息
         btGetplan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +83,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         });
     }
 
-    //查询计划
+    //生产追溯
     public void getCurrentVPlan() {
         //获取输入机台上barcode
         tvbarCode = barCode.getText().toString().trim();
@@ -92,6 +92,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         } else {
             String parm = "SwitchTYRE_CODE=" + tvbarCode;
             new GetFormingDetail().execute(parm);
+            new GetVulcanizaDetail().execute(parm);
         }
     }
 
@@ -100,7 +101,7 @@ public class BarCodeDetailActivity extends BaseActivity {
     class GetFormingDetail extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.FORMINGPLAN, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.FORMINGSECLECTCODE, strings[0]);
             return result;
         }
 
@@ -115,8 +116,8 @@ public class BarCodeDetailActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(BarCodeDetailActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         //成型明细
@@ -149,7 +150,7 @@ public class BarCodeDetailActivity extends BaseActivity {
     class GetVulcanizaDetail extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.FORMINGPLAN, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.SelDetailed, strings[0]);
             return result;
         }
 
@@ -164,8 +165,8 @@ public class BarCodeDetailActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(BarCodeDetailActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         //硫化明细

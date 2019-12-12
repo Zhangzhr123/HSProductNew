@@ -178,8 +178,8 @@ public class VulcanizationActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         //获取计划ID
@@ -233,7 +233,7 @@ public class VulcanizationActivity extends BaseActivity {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         App.Iu = "I";
@@ -278,7 +278,7 @@ public class VulcanizationActivity extends BaseActivity {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         //显示绑定条码数量

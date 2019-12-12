@@ -74,7 +74,7 @@ public class UpdateManager {
 		}
 
 		if (null != appVersion) {
-			int 最新版本 = appVersion.get版本号();
+			int 最新版本 = Integer.valueOf(appVersion.getItemid());
 			// 版本判断
 			if (最新版本 > 当前版本) {
 				return true;
@@ -109,7 +109,7 @@ public class UpdateManager {
 		// 显示更新的内容
 		LinearLayout ll = (LinearLayout) noticeDialog.findViewById(R.id.update_content);
 		if (null != appVersion) {
-			String updateInfo = appVersion.get版本描述();
+			String updateInfo = appVersion.getItemname();
 			if (updateInfo != null) {
 				String[] updateInfos = updateInfo.split(";");
 				for (String info : updateInfos) {
@@ -130,7 +130,7 @@ public class UpdateManager {
 			public void onClick(View v) {
 				noticeDialog.dismiss();
 				// 下载文件
-				downloadAPK(PathUtil.文件下载 + appVersion.get下载地址(), appVersion.get下载地址());
+				downloadAPK(PathUtil.文件下载 + appVersion.getDownloadPath(), appVersion.getDownloadPath());
 			}
 		});
 		bt_update_latter.setOnClickListener(new OnClickListener() {

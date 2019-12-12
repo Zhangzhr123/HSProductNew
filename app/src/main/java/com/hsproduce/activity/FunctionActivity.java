@@ -199,6 +199,9 @@ public class FunctionActivity extends BaseActivity {
             }else{
                 Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                 List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+                if(res == null || res.isEmpty()){
+                    Toast.makeText(FunctionActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                }
                 if(res.get("code").equals("200")){
                     if(map.size() == 1){
                         if(map.get(0).get("m_CNAME").equals("硫化生产")){

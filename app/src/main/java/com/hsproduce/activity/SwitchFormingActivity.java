@@ -100,8 +100,9 @@ public class SwitchFormingActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(planid)) {
             Toast.makeText(SwitchFormingActivity.this, "请选择您要替换规格", Toast.LENGTH_LONG).show();
         } else {
-//            String param = "CurrentID="+currid+"&SwitchID="+planid+"&USER_NAME="+App.username;
-//            new SwitchVplanTask().execute(param);
+            //?CurrentID=34&SwitchID=33&CurrentEndCode=51901100035&SwitchStartCode=51901100036&USER_NAME=shao&TEAM=1
+            String param = "CurrentID="+currid+"&SwitchID="+planid+"&CurrentEndCode="+preCode+"&SwitchStartCode="+nextCode+"&USER_NAME="+App.username+"&TEAM="+App.shift;
+            new SwitchVplanTask().execute(param);
         }
     }
 
@@ -199,7 +200,7 @@ public class SwitchFormingActivity extends BaseActivity {
     class SwitchVplanTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.SwitchVplan, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.SWITCHFORMING, strings[0]);
             return result;
         }
 

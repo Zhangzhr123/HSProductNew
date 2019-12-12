@@ -329,7 +329,7 @@ public class LoginActivity extends BaseActivity {
                 // 获取当前软件版本
                 int 当前版本 = LoginActivity.this.getPackageManager().getPackageInfo("com.hsproduce", 0).versionCode;
                 if (null != 终端版本) {
-                    int 最新版本 = 终端版本.getVersionCode();
+                    int 最新版本 = Integer.valueOf(终端版本.getItemid());
                     // 版本判断
                     if (最新版本 > 当前版本) {
                         download(PathUtil.文件下载 + 终端版本.getDownloadPath());

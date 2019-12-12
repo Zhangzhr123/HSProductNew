@@ -100,11 +100,20 @@ public class FormingReplAdapter extends BaseAdapter {
                                 EditText next = dialog.findViewById(R.id.input2);
                                 preCode = pre.getText().toString();
                                 nextCode = next.getText().toString();
+                                //如果为空则进行操作
                                 if(preCode == null || preCode.equals("")){
-                                    preCode = String.valueOf(Integer.valueOf(nextCode)-1);
+                                    preCode = String.valueOf(Long.valueOf(nextCode)-1);
+                                }else if(nextCode == null || nextCode.equals("")){
+                                    Toast.makeText(context, "当前班开始条码不能为空", Toast.LENGTH_LONG).show();
+                                }else{
+                                    if(!preCode.equals(nextCode)){
+                                        Toast.makeText(context, "上一班结束条码不能与当前班开始条码一致", Toast.LENGTH_LONG).show();
+                                    }else{
+                                        Toast.makeText(context, "上一班结束条码:"+preCode+"当前班开始条码:"+nextCode, Toast.LENGTH_LONG).show();
+                                        ((SwitchFormingActivity) context).repItndes(vPlan.getId(),preCode,nextCode);
+                                    }
                                 }
-                                Toast.makeText(context, "上一班结束条码:"+preCode+"当前班开始条码:"+nextCode, Toast.LENGTH_LONG).show();
-                                ((SwitchFormingActivity) context).repItndes(vPlan.getId(),preCode,nextCode);
+
                             }
                         })
                         .cancelable(false)

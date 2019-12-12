@@ -119,8 +119,8 @@ public class BarcodeReplaceActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到条码", Toast.LENGTH_LONG).show();
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
                         //获取原条码ID

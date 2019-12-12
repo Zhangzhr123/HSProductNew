@@ -109,14 +109,16 @@ public class DetailChangeActivity extends BaseActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //机台
+                MchId = mchid.getText().toString().trim();
                 //规格编码
                 Spesc = spesc.getText().toString().trim();
-                //规格名称
+                //主手
                 CreateUser = createuser.getText().toString().trim();
                 //补录条码
-                BarCode = barcode.getText().toString().trim();
+//                BarCode = barcode.getText().toString().trim();
                 //班次
-                Shift = shift.getSelectedItem().toString().trim();
+//                Shift = shift.getSelectedItem().toString().trim();
                 //左右膜
                 lorR = LorR.getSelectedItem().toString().trim();
                 //MCHID=07A01 &ITNBR=CBCBS64518C14DH0 &ITDSC=185R14C-8PR(TR645)S%20BLACKSTONE
@@ -199,8 +201,8 @@ public class DetailChangeActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(DetailChangeActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
                         //填入规格信息
@@ -264,7 +266,7 @@ public class DetailChangeActivity extends BaseActivity {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
                     List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
                     if(res == null || res.isEmpty()){
-                        Toast.makeText(DetailChangeActivity.this, "未获取到机台", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
                         String search = mchid.getText().toString().trim();
@@ -318,8 +320,8 @@ public class DetailChangeActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
-                    if(datas == null || datas.isEmpty()){
-                        Toast.makeText(DetailChangeActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                    if(res == null || res.isEmpty()){
+                        Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
                         //填入规格信息
@@ -385,7 +387,7 @@ public class DetailChangeActivity extends BaseActivity {
                 try{
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
                     if(res == null || res.isEmpty()){
-                        Toast.makeText(DetailChangeActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
                         Toast.makeText(DetailChangeActivity.this, "变更成功！", Toast.LENGTH_LONG).show();

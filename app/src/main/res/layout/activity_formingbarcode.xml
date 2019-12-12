@@ -141,6 +141,7 @@
                                 android:id="@+id/anum"
                                 android:layout_width="20dp"
                                 android:layout_height="wrap_content"
+                                android:textAlignment="textEnd"
                                 android:layout_margin="5dp"
                                 android:textSize="15sp"/>
                         <TextView

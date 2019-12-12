@@ -31,7 +31,7 @@ public class FormingBarCodeActivity extends BaseActivity {
     private ButtonView barcode_ok;
     private ImageButton btGetplan;
     //获取正在生产计划的信息
-    private TextView spesc,spescname,pro,state,anum,pnum;
+    private TextView spesc, spescname, pro, state, anum, pnum;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //绑定条码个数
@@ -58,12 +58,12 @@ public class FormingBarCodeActivity extends BaseActivity {
         //扫描框
         tvMchid = (TextView) findViewById(R.id.mchid);
         //计划信息
-        spesc = (TextView)findViewById(R.id.spesc);
-        spescname = (TextView)findViewById(R.id.spescname);
-        pro = (TextView)findViewById(R.id.pro);
-        state = (TextView)findViewById(R.id.state);
-        anum = (TextView)findViewById(R.id.anum);
-        pnum = (TextView)findViewById(R.id.pnum);
+        spesc = (TextView) findViewById(R.id.spesc);
+        spescname = (TextView) findViewById(R.id.spescname);
+        pro = (TextView) findViewById(R.id.pro);
+        state = (TextView) findViewById(R.id.state);
+        anum = (TextView) findViewById(R.id.anum);
+        pnum = (TextView) findViewById(R.id.pnum);
         //条码记录
         barcodelog = (TextView) findViewById(R.id.barcode_log);
         //不可编辑
@@ -92,6 +92,7 @@ public class FormingBarCodeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 final EditText et = new EditText(FormingBarCodeActivity.this);
+                et.setText("");
                 et.setHint("请输入报废条码");
                 new AlertDialog.Builder(FormingBarCodeActivity.this).setTitle("报废条码录入")
                         .setView(et)
@@ -100,9 +101,9 @@ public class FormingBarCodeActivity extends BaseActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 tvbarcode = et.getText().toString();
                                 getBarCode();
-                                Toast.makeText(getApplicationContext(), et.getText().toString(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), et.getText().toString(), Toast.LENGTH_LONG).show();
                             }
-                        }).setNegativeButton("取消",null).show();
+                        }).setNegativeButton("取消", null).show();
             }
         });
     }
@@ -120,11 +121,11 @@ public class FormingBarCodeActivity extends BaseActivity {
                 tvMchid.setText("");
             } else {
                 App.lr = lr.toUpperCase();
-                String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
+                String param = "MCHID=" + mchid + "&SHIFT=" + App.shift + "&TYPE_N=30";
                 new MyTask().execute(param);
             }
         }
-//        tvMchid.setText("");
+        tvMchid.setText("");
     }
 
     //获取轮胎条码
@@ -143,7 +144,7 @@ public class FormingBarCodeActivity extends BaseActivity {
             }
             if (isNew) {
                 //判断轮胎条码是否重复
-                String param1 = "TYRE_CODE=" + tvbarcode;
+                String param1 = "ScrapCode=" + tvbarcode + "&FormingID" + planid + "&User_Name=" + App.username + "&TEAM=" + App.shift;
                 new TypeCodeTask().execute(param1);
             } else {
                 Toast.makeText(FormingBarCodeActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
@@ -153,11 +154,11 @@ public class FormingBarCodeActivity extends BaseActivity {
         //barcode.setText("");
     }
 
-    //查询任务
+    //查询正在生产的计划
     class MyTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_GET_PLAN, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.SWITCHFORMINGPLAN, strings[0]);
             return result;
         }
 
@@ -171,23 +172,19 @@ public class FormingBarCodeActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(FormingBarCodeActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(FormingBarCodeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        //获取计划ID
+                        //获取正在生产的计划
                         planid = datas.get(0).getId();
                         spesc.setText(datas.get(0).getItnbr());
                         spescname.setText(datas.get(0).getItdsc());
                         pro.setText(datas.get(0).getPro());
                         state.setText(datas.get(0).getState());
-                        if(datas.get(0).getAnum()==null || datas.get(0).getAnum().equals("")){
-                            anum.setText("0");
-                        }else{
-                            anum.setText(datas.get(0).getAnum());
-                        }
+                        anum.setText(datas.get(0).getAnum());
                         pnum.setText(datas.get(0).getPnum());
-//                        Toast.makeText(VulcanizationActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingBarCodeActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingBarCodeActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
@@ -205,11 +202,11 @@ public class FormingBarCodeActivity extends BaseActivity {
         }
     }
 
-    //判断轮胎条码是否重复
+    //成型胚胎报废
     class TypeCodeTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_SelActual_TYRE_CODE, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.FORMINGBARCODE, strings[0]);
             return result;
         }
 
@@ -222,52 +219,11 @@ public class FormingBarCodeActivity extends BaseActivity {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingBarCodeActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingBarCodeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        //扫描条码绑定计划
-                        String param2 = "PLAN_ID=" + planid + "&TYRE_CODE=" + tvbarcode + "&IorU=I" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
-                        new CodeInPlanTask().execute(param2);
-                        //Toast.makeText(FormingBarCodeActivity.this, "全新轮胎条码", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(FormingBarCodeActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(FormingBarCodeActivity.this, "已扫描过该轮胎条码！", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(FormingBarCodeActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(FormingBarCodeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    //扫描条码绑定计划
-    class CodeInPlanTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingBarCodeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
-                    }.getType());
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingBarCodeActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                        list.add("[" + date + "]" + tvbarcode+"报废成功");
+                        list.add("[" + date + "]" + tvbarcode + "报废成功");
                         //list.add(tvbarcode);
                         barcodelog.setText("");
                         System.out.println(list.size());
@@ -281,14 +237,11 @@ public class FormingBarCodeActivity extends BaseActivity {
                         num.setText("");
                         number++;//计算成功次数
                         num.setText(number + "");
-                        //barcode.setText("");
-//                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(FormingBarCodeActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingBarCodeActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
-                        Toast.makeText(FormingBarCodeActivity.this, "扫描插入数据库失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingBarCodeActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(FormingBarCodeActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingBarCodeActivity.this, "错误！", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
@@ -316,10 +269,7 @@ public class FormingBarCodeActivity extends BaseActivity {
         //扫描键 按下时清除
         if (keyCode == 0) {
             //获取计划
-            //getPlan();
             tvMchid.setText("");
-        } else if (keyCode == 4) {
-            //绑定条码
         }
         //返回键时间间隔超过两秒 返回功能页面
         if (keyCode == 4) {

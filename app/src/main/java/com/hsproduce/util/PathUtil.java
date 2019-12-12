@@ -6,45 +6,45 @@ import com.hsproduce.activity.VulcanizationActivity;
 
 public interface PathUtil {
     //服务ip地址
-    public static final String SERVER = "http://"+ App.ip +"/";
+    public static final String SERVER = "http://" + App.ip + "/";
 
     //登录
-    public static final String LOGIN =  SERVER + "api/PDA/PdaLogin";
+    public static final String LOGIN = SERVER + "api/PDA/PdaLogin";
     //获取班组
     public static final String GET_SHIFT = SERVER + "api/User/GetTeam";
     //注销
-    public static final String LOGOUT =  SERVER + "login/logout";
+    public static final String LOGOUT = SERVER + "login/logout";
 
     //获取菜单
-    public static final String GET_TEAM =SERVER + "api/PDA/GetTeam";
+    public static final String GET_TEAM = SERVER + "api/PDA/GetTeam";
 
-    //根据机台号获取计划
+    //硫化生产根据机台号获取计划
     public static final String VUL_GET_PLAN = SERVER + "api/PDA/GetVPlan";
     //判断轮胎条码是否重复
     public static final String VUL_SelActual_TYRE_CODE = SERVER + "api/PDA/SelActual_TYRE_CODE";
     //扫描条码，新增生产实绩
     public static final String VUL_AddActualAchievement = SERVER + "api/PDA/AddActualAchievement";
 
-    //根据状态查询计划
+    //硫化生产根据状态查询计划
     public static final String GetCurrentVPlan = SERVER + "api/PDA/GetCurrentVPlan";
     //规格交替
     public static final String SwitchVplan = SERVER + "api/PDA/SwitchVplan";
 
-    //根据轮胎条码查询轮胎规格
+    //硫化生产根据轮胎条码查询轮胎规格
     public static final String SelTYRE_CODE = SERVER + "api/PDA/SelTYRE_CODE";
     //条码更换
     public static final String ChangeTYRE_CODE = SERVER + "api/PDA/ChangeTYRE_CODE";
 
-    //根据规格编码模糊查询规格
+    //硫化生产根据规格编码模糊查询规格
     public static final String GetSPECIFICATION = SERVER + "api/PDA/GetSPECIFICATION";
-    //根据TYPEID 获取数据字典内容
+    //根据TYPEID 获取数据字典内容  机台号
     public static final String GetDictionaries = SERVER + "api/PDA/GetDictionaries";
     //根据条件获取计划
     public static final String GetVPlan_T = SERVER + "api/PDA/GetVPlan_T";
     //条码补录
     public static final String SupplementTYRE_CODE = SERVER + "api/PDA/SupplementTYRE_CODE";
 
-    //根据条码查询轮胎信息
+    //根据条码查询轮胎信息       生产追溯硫化信息
     public static final String SelDetailed = SERVER + "api/PDA/SelDetailed";
     //明细变更
     public static final String ChangeDetailed = SERVER + "api/PDA/ChangeDetailed";
@@ -64,26 +64,31 @@ public interface PathUtil {
     public static final String DelVLOAD = SERVER + "api/PDA/DelVLOAD";
     //发送WMS
     public static final String SendWMS = SERVER + "api/PDA/SendWMS";
-
     //退厂扫描
     public static final String OutsVLOAD = SERVER + "api/PDA/BarcordReturn";
 
     //APP更新
-    public static final String 获取最新版本 = SERVER + "UpdateVersion/getNewVersion";
+    public static final String 获取最新版本 = SERVER + "api/PDA/GetVERSION";
     //APK文件下载
     public static final String 文件下载 = SERVER + "file/download?filepath=";
 
-    //成型生产
+    //成型生产                  获取等待中生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";
-    //成型生产
+    //开始生产计划
     public static final String StartProduction = SERVER + "api/PDA/StartProduction";
-    //成型规格交替
+    //成型查询正在生产或者等待中的计划
     public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
+    //成型规格交替
+    public static final String SWITCHFORMING = SERVER + "api/PDA/SwitchVplan_Forming";
     //成型胚胎报废
-    public static final String FORMINGBARCODE = SERVER + "";
-    //成型生产变更
-    public static final String FORMINGCHANGE = SERVER + "";
-    //生产追溯
-    public static final String BARCODEDETAIL = SERVER + "";
+    public static final String FORMINGBARCODE = SERVER + "api/PDA/FormingScrap";
+    //成型生产根据条码查询明细   生产追溯成型信息
+    public static final String FORMINGSECLECTCODE = SERVER + "api/PDA/SelDetailed_Forming";
+    //成型生产模糊查询规格
+    public static final String FORMINGSECLECTITNBR = SERVER + "api/PDA/GetSPECIFICATION_Forming";
+    //成型查询机台号
+    public static final String FORMINGSELECTMCHID = SERVER + "api/PDA/GetDictionaries";
+    //成型明细变更
+    public static final String FORMINGCHANGE = SERVER + "api/PDA/ChangeDetailed_Forming";
 
 }

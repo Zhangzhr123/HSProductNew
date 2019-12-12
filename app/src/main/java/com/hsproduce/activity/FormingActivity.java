@@ -56,22 +56,6 @@ public class FormingActivity extends BaseActivity {
         //获取计划按钮
         btGetplan = (ImageButton) findViewById(R.id.getPlan);
 
-        //测试数据
-//        List<VPlan> datas = new ArrayList<>();
-//        for(int i=0;i<5;i++){
-//            VPlan v = new VPlan();
-//            v.setItnbr("11111111");
-//            v.setItdsc("22222222");
-//            v.setPro("frist");
-//            v.setState("20");
-//            v.setAnum("0");
-//            v.setPnum("10");
-//            datas.add(v);
-//        }
-//        adapter = new FormingItemAdapter(FormingActivity.this, datas);
-//        lvplan.setAdapter(adapter);
-//        adapter.notifyDataSetChanged();
-
     }
 
     public void initEvent() {
@@ -133,8 +117,8 @@ public class FormingActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         //展示计划列表
@@ -176,7 +160,7 @@ public class FormingActivity extends BaseActivity {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
                         getCurrentVPlan();//展示替换后的计划
