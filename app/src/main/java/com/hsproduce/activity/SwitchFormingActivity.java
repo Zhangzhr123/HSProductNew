@@ -92,7 +92,7 @@ public class SwitchFormingActivity extends BaseActivity {
             new GetPPlanTask().execute(param2);
 //            }
         }
-        tvMchid.setText("");
+//        tvMchid.setText("");
     }
 
     //切换规格显示列表
@@ -217,6 +217,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         getCurrentVPlan();//展示替换后的计划
+                        tvMchid.setText("");
                         Toast.makeText(SwitchFormingActivity.this, "切换成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(SwitchFormingActivity.this, "新切换的计划变动，切换失败，请刷新！", Toast.LENGTH_LONG).show();

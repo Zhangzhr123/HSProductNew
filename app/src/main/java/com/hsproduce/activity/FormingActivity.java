@@ -85,7 +85,7 @@ public class FormingActivity extends BaseActivity {
                 new GetFormingPlanTask().execute(param1);
 //            }
         }
-        tvMchid.setText("");
+//        tvMchid.setText("");
     }
 
     //切换计划
@@ -164,6 +164,7 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         getCurrentVPlan();//展示替换后的计划
+                        tvMchid.setText("");
                         Toast.makeText(FormingActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();

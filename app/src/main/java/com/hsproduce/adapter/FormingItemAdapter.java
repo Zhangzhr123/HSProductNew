@@ -22,7 +22,7 @@ import java.util.List;
 public class FormingItemAdapter extends BaseAdapter {
     private Context context;
     private List<VPlan> vPlanList = new ArrayList<>();
-    private String preCode = "",nextCode = "";
+    private String preCode = "", nextCode = "";
 
     public FormingItemAdapter(Context context, List<VPlan> vPlanList) {
         this.context = context;
@@ -73,24 +73,24 @@ public class FormingItemAdapter extends BaseAdapter {
         }
         if (vPlan.getAnum() == null) {
             ((TextView) convertView.findViewById(R.id.anum)).setText("0");
-        }else if(vPlan.getAnum() != null){
+        } else if (vPlan.getAnum() != null) {
             ((TextView) convertView.findViewById(R.id.anum)).setText(vPlan.getAnum());
         }
         if (vPlan.getPnum() != null) {
             ((TextView) convertView.findViewById(R.id.pnum)).setText(vPlan.getPnum());
         }
         convertView.findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
+            @SuppressLint({"ResourceAsColor", "ResourceType"})
             @Override
             public void onClick(View v) {
                 //显示dialog
                 new MaterialDialog.Builder(context)
 //                        .iconRes(R.drawable.icon_warning)
-                        .title("生产条码录入").titleColor(R.color.theme)
-                        .customView(R.layout.dialog_input,true)
+                        .title("生产条码录入").titleColorRes(R.color.colorPrimaryDark)
+                        .customView(R.layout.dialog_input, true)
                         .cancelable(false)
-                        .positiveText(R.string.vul_confirm)
-                        .negativeText(R.string.vul_cancel)
+                        .positiveText(R.string.vul_confirm).positiveColorRes(R.color.colorPrimary)
+                        .negativeText(R.string.vul_cancel).negativeColorRes(R.color.colorPrimary)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -100,18 +100,19 @@ public class FormingItemAdapter extends BaseAdapter {
                                 preCode = pre.getText().toString();
                                 nextCode = next.getText().toString();
                                 //如果为空则进行操作
-                                if(preCode == null || preCode.equals("")){
-                                    preCode = String.valueOf(Long.valueOf(nextCode)-1);
-                                }else if(nextCode == null || nextCode.equals("")){
+                                if (nextCode == null || nextCode.equals("")) {
                                     Toast.makeText(context, "当前班开始条码不能为空", Toast.LENGTH_LONG).show();
-                                }else{
-                                    if(!preCode.equals(nextCode)){
-                                        Toast.makeText(context, "上一班结束条码不能与当前班开始条码一致", Toast.LENGTH_LONG).show();
-                                    }else{
-                                        Toast.makeText(context, "上一班结束条码:"+preCode+"当前班开始条码:"+nextCode, Toast.LENGTH_LONG).show();
-                                        ((FormingActivity) context).repItndes(vPlan.getId(),preCode,nextCode);
-                                    }
+                                } else if (preCode == null || preCode.equals("")) {
+                                    preCode = String.valueOf(Long.valueOf(nextCode) - 1);
+//                                    System.out.println("preCode:"+preCode);
                                 }
+                                if (preCode.equals(nextCode)) {
+                                    Toast.makeText(context, "上一班结束条码不能与当前班开始条码一致", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(context, "上一班结束条码:" + preCode + "当前班开始条码:" + nextCode, Toast.LENGTH_LONG).show();
+                                    ((FormingActivity) context).repItndes(vPlan.getId(), preCode, nextCode);
+                                }
+
 
                             }
                         })

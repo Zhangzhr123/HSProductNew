@@ -115,15 +115,15 @@ public class FormingBarCodeActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(FormingBarCodeActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
         } else {
-            String lr = mchid.substring(mchid.length() - 1);
-            if (!"LR".contains(lr.toUpperCase())) {//判断有无大写字母LR
-                Toast.makeText(FormingBarCodeActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
-                tvMchid.setText("");
-            } else {
-                App.lr = lr.toUpperCase();
+//            String lr = mchid.substring(mchid.length() - 1);
+//            if (!"LR".contains(lr.toUpperCase())) {//判断有无大写字母LR
+//                Toast.makeText(FormingBarCodeActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
+//                tvMchid.setText("");
+//            } else {
+//                App.lr = lr.toUpperCase();
                 String param = "MCHID=" + mchid + "&SHIFT=" + App.shift + "&TYPE_N=30";
                 new MyTask().execute(param);
-            }
+//            }
         }
         tvMchid.setText("");
     }
