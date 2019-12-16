@@ -295,6 +295,7 @@ public class FormingBarCodeActivity extends BaseActivity {
         if (keyCode == 22) {
             getPlan();
         }
+        //左方向键
         if (keyCode == 21) {
             list.clear();
             codelist.clear();

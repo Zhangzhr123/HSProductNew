@@ -135,7 +135,7 @@ public class VulcanizationActivity extends BaseActivity {
                 new MyTask().execute(param);
             }
         }
-        tvMchid.setText("");
+//        tvMchid.setText("");
     }
 
     //获取轮胎条码
@@ -164,7 +164,7 @@ public class VulcanizationActivity extends BaseActivity {
             }
 
         }
-        //barcode.setText("");
+//        barcode.setText("");
     }
 
     //查询任务
@@ -204,7 +204,7 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        //tvMchid.setText("");
+                        tvMchid.setText("");
 //                        Toast.makeText(VulcanizationActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
@@ -340,7 +340,7 @@ public class VulcanizationActivity extends BaseActivity {
                         anum.setText("");
                         number++;//计算成功次数
                         anum.setText(number + "");
-                        //barcode.setText("");
+                        barcode.setText("");
 //                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
@@ -411,8 +411,6 @@ public class VulcanizationActivity extends BaseActivity {
             //getPlan();
             tvMchid.setText("");
             barcode.setText("");
-        } else if (keyCode == 4) {
-            //绑定条码
         }
         //返回键时间间隔超过两秒 返回功能页面
         if (keyCode == 4) {
@@ -428,6 +426,7 @@ public class VulcanizationActivity extends BaseActivity {
         if (keyCode == 22) {
             getPlan();
         }
+        //左方向键
         if (keyCode == 21) {
             list.clear();
             codelist.clear();

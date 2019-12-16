@@ -183,6 +183,7 @@ public class LoadScanningActivity extends BaseActivity {
                 System.exit(0);//注销功能
             }
         }
+        //左方向键
         if(keyCode == 21){
             codelist.clear();
             tofunction(); //BaseActivity  返回功能页面函数

@@ -201,7 +201,7 @@ public class FormingActivity extends BaseActivity {
                 System.exit(0);//注销功能
             }
         }
-        //返回键时间间隔超过两秒 返回功能页面
+        //左方向键
         if (keyCode == 21) {
             tofunction(); //BaseActivity  返回功能页面函数
 //            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
