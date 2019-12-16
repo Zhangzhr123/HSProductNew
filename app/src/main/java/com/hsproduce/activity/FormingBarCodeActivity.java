@@ -8,6 +8,7 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -46,6 +47,7 @@ public class FormingBarCodeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_formingbarcode);
         //加载控件
         initView();
@@ -237,6 +239,13 @@ public class FormingBarCodeActivity extends BaseActivity {
                         num.setText("");
                         number++;//计算成功次数
                         num.setText(number + "");
+                        //清空
+                        spesc.setText("");
+                        spescname.setText("");
+                        pro.setText("");
+                        state.setText("");
+                        anum.setText("");
+                        pnum.setText("");
                         Toast.makeText(FormingBarCodeActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingBarCodeActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
@@ -266,10 +275,11 @@ public class FormingBarCodeActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
-        if (keyCode == 0) {
+        //右方向键
+        if (keyCode == 22) {
             //获取计划
-            tvMchid.setText("");
+            getPlan();
+//            tvMchid.setText("");
         }
         //返回键时间间隔超过两秒 返回功能页面
         if (keyCode == 4) {
@@ -298,13 +308,13 @@ public class FormingBarCodeActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-        if (keyCode == 0) {
-            if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
-                getPlan();
-            } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if (keyCode == 0) {
+//            if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
+//                getPlan();
+//            } else {
+//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+//            }
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

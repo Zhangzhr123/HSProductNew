@@ -19,6 +19,8 @@ import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.xuexiang.xui.utils.ResUtils.getResources;
+
 public class FormingItemAdapter extends BaseAdapter {
     private Context context;
     private List<VPlan> vPlanList = new ArrayList<>();
@@ -84,13 +86,14 @@ public class FormingItemAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //显示dialog
-                new MaterialDialog.Builder(context)
+                final MaterialDialog dialog = new MaterialDialog.Builder(context)
 //                        .iconRes(R.drawable.icon_warning)
                         .title("生产条码录入").titleColorRes(R.color.colorPrimaryDark)
                         .customView(R.layout.dialog_input, true)
                         .cancelable(false)
                         .positiveText(R.string.vul_confirm).positiveColorRes(R.color.colorPrimary)
                         .negativeText(R.string.vul_cancel).negativeColorRes(R.color.colorPrimary)
+                        .icon(getResources().getDrawable(R.drawable.button_drawable))
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

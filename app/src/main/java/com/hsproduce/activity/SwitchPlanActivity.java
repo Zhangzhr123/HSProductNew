@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class SwitchPlanActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_switchplan);
         //加载控件
         initView();
@@ -217,7 +219,10 @@ public class SwitchPlanActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
+        //右方向键
+        if(keyCode == 22){
+            getCurrentVPlan();
+        }
         if(keyCode == 0){
             tvMchid.setText("");
         }
@@ -240,9 +245,9 @@ public class SwitchPlanActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时获取计划
-        if(keyCode == 66){
-            getCurrentVPlan();
-        }
+//        if(keyCode == 66){
+//            getCurrentVPlan();
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +40,7 @@ public class LoadScanningActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_loadscanning);
         //加载控件
         initView();
@@ -131,6 +133,8 @@ public class LoadScanningActivity extends BaseActivity {
                         anum.setText("");
                         number++;
                         anum.setText(number+"");
+                        //成功后清空扫描框
+                        barcode.setText("");
                         Toast.makeText(LoadScanningActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(LoadScanningActivity.this, "未找到轮胎信息，操作失败！", Toast.LENGTH_LONG).show();
@@ -165,8 +169,9 @@ public class LoadScanningActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event){
         Log.e("key", keyCode + "  ");
         //扫描键 按下时清除
-        if(keyCode == 0){
-            barcode.setText("");
+        if(keyCode == 22){
+            outVLoad();
+//            barcode.setText("");
         }
         //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 4){
@@ -190,9 +195,9 @@ public class LoadScanningActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时执行操作
-        if(keyCode == 66){
-            outVLoad();
-        }
+//        if(keyCode == 66){
+//            outVLoad();
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

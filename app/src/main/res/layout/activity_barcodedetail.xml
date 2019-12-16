@@ -24,14 +24,13 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="5dp"
-                    android:text="轮胎条码："
-                    android:textColor="@color/black"
-                    android:textAlignment="center"
-                    android:textSize="18sp"/>
+                    android:layout_marginTop="10dp"
+                    android:text="条码"
+                    android:textAlignment="textStart"
+                    android:textSize="15sp"/>
             <com.xuexiang.xui.widget.edittext.ClearEditText
                     style="@style/EditText.Normal"
                     android:id="@+id/BarCode"
@@ -41,13 +40,13 @@
                     android:layout_marginLeft="5dp"
                     android:hint="@string/vul_barcode_scan"
                     android:textAlignment="center"/>
-            <Button
+            <com.xuexiang.xui.widget.button.ButtonView
+                    style="@style/ButtonView.Blue"
                     android:id="@+id/getBarCode"
-                    android:layout_width="50dp"
+                    android:layout_width="80dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
-                    android:background="@color/limegreen"
                     android:text="查询"
                     android:textColor="@color/white"
             />

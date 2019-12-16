@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
@@ -26,8 +23,9 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1,view2,view3,view4,view5,view6,view7,view8,view9,view10,view11,view12,view13;
-    private ImageButton vplan, repl, load,loadsc,barrep,barsup,detch,check,forming,switchforming,formingchange,formingbarcode,barcodedetail;
+    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13;
+    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail;
+    private RelativeLayout cx,lh,jc,zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
 
@@ -39,7 +37,12 @@ public class FunctionActivity extends BaseActivity {
         initView();
     }
 
-    public void initView(){
+    public void initView() {
+        //功能分类控件
+        cx = (RelativeLayout)findViewById(R.id.cx);
+        lh = (RelativeLayout)findViewById(R.id.lh);
+        jc = (RelativeLayout)findViewById(R.id.jc);
+        zc = (RelativeLayout)findViewById(R.id.zc);
         //view功能显示
         view1 = findViewById(R.id.view1);
         view2 = findViewById(R.id.view2);
@@ -57,20 +60,20 @@ public class FunctionActivity extends BaseActivity {
         //按钮
         vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
         repl = (ImageButton) findViewById(R.id.repl);//规格交替
-        load = (ImageButton)findViewById(R.id.load);//装车出厂
+        load = (ImageButton) findViewById(R.id.load);//装车出厂
         detch = (ImageButton) findViewById(R.id.detch);//明细更改
         loadsc = (ImageButton) findViewById(R.id.loadsc);//退厂扫描
         barrep = (ImageButton) findViewById(R.id.barrep);//条码更换
-        barsup = (ImageButton)findViewById(R.id.barsup);//条码补录
-        check = (ImageButton)findViewById(R.id.check);//检测
-        forming = (ImageButton)findViewById(R.id.forming);//成型生产
-        switchforming = (ImageButton)findViewById(R.id.switchforming);//成型规格切换
-        formingchange = (ImageButton)findViewById(R.id.formingchange);//成型明细变更
-        formingbarcode = (ImageButton)findViewById(R.id.formingbarcode);//成型胚胎报废
-        barcodedetail = (ImageButton)findViewById(R.id.barcodeDetail);//条码追溯
+        barsup = (ImageButton) findViewById(R.id.barsup);//条码补录
+        check = (ImageButton) findViewById(R.id.check);//检测
+        forming = (ImageButton) findViewById(R.id.forming);//成型生产
+        switchforming = (ImageButton) findViewById(R.id.switchforming);//成型规格切换
+        formingchange = (ImageButton) findViewById(R.id.formingchange);//成型明细变更
+        formingbarcode = (ImageButton) findViewById(R.id.formingbarcode);//成型胚胎报废
+        barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
 
         //菜单权限管理
-        String parm = "UserName="+App.username;
+        String parm = "UserName=" + App.username;
         new TeamTask().execute(parm);
 
         //Button点击事件
@@ -191,100 +194,115 @@ public class FunctionActivity extends BaseActivity {
             String result = HttpUtil.sendGet(PathUtil.GET_TEAM, strs[0]);
             return result;
         }
+
         //事后执行
         @Override
         protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
+            if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FunctionActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
-                if(res == null || res.isEmpty()){
+            } else {
+                Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                }.getType());
+                List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                if (res == null || res.isEmpty()) {
                     Toast.makeText(FunctionActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                 }
-                if(res.get("code").equals("200")){
-                    if(map.size() == 1){
-                        if(map.get(0).get("m_CNAME").equals("硫化生产")){
+                if (res.get("code").equals("200")) {
+                    if (map.size() == 1) {
+                        if (map.get(0).get("m_CNAME").equals("硫化生产")) {
                             startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("硫化规格交替")){
+                        } else if (map.get(0).get("m_CNAME").equals("硫化规格交替")) {
                             startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("装车出厂")){
+                        } else if (map.get(0).get("m_CNAME").equals("装车出厂")) {
                             startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("条码更换")){
+                        } else if (map.get(0).get("m_CNAME").equals("条码更换")) {
                             startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("条码补录")){
+                        } else if (map.get(0).get("m_CNAME").equals("条码补录")) {
                             startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("硫化明细变更")){
+                        } else if (map.get(0).get("m_CNAME").equals("硫化明细变更")) {
                             startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("退厂扫描")){
+                        } else if (map.get(0).get("m_CNAME").equals("退厂扫描")) {
                             startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("检测")){
+                        } else if (map.get(0).get("m_CNAME").equals("检测")) {
                             startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("成型生产")){
+                        } else if (map.get(0).get("m_CNAME").equals("成型生产")) {
                             startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("成型规格切换")){
+                        } else if (map.get(0).get("m_CNAME").equals("成型规格切换")) {
                             startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("成型生产变更")){
+                        } else if (map.get(0).get("m_CNAME").equals("成型生产变更")) {
                             startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("成型胎胚报废")){
+                        } else if (map.get(0).get("m_CNAME").equals("成型胎胚报废")) {
                             startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
                             finish();
-                        }else if(map.get(0).get("m_CNAME").equals("生产追溯")){
+                        } else if (map.get(0).get("m_CNAME").equals("生产追溯")) {
                             startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
                             finish();
-                        }else{
+                        } else {
                             Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_LONG).show();
                         }
 
-                    }else if(map.size() > 1){
-                        for(int i=0;i<map.size();i++){
-                            if(map.get(i).get("m_CNAME").equals("硫化生产")){
+                    } else if (map.size() > 1) {
+                        for (int i = 0; i < map.size(); i++) {
+                            if (map.get(i).get("m_CNAME").equals("硫化生产")) {
+                                lh.setVisibility(View.VISIBLE);
                                 view1.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("条码补录")){
+                            } else if (map.get(i).get("m_CNAME").equals("条码补录")) {
+                                lh.setVisibility(View.VISIBLE);
                                 view2.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("条码更换")){
+                            } else if (map.get(i).get("m_CNAME").equals("条码更换")) {
+                                lh.setVisibility(View.VISIBLE);
                                 view3.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("硫化明细变更")){
+                            } else if (map.get(i).get("m_CNAME").equals("硫化明细变更")) {
+                                lh.setVisibility(View.VISIBLE);
                                 view4.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("硫化规格交替")){
+                            } else if (map.get(i).get("m_CNAME").equals("硫化规格交替")) {
+                                lh.setVisibility(View.VISIBLE);
                                 view5.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("检测")){
+                            } else if (map.get(i).get("m_CNAME").equals("检测")) {
+                                jc.setVisibility(View.VISIBLE);
                                 view6.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("装车出厂")){
+                            } else if (map.get(i).get("m_CNAME").equals("装车出厂")) {
+                                zc.setVisibility(View.VISIBLE);
                                 view7.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("退厂扫描")){
+                            } else if (map.get(i).get("m_CNAME").equals("退厂扫描")) {
+                                zc.setVisibility(View.VISIBLE);
                                 view8.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("成型生产")){
+                            } else if (map.get(i).get("m_CNAME").equals("成型生产")) {
+                                cx.setVisibility(View.VISIBLE);
                                 view9.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("成型规格切换")){
+                            } else if (map.get(i).get("m_CNAME").equals("成型规格切换")) {
+                                cx.setVisibility(View.VISIBLE);
                                 view10.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("成型生产变更")){
+                            } else if (map.get(i).get("m_CNAME").equals("成型生产变更")) {
+                                cx.setVisibility(View.VISIBLE);
                                 view11.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("成型胎胚报废")){
+                            } else if (map.get(i).get("m_CNAME").equals("成型胎胚报废")) {
+                                cx.setVisibility(View.VISIBLE);
                                 view12.setVisibility(View.VISIBLE);
-                            }else if(map.get(i).get("m_CNAME").equals("生产追溯")){
+                            } else if (map.get(i).get("m_CNAME").equals("生产追溯")) {
+                                jc.setVisibility(View.VISIBLE);
                                 view13.setVisibility(View.VISIBLE);
-                            }else{
+                            } else {
                                 Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
-                                        +"此功能未在PDA当中", Toast.LENGTH_LONG).show();
+                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
                             }
                         }
 
-                    }else{
+                    } else {
                         Toast.makeText(FunctionActivity.this, "您没有操作PDA权限,请退出", Toast.LENGTH_LONG).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(FunctionActivity.this, "菜单查询失败", Toast.LENGTH_LONG).show();
                 }
             }
@@ -293,45 +311,45 @@ public class FunctionActivity extends BaseActivity {
 
     //键盘监听
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //两次返回键时间间隔超过两秒 退出登录
-        if(keyCode == 4){
-            if(System.currentTimeMillis() - mExitTime > 2000){
+        if (keyCode == 4) {
+            if (System.currentTimeMillis() - mExitTime > 2000) {
                 Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
                 //并记录下本次点击“返回键”的时刻，以便下次进行判断
                 mExitTime = System.currentTimeMillis();
-            }else{
+            } else {
                 System.exit(0);//注销功能
             }
         }
         //键盘监听 按键跳转功能 1--9
-        if(keyCode == 8){
+        if (keyCode == 8) {
             startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
             finish();
-        }else if(keyCode == 9){
+        } else if (keyCode == 9) {
             startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
             finish();
-        }else if(keyCode == 10){
+        } else if (keyCode == 10) {
             startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
             finish();
-        }else if(keyCode == 11){
+        } else if (keyCode == 11) {
             startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
             finish();
-        }else if(keyCode == 12){
+        } else if (keyCode == 12) {
             startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
             finish();
-        }else if(keyCode == 13){
+        } else if (keyCode == 13) {
             startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
             finish();
-        }else if(keyCode == 14){
+        } else if (keyCode == 14) {
             startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
             finish();
-        }else if(keyCode == 15){
+        } else if (keyCode == 15) {
             startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
             finish();
-        }else{
-            Toast.makeText(this, "没有此快捷键功能", Toast.LENGTH_SHORT).show();
+        } else {
+//            Toast.makeText(this, "没有此快捷键功能", Toast.LENGTH_SHORT).show();
         }
         return true;
     }

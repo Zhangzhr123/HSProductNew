@@ -42,7 +42,7 @@
                 android:layout_width="80dp"
                 android:layout_height="30dp"
                 android:text="@string/search"
-                android:layout_margin="5dp"/>
+                android:layout_marginTop="5dp"/>
     </LinearLayout>
     <!-- 条码明细显示 -->
     <View
@@ -193,7 +193,7 @@
                 android:layout_width="150dp"
                 android:layout_height="30dp"
                 android:text="@string/replace"
-                android:layout_marginLeft="80dp"
+                android:layout_marginLeft="90dp"
                 android:visibility="visible"/>
     </LinearLayout>
 </LinearLayout>

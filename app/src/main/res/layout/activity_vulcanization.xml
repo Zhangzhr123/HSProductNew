@@ -43,8 +43,8 @@
                 android:id="@+id/bt_getPlan"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
-                android:text="测试"
-                android:layout_marginTop="180dp" android:visibility="gone"/>
+                android:text="搜索"
+                android:layout_marginTop="180dp" android:visibility="visible"/>
     </LinearLayout>
 
 

@@ -47,8 +47,8 @@
                 android:id="@+id/bt_getCode"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
-                android:text="测试"
-                android:layout_margin="5dp" android:visibility="gone"/>
+                android:text="搜索"
+                android:layout_margin="5dp" android:visibility="visible"/>
     </LinearLayout>
     <View
             android:layout_height="1px"

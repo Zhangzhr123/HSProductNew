@@ -42,7 +42,7 @@
                 <com.xuexiang.xui.widget.button.ButtonView
                         style="@style/ButtonView.Blue"
                         android:id="@+id/bt_in_plan"
-                        android:layout_width="80dp"
+                        android:layout_width="70dp"
                         android:layout_height="30dp"
                         android:text="选择计划"
                         android:layout_marginTop="5dp"
@@ -77,7 +77,7 @@
                     <com.xuexiang.xui.widget.button.ButtonView
                             style="@style/ButtonView.Blue"
                             android:id="@+id/getitnbr"
-                            android:layout_width="80dp"
+                            android:layout_width="70dp"
                             android:layout_height="30dp"
                             android:text="选择规格"
                             android:layout_marginTop="5dp"
@@ -118,7 +118,7 @@
                     <com.xuexiang.xui.widget.button.ButtonView
                             style="@style/ButtonView.Blue"
                             android:id="@+id/getmchid"
-                            android:layout_width="80dp"
+                            android:layout_width="70dp"
                             android:layout_height="30dp"
                             android:text="选择机台"
                             android:layout_marginTop="5dp"

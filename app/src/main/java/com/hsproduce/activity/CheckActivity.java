@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -43,6 +44,7 @@ public class CheckActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_check);
         //加载控件
         initView();
@@ -234,6 +236,7 @@ public class CheckActivity extends BaseActivity {
                         Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
+                        barcode.setText("");
                         Toast.makeText(CheckActivity.this, "标记成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(CheckActivity.this, "未找到轮胎信息，标记失败！", Toast.LENGTH_LONG).show();
@@ -254,10 +257,11 @@ public class CheckActivity extends BaseActivity {
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
-        //返回键时间间隔超过两秒 返回功能页面
-        if(keyCode == 0){
+        //右方向键
+        if(keyCode == 22){
             //获取信息
-            barcode.setText("");
+            getCodeCheck();
+//            barcode.setText("");
         }
         if(keyCode == 4){
             if(System.currentTimeMillis() - mExitTime > 2000){
@@ -268,6 +272,7 @@ public class CheckActivity extends BaseActivity {
                 System.exit(0);//注销功能
             }
         }
+        //左方向键
         if(keyCode == 21){
             tofunction(); //BaseActivity  返回功能页面函数
 //            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
@@ -279,10 +284,10 @@ public class CheckActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时执行操作
-        if(keyCode == 0){
-            //获取信息
-            getCodeCheck();
-        }
+//        if(keyCode == 0){
+//            //获取信息
+//            getCodeCheck();
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

@@ -1,11 +1,14 @@
 package com.hsproduce.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,6 +60,7 @@ public class VulcanizationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_vulcanization);
         //加载控件
         initView();
@@ -149,6 +153,9 @@ public class VulcanizationActivity extends BaseActivity {
                 }
             }
             if (isNew) {
+                //判断规格是否合格
+//                String param = "PLAN_ID="+planid+"&TYRE_CODE="+tvbarcode;
+//                new ErrorJudgeTask().execute(param);
                 //判断轮胎条码是否重复
                 String param1 = "TYRE_CODE=" + tvbarcode;
                 new TypeCodeTask().execute(param1);
@@ -212,6 +219,42 @@ public class VulcanizationActivity extends BaseActivity {
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
                 }
 
+            }
+        }
+    }
+
+    //判断轮胎条码是否重复
+    class ErrorJudgeTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = HttpUtil.sendGet(PathUtil.ErrorJudge, strings[0]);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+                        //Toast.makeText(VulcanizationActivity.this, "全新轮胎条码", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("300")) {
+                        error("条码轮胎规格与计划轮胎规格不一致，是否继续？");
+                        //Toast.makeText(VulcanizationActivity.this, "已扫描过该轮胎条码！", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(VulcanizationActivity.this, "错误！", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -325,11 +368,44 @@ public class VulcanizationActivity extends BaseActivity {
         return logstr;
     }
 
+    //用户提示信息
+    public void error(String v){
+        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
+        normalDialog.setTitle("提示");
+        normalDialog.setMessage(v);
+        normalDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        normalDialog.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
+                        finish();
+                    }
+                });
+        // 显示
+        normalDialog.show();
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
+        //右方向键
+        if (keyCode == 22) {
+            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
+                getBarCode();
+            } else if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
+                getPlan();
+            } else {
+                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+            }
+        }
         if (keyCode == 0) {
             //获取计划
             //getPlan();
@@ -365,16 +441,18 @@ public class VulcanizationActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-        if (keyCode == 0) {
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                getBarCode();
-            } else if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
-                getPlan();
-            } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if (keyCode == 0) {
+//            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
+//                getBarCode();
+//            } else if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
+//                getPlan();
+//            } else {
+//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+//            }
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }
+
+
 }

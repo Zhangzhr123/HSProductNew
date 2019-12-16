@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ public class BarCodeDetailActivity extends BaseActivity {
     //轮胎条码
     private TextView barCode;
     //获取计划按钮
-    private Button btGetplan;
+    private ButtonView btGetplan;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //成型明细
@@ -41,6 +42,7 @@ public class BarCodeDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_barcodedetail);
         //加载控件
         initView();
@@ -52,7 +54,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         //扫描框
         barCode = (TextView) findViewById(R.id.BarCode);
         //获取计划按钮
-        btGetplan = (Button) findViewById(R.id.getBarCode);
+        btGetplan = (ButtonView) findViewById(R.id.getBarCode);
         //成型
         fspesc = (TextView) findViewById(R.id.fspesc);
         fspescname = (TextView) findViewById(R.id.fspescname);
@@ -120,6 +122,14 @@ public class BarCodeDetailActivity extends BaseActivity {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        //清空
+                        fspesc.setText("");
+                        fspescname.setText("");
+                        fmchid.setText("");
+                        fdate.setText("");
+                        fshift.setText("");
+                        fmaster.setText("");
+                        fstate.setText("");
                         //成型明细
                         fspesc.setText(datas.get(0).getItnbr());
                         fspescname.setText(datas.get(0).getItdsc());
@@ -169,6 +179,15 @@ public class BarCodeDetailActivity extends BaseActivity {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        //清空
+                        vspesc.setText("");
+                        vspescname.setText("");
+                        vmchid.setText("");
+                        lorR.setText("");
+                        vdate.setText("");
+                        vshift.setText("");
+                        vmaster.setText("");
+                        vstate.setText("");
                         //硫化明细
                         vspesc.setText(datas.get(0).getItnbr());
                         vspescname.setText(datas.get(0).getItdsc());
@@ -200,6 +219,10 @@ public class BarCodeDetailActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
+        //右方向键
+        if(keyCode == 22){
+            getCurrentVPlan();
+        }
         //扫描键 按下时清除
         if (keyCode == 0) {
             barCode.setText("");
@@ -224,9 +247,9 @@ public class BarCodeDetailActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-        if (keyCode == 66) {
-            getCurrentVPlan();
-        }
+//        if (keyCode == 66) {
+//            getCurrentVPlan();
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

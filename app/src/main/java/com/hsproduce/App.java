@@ -13,6 +13,8 @@ public class App extends Application {
     public static String access_token = "";
     public static String Iu = "";
     public static String ip = "";//27191q95f3.wicp.vip:21127
+    public static String version = "";
+
     @Override
     public void onCreate() {
         XUI.init(this); //初始化UI框架

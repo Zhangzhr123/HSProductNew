@@ -24,6 +24,8 @@ public interface PathUtil {
     public static final String VUL_SelActual_TYRE_CODE = SERVER + "api/PDA/SelActual_TYRE_CODE";
     //扫描条码，新增生产实绩
     public static final String VUL_AddActualAchievement = SERVER + "api/PDA/AddActualAchievement";
+    //判断规格是否一致
+    public static final String ErrorJudge = SERVER +"api/PDA/ErrorJudge";
 
     //硫化生产根据状态查询计划
     public static final String GetCurrentVPlan = SERVER + "api/PDA/GetCurrentVPlan";
@@ -70,7 +72,7 @@ public interface PathUtil {
     //APP更新
     public static final String 获取最新版本 = SERVER + "api/PDA/GetVERSION";
     //APK文件下载
-    public static final String 文件下载 = SERVER + "file/download?filepath=";
+    public static final String 文件下载 = SERVER + "app-debug.apk";
 
     //成型生产                  获取等待中生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";

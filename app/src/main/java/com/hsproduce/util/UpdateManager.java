@@ -130,7 +130,7 @@ public class UpdateManager {
 			public void onClick(View v) {
 				noticeDialog.dismiss();
 				// 下载文件
-				downloadAPK(PathUtil.文件下载 + appVersion.getDownloadPath(), appVersion.getDownloadPath());
+				downloadAPK(PathUtil.文件下载, appVersion.getDownloadPath());
 			}
 		});
 		bt_update_latter.setOnClickListener(new OnClickListener() {
@@ -160,7 +160,7 @@ public class UpdateManager {
 		request.setVisibleInDownloadsUi(true);
 
 		//sdcard的目录下的download文件夹，必须设置
-		request.setDestinationInExternalPublicDir("/download/", versionName);
+		request.setDestinationInExternalPublicDir("/download/", "update.apk");
 		//request.setDestinationInExternalFilesDir(),也可以自己制定下载路径
 
 		//将下载请求加入下载队列

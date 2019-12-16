@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -45,30 +46,30 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login);
-        //更新版本
-        findViewById(R.id.title).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                new 版本更新Task().execute();
-                return false;
-            }
-        });
-        //显示版本信息
-        String 当前版本 = "";
-        try {
-            当前版本 = "版本：" + getPackageManager().getPackageInfo("com.hsproduce", 0).versionName;
-            System.out.println("当前版本:"+当前版本);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("login", e.getMessage());
+        // 获取设置的版本
+        String version = get("myVersion");
+        if (!TextUtils.isEmpty(version)) {
+            App.version = version;
+//            Toast.makeText(this, "读取成功", Toast.LENGTH_LONG).show();
         }
+        new 版本更新Task().execute();
+
+        //更新版本
+//        findViewById(R.id.title).setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                new 版本更新Task().execute();
+//                return false;
+//            }
+//        });
 
         // 获取设置的IP地址
-        String text = get();
+        String text = get("myIP");
         if (!TextUtils.isEmpty(text)) {
             App.ip = text;
-            Toast.makeText(this, "读取成功", Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "读取成功", Toast.LENGTH_LONG).show();
             new ShiftTask().execute();
         }
 
@@ -107,9 +108,9 @@ public class LoginActivity extends BaseActivity {
                                 File file = getDir("myIP", Context.MODE_PRIVATE);
                                 if (file != null) {
                                     deleteFile(file);
-                                    save(IP);
+                                    save("myIP", IP);
                                 } else {
-                                    save(IP);
+                                    save("myIP", IP);
                                 }
                                 new ShiftTask().execute();//查询班组
                                 Toast.makeText(getApplicationContext(), et.getText().toString(), Toast.LENGTH_LONG).show();
@@ -201,7 +202,6 @@ public class LoginActivity extends BaseActivity {
                 Map<String, String> res = App.gson.fromJson(s, new TypeToken<HashMap<String, String>>() {
                 }.getType());
                 if (res.get("code").equals("200")) {
-
                     Intent intent = new Intent(LoginActivity.this, FunctionActivity.class);
                     startActivity(intent);
                 } else {
@@ -223,16 +223,16 @@ public class LoginActivity extends BaseActivity {
      *
      * @param value
      */
-    private void save(String value) {
+    private void save(String packName, String value) {
         BufferedWriter writer = null;
         try {
 
-            FileOutputStream out = openFileOutput("myIP", Context.MODE_PRIVATE);
+            FileOutputStream out = openFileOutput(packName, Context.MODE_PRIVATE);
             writer = new BufferedWriter(new OutputStreamWriter(out));
             writer.write(value);
 
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "save: 找不到文件", e);
+//            Log.e(TAG, "save: 找不到文件", e);
         } catch (IOException e) {
             Log.e(TAG, "save:IO 异常", e);
         } finally {
@@ -251,19 +251,19 @@ public class LoginActivity extends BaseActivity {
      *
      * @return
      */
-    private String get() {
+    private String get(String packName) {
 
         BufferedReader reader = null;
         StringBuilder content = new StringBuilder();
         try {
-            FileInputStream in = openFileInput("myIP");
+            FileInputStream in = openFileInput(packName);
             reader = new BufferedReader(new InputStreamReader(in));
             String temp;
             while ((temp = reader.readLine()) != null) {
                 content.append(temp);
             }
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "get: FileNotFoundException", e);
+//            Log.e(TAG, "get: FileNotFoundException", e);
         } catch (IOException e) {
             Log.e(TAG, "get: IOException", e);
         }
@@ -304,43 +304,51 @@ public class LoginActivity extends BaseActivity {
     }
 
     //版本更新
-    class 版本更新Task extends AsyncTask<Void, Void, UpdateVersion> {
+    class 版本更新Task extends AsyncTask<String, Void, String> {
         @Override
-        protected UpdateVersion doInBackground(Void... voids) {
-            UpdateVersion 终端版本 = null;
+        protected String doInBackground(String... voids) {
+//            UpdateVersion 终端版本 = null;
             // 获取服务器最新版本
-            try {
-                String result = HttpUtil.sendGet(PathUtil.获取最新版本, "");
-                Result<UpdateVersion> res = new Result<>();
-                res = TaskUtil.handle(res, result, new TypeToken<Result<UpdateVersion>>() {
-                }.getType());
-                if (res.isFlag()) {
-                    终端版本 = res.getData();
-                }
-            } catch (Exception e) {
-                return 终端版本;
-            }
-            return 终端版本;
+            String result = HttpUtil.sendGet(PathUtil.获取最新版本, "");
+            return result;
         }
 
         @Override
-        protected void onPostExecute(UpdateVersion 终端版本) {
+        protected void onPostExecute(String s) {
             try {
-                // 获取当前软件版本
-                int 当前版本 = LoginActivity.this.getPackageManager().getPackageInfo("com.hsproduce", 0).versionCode;
-                if (null != 终端版本) {
-                    int 最新版本 = Integer.valueOf(终端版本.getItemid());
-                    // 版本判断
-                    if (最新版本 > 当前版本) {
-                        download(PathUtil.文件下载 + 终端版本.getDownloadPath());
-                    } else {
-                        Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
+                if (StringUtil.isNullOrBlank(s)) {
+                    Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                } else {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<HashMap<Object, Object>>() {
+                    }.getType());
+                    List<UpdateVersion> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<UpdateVersion>>() {
+                    }.getType());
+                    if (res.get("code").equals("200")) {
+                        String 当前版本 = App.version;
+                        if (null != datas) {
+                            String 最新版本 = datas.get(0).getItemid();
+                            // 版本判断
+                            if (!最新版本.equals(当前版本)) {
+                                App.version = 最新版本;
+                                File file = getDir("myVersion", Context.MODE_PRIVATE);
+                                if (file != null) {
+                                    deleteFile(file);
+                                    save("myVersion", 最新版本);
+                                } else {
+                                    save("myVersion", 最新版本);
+                                }
+//                                download(PathUtil.文件下载);
+
+                            } else {
+                                Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_LONG).show();
+                            }
+
+                        }
                     }
                 }
             } catch (Exception e) {
 
             }
-
         }
     }
 

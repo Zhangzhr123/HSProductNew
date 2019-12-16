@@ -23,14 +23,13 @@
             android:orientation="horizontal"
             android:visibility="visible">
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:text="机台："
-                android:textColor="@color/black"
-                android:textAlignment="center"
-                android:textSize="20sp"/>
+                android:text="机台号"
+                android:textAlignment="textStart"
+                android:textSize="15sp"/>
         <com.xuexiang.xui.widget.edittext.ClearEditText
                 style="@style/EditText.Normal"
                 android:id="@+id/mchid"
@@ -49,7 +48,11 @@
                 android:background="@mipmap/searth"
         />
     </LinearLayout>
-
+    <View
+            android:layout_height="1px"
+            android:layout_width="match_parent"
+            android:background="@color/black_textview"
+    />
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:visibility="visible">

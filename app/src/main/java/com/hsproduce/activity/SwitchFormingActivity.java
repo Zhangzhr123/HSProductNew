@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,19 +23,19 @@ import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SwitchFormingActivity extends BaseActivity {
 
     //当前计划展示list  规格交替列表
-    private ListView lvplan, replplan;
+    private ListView replplan;
     //机台号  轮胎条码  条码记录
-    private TextView tvMchid;
+    private TextView tvMchid, spesc, spescname, pro, state, anum, pnum;
     //获取计划按钮
-    private Button btGetplan;
+    private ButtonView btGetplan;
     //计划展示适配器  规格交替适配器
-    private FormingAdapter adapter;
     private FormingReplAdapter repladaprer;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
@@ -44,6 +45,7 @@ public class SwitchFormingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_switchforming);
         //加载控件
         initView();
@@ -53,12 +55,33 @@ public class SwitchFormingActivity extends BaseActivity {
 
     public void initView() {
         //list列表
-        lvplan = (ListView) findViewById(R.id.lv_plan);
         replplan = (ListView) findViewById(R.id.lv_replplan);
         //扫描框
         tvMchid = (TextView) findViewById(R.id.mchid);
         //获取计划按钮
-        btGetplan = (Button) findViewById(R.id.getSwitchPlan);
+        btGetplan = (ButtonView) findViewById(R.id.getSwitchPlan);
+        //当前声称计划控件
+        spesc = (TextView) findViewById(R.id.spesc);
+        spescname = (TextView) findViewById(R.id.spescname);
+        pro = (TextView) findViewById(R.id.pro);
+        state = (TextView) findViewById(R.id.state);
+        anum = (TextView) findViewById(R.id.anum);
+        pnum = (TextView) findViewById(R.id.pnum);
+
+        List<VPlan> datas = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            VPlan v = new VPlan();
+            v.setItnbr("111111111");
+            v.setItdsc("222222222");
+            v.setState("20");
+            v.setPro(i + "");
+            v.setAnum("0");
+            v.setPnum("60");
+            datas.add(v);
+        }
+        repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, datas);
+        replplan.setAdapter(repladaprer);
+        repladaprer.notifyDataSetChanged();
 
     }
 
@@ -101,7 +124,7 @@ public class SwitchFormingActivity extends BaseActivity {
             Toast.makeText(SwitchFormingActivity.this, "请选择您要替换规格", Toast.LENGTH_LONG).show();
         } else {
             //?CurrentID=34&SwitchID=33&CurrentEndCode=51901100035&SwitchStartCode=51901100036&USER_NAME=shao&TEAM=1
-            String param = "CurrentID="+currid+"&SwitchID="+planid+"&CurrentEndCode="+preCode+"&SwitchStartCode="+nextCode+"&USER_NAME="+App.username+"&TEAM="+App.shift;
+            String param = "CurrentID=" + currid + "&SwitchID=" + planid + "&CurrentEndCode=" + preCode + "&SwitchStartCode=" + nextCode + "&USER_NAME=" + App.username + "&TEAM=" + App.shift;
             new SwitchVplanTask().execute(param);
         }
     }
@@ -125,18 +148,32 @@ public class SwitchFormingActivity extends BaseActivity {
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
                     if (res.get("code").equals("200")) {
-                        //tvMchid.setText("");
                         //获取当前计划ID
                         currid = datas.get(0).getId();
-                        //展示当前计划列表
-                        adapter = new FormingAdapter(SwitchFormingActivity.this, datas);
-                        lvplan.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
+                        //展示当前计划
+                        spesc.setText(datas.get(0).getItnbr());
+                        spescname.setText(datas.get(0).getItdsc());
+                        pro.setText(datas.get(0).getPro());
+                        if (datas.get(0).getState() != null) {
+                            if (datas.get(0).getState().equals("10")) {
+                                state.setText("新计划");
+                            } else if (datas.get(0).getState().equals("20")) {
+                                state.setText("等待中");
+                            } else if (datas.get(0).getState().equals("30")) {
+                                state.setText("进行中");
+                            } else if (datas.get(0).getState().equals("40")) {
+                                state.setText("已完成");
+                            } else {
+                                state.setText("未知状态");
+                            }
+                        }
+                        anum.setText(datas.get(0).getAnum());
+                        pnum.setText(datas.get(0).getPnum());
 //                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(SwitchFormingActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchFormingActivity.this, "查询成功，没有生产中的计划！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }
@@ -170,7 +207,9 @@ public class SwitchFormingActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
-                    System.out.println(datas.get(0).getPdate());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchFormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
                         //展示规格替换列表
                         repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, datas);
@@ -180,13 +219,11 @@ public class SwitchFormingActivity extends BaseActivity {
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(SwitchFormingActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchFormingActivity.this, "查询成功，没有等待的计划！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(SwitchFormingActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -240,7 +277,10 @@ public class SwitchFormingActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
+        //右方向键
+        if (keyCode == 22) {
+            getCurrentVPlan();
+        }
         if (keyCode == 0) {
             tvMchid.setText("");
         }
@@ -264,9 +304,9 @@ public class SwitchFormingActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-        if (keyCode == 66) {
-            getCurrentVPlan();
-        }
+//        if (keyCode == 66) {
+//            getCurrentVPlan();
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -53,6 +54,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_barcodesupplement);
         //加载控件
         initView();
@@ -140,71 +142,135 @@ public class BarcodeSupplementActivity extends BaseActivity {
         btplan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //清空数据
-                planlist.clear();
-                //选择计划
-                String parm1 ="MCHIDLR="+"&SHIFT="+"&TIME_A=";
-                new GetVPlan_TTask().execute(parm1);
+                getPlan();
+//                //清空数据
+//                planlist.clear();
+//                //选择计划
+//                String parm1 ="MCHIDLR="+"&SHIFT="+"&TIME_A=";
+//                new GetVPlan_TTask().execute(parm1);
             }
         });
         //条码补录
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //规格编码
-                Spesc = spesc.getText().toString().trim();
-                //规格名称
-                SpescName = spescname.getText().toString().trim();
-                SpescName = SpescName.replace(" ","%20");
-                //补录条码
-                BarCode = barcode.getText().toString().trim();
-                //生产日期
-                Pddate = date.getText().toString().trim();
-                //左右膜
-                lorR = LorR.getSelectedItem().toString().trim();
-                //班次
-                Shift = shift.getSelectedItem().toString().trim();
-                //主手
-                creatuser = master.getText().toString().trim();
-                if(StringUtil.isNullOrBlank(Spesc)){
-                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格编码", Toast.LENGTH_LONG).show();
-                }else if(StringUtil.isNullOrBlank(SpescName)){
-                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格名称", Toast.LENGTH_LONG).show();
-                }else if(StringUtil.isNullOrBlank(BarCode)){
-                    Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
-                }else{
-                    //MCHID=  &ITNBR=  &ITDSC=  &LoR=  &SHIFT=  &TIME_A=  &USER_NAME=  &SwitchTYRE_CODE= 111600000451
-                    String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
-                            +"&TIME_A="+Pddate+"&USER_NAME="+creatuser+"&SwitchTYRE_CODE="+BarCode;
-                    System.out.println(parm);
-                    new SupCodeTask().execute(parm);
-                }
-                barcode.setText("");
+                supCode();
+//                //规格编码
+//                Spesc = spesc.getText().toString().trim();
+//                //规格名称
+//                SpescName = spescname.getText().toString().trim();
+//                SpescName = SpescName.replace(" ","%20");
+//                //补录条码
+//                BarCode = barcode.getText().toString().trim();
+//                //生产日期
+//                Pddate = date.getText().toString().trim();
+//                //左右膜
+//                lorR = LorR.getSelectedItem().toString().trim();
+//                //班次
+//                Shift = shift.getSelectedItem().toString().trim();
+//                //主手
+//                creatuser = master.getText().toString().trim();
+//                if(StringUtil.isNullOrBlank(Spesc)){
+//                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格编码", Toast.LENGTH_LONG).show();
+//                }else if(StringUtil.isNullOrBlank(SpescName)){
+//                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格名称", Toast.LENGTH_LONG).show();
+//                }else if(StringUtil.isNullOrBlank(BarCode)){
+//                    Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
+//                }else{
+//                    //MCHID=  &ITNBR=  &ITDSC=  &LoR=  &SHIFT=  &TIME_A=  &USER_NAME=  &SwitchTYRE_CODE= 111600000451
+//                    String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
+//                            +"&TIME_A="+Pddate+"&USER_NAME="+creatuser+"&SwitchTYRE_CODE="+BarCode;
+//                    System.out.println(parm);
+//                    new SupCodeTask().execute(parm);
+//                }
+//                barcode.setText("");
             }
         });
         //筛选规格
         getitnbr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //清空数据
-                itnbrlist.clear();
-                itndsc.clear();
-                String search = spesc.getText().toString().trim();
-                search = search.toUpperCase();//大写转换
-                String parm = "ITNBR="+search;
-                new GetSpecTask().execute(parm);
+                getItnbr();
+//                //清空数据
+//                itnbrlist.clear();
+//                itndsc.clear();
+//                String search = spesc.getText().toString().trim();
+//                search = search.toUpperCase();//大写转换
+//                String parm = "ITNBR="+search;
+//                new GetSpecTask().execute(parm);
             }
         });
         //筛选机台
         getmchid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //清空数据
-                mchidlist.clear();
-                String parm = "TYPE_ID=10098";
-                new MCHIDTask().execute(parm);
+                getMchid();
+//                //清空数据
+//                mchidlist.clear();
+//                String parm = "TYPE_ID=10098";
+//                new MCHIDTask().execute(parm);
             }
         });
+    }
+
+    //选择计划
+    public void getPlan(){
+        //清空数据
+        planlist.clear();
+        //选择计划
+        String parm1 ="MCHIDLR="+"&SHIFT="+"&TIME_A=";
+        new GetVPlan_TTask().execute(parm1);
+    }
+
+    //条码补录
+    public void supCode(){
+        //规格编码
+        Spesc = spesc.getText().toString().trim();
+        //规格名称
+        SpescName = spescname.getText().toString().trim();
+        SpescName = SpescName.replace(" ","%20");
+        //补录条码
+        BarCode = barcode.getText().toString().trim();
+        //生产日期
+        Pddate = date.getText().toString().trim();
+        //左右膜
+        lorR = LorR.getSelectedItem().toString().trim();
+        //班次
+        Shift = shift.getSelectedItem().toString().trim();
+        //主手
+        creatuser = master.getText().toString().trim();
+        if(StringUtil.isNullOrBlank(Spesc)){
+            Toast.makeText(BarcodeSupplementActivity.this, "请填写规格编码", Toast.LENGTH_LONG).show();
+        }else if(StringUtil.isNullOrBlank(SpescName)){
+            Toast.makeText(BarcodeSupplementActivity.this, "请填写规格名称", Toast.LENGTH_LONG).show();
+        }else if(StringUtil.isNullOrBlank(BarCode)){
+            Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
+        }else{
+            //MCHID=  &ITNBR=  &ITDSC=  &LoR=  &SHIFT=  &TIME_A=  &USER_NAME=  &SwitchTYRE_CODE= 111600000451
+            String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
+                    +"&TIME_A="+Pddate+"&USER_NAME="+creatuser+"&SwitchTYRE_CODE="+BarCode;
+            System.out.println(parm);
+            new SupCodeTask().execute(parm);
+        }
+    }
+
+    //筛选规格
+    public void getItnbr(){
+        //清空数据
+        itnbrlist.clear();
+        itndsc.clear();
+        String search = spesc.getText().toString().trim();
+        search = search.toUpperCase();//大写转换
+        String parm = "ITNBR="+search;
+        new GetSpecTask().execute(parm);
+    }
+
+    //筛选机台
+    public void getMchid(){
+        //清空数据
+        mchidlist.clear();
+        String parm = "TYPE_ID=10098";
+        new MCHIDTask().execute(parm);
     }
 
     //班组
@@ -429,6 +495,11 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         Toast.makeText(BarcodeSupplementActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
+                        barcode.setText("");
+                        spesc.setText("");
+                        spescname.setText("");
+                        date.setText("");
+                        mchid.setText("");
                         Toast.makeText(BarcodeSupplementActivity.this, "补录成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(BarcodeSupplementActivity.this, "新条码被使用过无法更换！", Toast.LENGTH_LONG).show();
@@ -494,6 +565,11 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         Toast.makeText(BarcodeSupplementActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
+                        barcode.setText("");
+                        spesc.setText("");
+                        spescname.setText("");
+                        date.setText("");
+                        mchid.setText("");
                         Toast.makeText(BarcodeSupplementActivity.this, "条码插入成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(BarcodeSupplementActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
@@ -516,8 +592,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event){
         Log.e("key", keyCode + "  ");
         //扫描键 按下时清除
-        if(keyCode == 0){
-            barcode.setText("");
+        if(keyCode == 22){
+            getPlan();
+//            barcode.setText("");
         }
         if(keyCode == 4){
             if(System.currentTimeMillis() - mExitTime > 2000){

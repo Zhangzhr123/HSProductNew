@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -34,8 +35,9 @@ public class LoadFactoryActivity extends BaseActivity {
     private View ll_search, ll_load, llfacok, llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
     private TextView outbarcodelog, barcode, anum, search, itnbr, itndsc, outbarcode, outanum;
     private TextView barcodelog;
-    private ButtonView ok, get_code, getsearch, outcode, outok;
+    private ButtonView ok, get_code, outcode, outok;
     private Button out, loadfacok, inscan, outscan;
+    private ImageButton getsearch;
     private TableRow table;
     private TableLayout lltable;
     private View view6;
@@ -69,6 +71,7 @@ public class LoadFactoryActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_loadfactory);
         //加载控件
         initView();
@@ -118,7 +121,7 @@ public class LoadFactoryActivity extends BaseActivity {
         //条码记录
         barcodelog = (TextView) findViewById(R.id.barcode_log);
         //点击按钮
-        getsearch = (ButtonView) findViewById(R.id.get_search);
+        getsearch = (ImageButton) findViewById(R.id.get_search);
         inscan = (Button) findViewById(R.id.in_scan);
         outscan = (Button) findViewById(R.id.out_scan);
         out = (Button) findViewById(R.id.out);
@@ -691,7 +694,17 @@ public class LoadFactoryActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
+        //右方向键
+        if (keyCode == 22) {
+            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
+                loadcode();
+            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
+                outcode();
+            } else {
+                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }
         if (keyCode == 0) {
             barcode.setText("");
             outbarcode.setText("");
@@ -716,16 +729,16 @@ public class LoadFactoryActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-        if (keyCode == 66) {
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                loadcode();
-            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
-                outcode();
-            } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-
-        }
+//        if (keyCode == 66) {
+//            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
+//                loadcode();
+//            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
+//                outcode();
+//            } else {
+//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }
