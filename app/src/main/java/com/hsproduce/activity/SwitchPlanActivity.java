@@ -96,7 +96,7 @@ public class SwitchPlanActivity extends BaseActivity {
                 new GetPlanTask().execute(param2);
             }
         }
-        tvMchid.setText("");
+//        tvMchid.setText("");
     }
 
     //切换规格显示列表

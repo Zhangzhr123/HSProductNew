@@ -319,14 +319,20 @@ public class LoadFactoryActivity extends BaseActivity {
     public void loadcode() {
         //获取轮胎条码
         code = barcode.getText().toString().trim();
-        codelist.add(code);
-        for (int i = 0; i < codelist.size(); i++) {
-            if (code.equals(codelist.get(i))) {
-                isNew = false;
-                return;
+        if(codelist.size() == 0 || codelist == null){
+            isNew = true;
+            return;
+        }else{
+            for (int i = 0; i < codelist.size(); i++) {
+                if (code.equals(codelist.get(i))) {
+                    isNew = false;
+                    return;
+                }
             }
         }
+
         if (isNew) {
+            codelist.add(code);
             //查询轮胎条码规格
             String parm1 = "TYRE_CODE=" + code;
             new SelCodeTask().execute(parm1);
@@ -340,14 +346,20 @@ public class LoadFactoryActivity extends BaseActivity {
     //取消扫描
     public void outcode() {
         outCode = outbarcode.getText().toString().trim();
-        outcodelist.add(outCode);
-        for (int j = 0; j < outcodelist.size(); j++) {
-            if (outCode.equals(outcodelist.get(j))) {
-                outIsNew = false;
-                return;
+        if(outcodelist.size() == 0 || outcodelist == null){
+            outIsNew = true;
+            return;
+        }else{
+            for (int j = 0; j < outcodelist.size(); j++) {
+                if (outCode.equals(outcodelist.get(j))) {
+                    outIsNew = false;
+                    return;
+                }
             }
         }
+
         if (outIsNew) {
+            outcodelist.add(outCode);
             String parm = "TYRE_CODE=" + outCode + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
             new DelVLoadTask().execute(parm);
         } else {

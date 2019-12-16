@@ -130,7 +130,7 @@ public class DetailChangeActivity extends BaseActivity {
                 String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname + "&LoR=" + lorR
                         + "&SHIFT=" + Team + "&USER_NAME=" + CreateUser + "&DateTime_W=" + "&SwitchID=" + codeid;
                 new ChangeDetailedTask().execute(parm);
-                barcode.setText("");
+//                barcode.setText("");
             }
         });
         //筛选规格
@@ -434,8 +434,11 @@ public class DetailChangeActivity extends BaseActivity {
         //右方向键 查询条码
         if (keyCode == 22) {
             getCodeDetail();
-            //barcode.setText("");
         }
+        if (keyCode == 0) {
+            barcode.setText("");
+        }
+
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
                 Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();

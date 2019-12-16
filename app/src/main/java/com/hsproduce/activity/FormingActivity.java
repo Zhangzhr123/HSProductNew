@@ -166,7 +166,7 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         getCurrentVPlan();//展示替换后的计划
-                        tvMchid.setText("");
+//                        tvMchid.setText("");
                         Toast.makeText(FormingActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
@@ -190,7 +190,9 @@ public class FormingActivity extends BaseActivity {
         //右方向键
         if (keyCode == 22) {
             getCurrentVPlan();
-//            tvMchid.setText("");
+        }
+        if (keyCode == 0) {
+            tvMchid.setText("");
         }
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {

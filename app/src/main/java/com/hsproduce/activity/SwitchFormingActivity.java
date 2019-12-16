@@ -69,19 +69,19 @@ public class SwitchFormingActivity extends BaseActivity {
         anum = (TextView) findViewById(R.id.anum);
         pnum = (TextView) findViewById(R.id.pnum);
 
-        List<VPlan> a = new ArrayList<>();
-        for (int i = 1; i < 5; i++) {
-            VPlan v = new VPlan();
-            v.setItnbr("111111111");
-            v.setItdsc("222222222");
-            v.setState("20");
-            v.setPro(i + "");
-            v.setAnum("0");
-            v.setPnum("60");
-            a.add(v);
-        }
-        repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, a);
-        replplan.setAdapter(repladaprer);
+//        List<VPlan> a = new ArrayList<>();
+//        for (int i = 1; i < 5; i++) {
+//            VPlan v = new VPlan();
+//            v.setItnbr("111111111");
+//            v.setItdsc("222222222");
+//            v.setState("20");
+//            v.setPro(i + "");
+//            v.setAnum("0");
+//            v.setPnum("60");
+//            a.add(v);
+//        }
+//        repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, a);
+//        replplan.setAdapter(repladaprer);
 
         replplan.setOnTouchListener(new View.OnTouchListener() {
 
@@ -271,7 +271,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         getCurrentVPlan();//展示替换后的计划
-                        tvMchid.setText("");
+//                        tvMchid.setText("");
                         Toast.makeText(SwitchFormingActivity.this, "切换成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(SwitchFormingActivity.this, "新切换的计划变动，切换失败，请刷新！", Toast.LENGTH_LONG).show();

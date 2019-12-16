@@ -439,7 +439,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        barcode.setText("");
+//                        barcode.setText("");
                         spesc.setText("");
                         mchid.setText("");
                         date.setText("");
@@ -498,6 +498,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
         if (keyCode == 22) {
             getCodeDetail();
             //barcode.setText("");
+        }
+        if (keyCode == 0) {
+            barcode.setText("");
         }
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {

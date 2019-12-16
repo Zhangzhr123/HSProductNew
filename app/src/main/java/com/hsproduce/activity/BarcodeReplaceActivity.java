@@ -87,7 +87,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
             String parm = "TYRE_CODE=" + lvcode;
             new SelCodeTask().execute(parm);
         }
-        //barcode.setText("");
+//        barcode.setText("");
     }
 
     //更换条码操作

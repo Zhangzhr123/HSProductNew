@@ -145,14 +145,20 @@ public class VulcanizationActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(tvbarcode)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            codelist.add(tvbarcode);
-            for (int i = 0; i < codelist.size(); i++) {
-                if (tvbarcode.equals(codelist.get(i))) {
-                    isNew = false;
-                    return;
+            if(codelist.size() == 0 || codelist == null){
+                isNew = true;
+                return;
+            }else{
+                for (int i = 0; i < codelist.size(); i++) {
+                    if (tvbarcode.equals(codelist.get(i))) {
+                        isNew = false;
+                        return;
+                    }
                 }
             }
+
             if (isNew) {
+                codelist.add(tvbarcode);
                 //判断规格是否合格
 //                String param = "PLAN_ID="+planid+"&TYRE_CODE="+tvbarcode;
 //                new ErrorJudgeTask().execute(param);
@@ -204,7 +210,7 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        tvMchid.setText("");
+//                        tvMchid.setText("");
 //                        Toast.makeText(VulcanizationActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
@@ -340,7 +346,7 @@ public class VulcanizationActivity extends BaseActivity {
                         anum.setText("");
                         number++;//计算成功次数
                         anum.setText(number + "");
-                        barcode.setText("");
+//                        barcode.setText("");
 //                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();

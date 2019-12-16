@@ -252,6 +252,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
             System.out.println(parm);
             new SupCodeTask().execute(parm);
         }
+//        barcode.setText("");
     }
 
     //筛选规格
@@ -495,7 +496,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         Toast.makeText(BarcodeSupplementActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
-                        barcode.setText("");
+//                        barcode.setText("");
                         spesc.setText("");
                         spescname.setText("");
                         date.setText("");
@@ -565,7 +566,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         Toast.makeText(BarcodeSupplementActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
-                        barcode.setText("");
+//                        barcode.setText("");
                         spesc.setText("");
                         spescname.setText("");
                         date.setText("");
@@ -594,7 +595,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //扫描键 按下时清除
         if(keyCode == 22){
             getPlan();
-//            barcode.setText("");
+        }
+        if(keyCode == 0){
+            barcode.setText("");
         }
         if(keyCode == 4){
             if(System.currentTimeMillis() - mExitTime > 2000){
@@ -615,9 +618,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时获取计划
-        if(keyCode == 0){
-            //获取计划
-        }
+//        if(keyCode == 0){
+//
+//        }
         super.onKeyDown(keyCode, event);
         return true;
     }

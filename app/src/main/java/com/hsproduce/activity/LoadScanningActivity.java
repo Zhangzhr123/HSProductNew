@@ -81,14 +81,20 @@ public class LoadScanningActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(scanbarcode)){
             Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         }else{
-            codelist.add(scanbarcode);
-            for (int i = 0; i < codelist.size(); i++) {
-                if (scanbarcode.equals(codelist.get(i))) {
-                    isNew = false;
-                    return;
+            if(codelist.size() == 0 || codelist == null){
+                isNew = true;
+                return;
+            }else{
+                for (int i = 0; i < codelist.size(); i++) {
+                    if (scanbarcode.equals(codelist.get(i))) {
+                        isNew = false;
+                        return;
+                    }
                 }
             }
+
             if(isNew){
+                codelist.add(scanbarcode);
                 String parm = "TYRE_CODE="+scanbarcode+"&USER_NAME="+App.username;
                 new OutsVLoadTask().execute(parm);
             }else{
@@ -134,7 +140,7 @@ public class LoadScanningActivity extends BaseActivity {
                         number++;
                         anum.setText(number+"");
                         //成功后清空扫描框
-                        barcode.setText("");
+//                        barcode.setText("");
                         Toast.makeText(LoadScanningActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(LoadScanningActivity.this, "未找到轮胎信息，操作失败！", Toast.LENGTH_LONG).show();
@@ -172,6 +178,9 @@ public class LoadScanningActivity extends BaseActivity {
         if(keyCode == 22){
             outVLoad();
 //            barcode.setText("");
+        }
+        if(keyCode == 0){
+            barcode.setText("");
         }
         //返回键时间间隔超过两秒 返回功能页面
         if(keyCode == 4){

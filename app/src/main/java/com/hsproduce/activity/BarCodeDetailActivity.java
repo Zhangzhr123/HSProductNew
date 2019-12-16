@@ -96,6 +96,7 @@ public class BarCodeDetailActivity extends BaseActivity {
             new GetFormingDetail().execute(parm);
             new GetVulcanizaDetail().execute(parm);
         }
+//        barCode.setText("");
     }
 
 

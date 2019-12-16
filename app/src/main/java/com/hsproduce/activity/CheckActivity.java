@@ -146,6 +146,8 @@ public class CheckActivity extends BaseActivity {
                         Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
+                        errorid.clear();
+                        errorlist.clear();
                         for(int i=0;i<map.size();i++){
                             errorid.add(map.get(i));
                             errorlist.add(map.get(i).get("itemname"));
@@ -236,7 +238,7 @@ public class CheckActivity extends BaseActivity {
                         Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
-                        barcode.setText("");
+//                        barcode.setText("");
                         Toast.makeText(CheckActivity.this, "标记成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(CheckActivity.this, "未找到轮胎信息，标记失败！", Toast.LENGTH_LONG).show();
@@ -261,7 +263,9 @@ public class CheckActivity extends BaseActivity {
         if(keyCode == 22){
             //获取信息
             getCodeCheck();
-//            barcode.setText("");
+        }
+        if(keyCode == 0){
+            barcode.setText("");
         }
         if(keyCode == 4){
             if(System.currentTimeMillis() - mExitTime > 2000){
