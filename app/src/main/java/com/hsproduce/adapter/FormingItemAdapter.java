@@ -6,12 +6,10 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.hsproduce.R;
 import com.hsproduce.activity.FormingActivity;
+import com.hsproduce.activity.SwitchFormingActivity;
 import com.hsproduce.bean.VPlan;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
@@ -87,40 +85,41 @@ public class FormingItemAdapter extends BaseAdapter {
             public void onClick(View v) {
                 //显示dialog
                 final MaterialDialog dialog = new MaterialDialog.Builder(context)
-//                        .iconRes(R.drawable.icon_warning)
-                        .title("生产条码录入").titleColorRes(R.color.colorPrimaryDark)
-                        .customView(R.layout.dialog_input, true)
-                        .cancelable(false)
-                        .positiveText(R.string.vul_confirm).positiveColorRes(R.color.colorPrimary)
-                        .negativeText(R.string.vul_cancel).negativeColorRes(R.color.colorPrimary)
-                        .icon(getResources().getDrawable(R.drawable.button_drawable))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                //获取控件
-                                EditText pre = dialog.findViewById(R.id.input);
-                                EditText next = dialog.findViewById(R.id.input2);
-                                preCode = pre.getText().toString();
-                                nextCode = next.getText().toString();
-                                //如果为空则进行操作
-                                if (nextCode == null || nextCode.equals("")) {
-                                    Toast.makeText(context, "当前班开始条码不能为空", Toast.LENGTH_LONG).show();
-                                } else if (preCode == null || preCode.equals("")) {
-                                    preCode = String.valueOf(Long.valueOf(nextCode) - 1);
-//                                    System.out.println("preCode:"+preCode);
-                                }
-                                if (preCode.equals(nextCode)) {
-                                    Toast.makeText(context, "上一班结束条码不能与当前班开始条码一致", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(context, "上一班结束条码:" + preCode + "当前班开始条码:" + nextCode, Toast.LENGTH_LONG).show();
-                                    ((FormingActivity) context).repItndes(vPlan.getId(), preCode, nextCode);
-                                }
-
-
-                            }
-                        })
-                        .cancelable(false)
+                        .customView(R.layout.dialog_input,true)
                         .show();
+                //控件
+                View customeView = dialog.getCustomView();
+                final EditText pre = dialog.findViewById(R.id.input);
+                final EditText next = dialog.findViewById(R.id.input2);
+                Button finish = customeView.findViewById(R.id.finish);
+                finish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                Button ok = customeView.findViewById(R.id.ok);
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        preCode = pre.getText().toString();
+                        nextCode = next.getText().toString();
+                        //如果为空则进行操作
+                        if(nextCode == null || nextCode.equals("")){
+                            Toast.makeText(context, "当前班开始条码不能为空", Toast.LENGTH_LONG).show();
+                        }else if(preCode == null || preCode.equals("")){
+                            preCode = String.valueOf(Long.valueOf(nextCode)-1);
+                        }else{
+                            if(preCode.equals(nextCode)){
+                                Toast.makeText(context, "上一班结束条码不能与当前班开始条码一致", Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(context, "上一班结束条码:"+preCode+"当前班开始条码:"+nextCode, Toast.LENGTH_LONG).show();
+                                ((FormingActivity) context).repItndes(vPlan.getId(),preCode,nextCode);
+                                dialog.dismiss();
+                            }
+                        }
+                    }
+                });
             }
         });
         return convertView;

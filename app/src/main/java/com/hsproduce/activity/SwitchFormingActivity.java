@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -68,7 +69,7 @@ public class SwitchFormingActivity extends BaseActivity {
         anum = (TextView) findViewById(R.id.anum);
         pnum = (TextView) findViewById(R.id.pnum);
 
-        List<VPlan> datas = new ArrayList<>();
+        List<VPlan> a = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             VPlan v = new VPlan();
             v.setItnbr("111111111");
@@ -77,13 +78,29 @@ public class SwitchFormingActivity extends BaseActivity {
             v.setPro(i + "");
             v.setAnum("0");
             v.setPnum("60");
-            datas.add(v);
+            a.add(v);
         }
-        repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, datas);
+        repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, a);
         replplan.setAdapter(repladaprer);
-        repladaprer.notifyDataSetChanged();
+
+        replplan.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                replplan.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
     }
+
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent e) {
+//        int action = e.getAction();
+//        if(action==MotionEvent.ACTION_DOWN) {
+//            return false;
+//        }
+//        return super.onInterceptTouchEvent(e);
+//    }
 
     public void initEvent() {
         //点击当期计划 和 规格交替计划

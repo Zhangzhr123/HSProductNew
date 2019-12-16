@@ -174,6 +174,7 @@ public class LoginActivity extends BaseActivity {
                 }.getType());
                 List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                 if (res.get("code").equals("200")) {
+                    shiftlist.clear();
                     for (int i = 0; i < map.size(); i++) {
                         shiftlist.add(map.get(i).get("name"));
                     }
@@ -337,6 +338,7 @@ public class LoginActivity extends BaseActivity {
                                 } else {
                                     save("myVersion", 最新版本);
                                 }
+                                //文件下载
 //                                download(PathUtil.文件下载);
 
                             } else {
@@ -352,23 +354,23 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    //根据地址下载
+    //根据地址下载APK并自动安装
     public void download(String url) {
         final DownloadManager dManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-// 设置下载路径和文件名
+        // 设置下载路径和文件名
         request.setDestinationInExternalPublicDir("download", "update.apk");
         request.setDescription("软件新版本下载");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setMimeType("application/vnd.android.package-archive");
-// 设置为可被媒体扫描器找到
+        // 设置为可被媒体扫描器找到
         request.allowScanningByMediaScanner();
-// 设置为可见和可管理
+        // 设置为可见和可管理
         request.setVisibleInDownloadsUi(true);
-// 获取此次下载的ID
+        // 获取此次下载的ID
         final long refernece = dManager.enqueue(request);
-// 注册广播接收器，当下载完成时自动安装
+        // 注册广播接收器，当下载完成时自动安装
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -385,5 +387,6 @@ public class LoginActivity extends BaseActivity {
         };
         registerReceiver(receiver, filter);
     }
+
 
 }
