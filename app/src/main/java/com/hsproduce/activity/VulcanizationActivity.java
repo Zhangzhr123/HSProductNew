@@ -4,18 +4,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
+import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.VPlanAdapter;
 import com.hsproduce.adapter.VPlanItemAdapter;
 import com.hsproduce.adapter.VPlanItnbrAdapter;
@@ -39,7 +38,9 @@ public class VulcanizationActivity extends BaseActivity {
     //计划展示list
     private ListView listView;
     //机台号  轮胎条码 条码计数  条码记录
-    private TextView tvMchid, barcode, anum, barcodelog;
+    private TextView barcode, anum, barcodelog;
+    private AutoCompleteTextView tvMchid;
+    private List<String> data1 = new ArrayList<>();
     //计划按钮   扫描按钮
     private ButtonView btGetplan, barcode_ok;
     //加载
@@ -77,7 +78,9 @@ public class VulcanizationActivity extends BaseActivity {
         //list列表
         listView = (ListView) findViewById(R.id.lv_plan);
         //扫描框
-        tvMchid = (TextView) findViewById(R.id.mchid);
+        tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
+        new MCHIDTask().execute("TYPE_ID=10098");
+        eventsViews();
         //条码扫描框
         barcode = (TextView) findViewById(R.id.barcode);
         //条码记录
@@ -95,6 +98,11 @@ public class VulcanizationActivity extends BaseActivity {
         loadingView = (MiniLoadingView) findViewById(R.id.loading);
         //设置条码扫描框输入字符数
         barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+    }
+
+    private void eventsViews() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data1);
+        tvMchid.setAdapter(adapter);
     }
 
     //初始化事件
@@ -125,15 +133,15 @@ public class VulcanizationActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
         } else {
-            String lr = mchid.substring(mchid.length() - 1);
-            if (!"LR".contains(lr.toUpperCase())) {//判断有无大写字母LR
-                Toast.makeText(VulcanizationActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
-                tvMchid.setText("");
-            } else {
-                App.lr = lr.toUpperCase();
+//            String lr = mchid.substring(mchid.length() - 1);
+//            if (!"LR".contains(lr.toUpperCase())) {//判断有无大写字母LR
+//                Toast.makeText(VulcanizationActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
+//                tvMchid.setText("");
+//            } else {
+//                App.lr = lr.toUpperCase();
                 String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
                 new MyTask().execute(param);
-            }
+//            }
         }
 //        tvMchid.setText("");
     }
@@ -158,7 +166,6 @@ public class VulcanizationActivity extends BaseActivity {
             }
 
             if (isNew) {
-                codelist.add(tvbarcode);
                 //判断规格是否合格
 //                String param = "PLAN_ID="+planid+"&TYRE_CODE="+tvbarcode;
 //                new ErrorJudgeTask().execute(param);
@@ -225,6 +232,44 @@ public class VulcanizationActivity extends BaseActivity {
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
                 }
 
+            }
+        }
+    }
+
+    //根据TYPEID 获取数据字典内容  机台
+    class MCHIDTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
+            return result;
+        }
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if(StringUtil.isNullOrBlank(s)){
+                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            }else{
+                try{
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
+                    List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+                        for (int i = 0; i < map.size(); i++) {
+                            data1.add(map.get(i).get("itemid"));
+                        }
+//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                    }else if(res.get("code").equals("500")){
+                        Toast.makeText(VulcanizationActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(VulcanizationActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -330,6 +375,7 @@ public class VulcanizationActivity extends BaseActivity {
                         Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        codelist.add(tvbarcode);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         list.add("[" + date + "]" + tvbarcode);

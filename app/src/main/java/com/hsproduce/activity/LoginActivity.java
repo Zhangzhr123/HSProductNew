@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.bean.Result;
+import com.hsproduce.bean.Team;
 import com.hsproduce.bean.UpdateVersion;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
@@ -40,6 +41,8 @@ public class LoginActivity extends BaseActivity {
     //下拉列表及适配器
     private List<String> shiftlist = new ArrayList<>();
     private ArrayAdapter<String> adapter;
+    //存放班组数据
+    private List<Team> teamList = new ArrayList<>();
     //IP
     public static String IP = "";
 
@@ -128,14 +131,23 @@ public class LoginActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String shift = parent.getItemAtPosition(position).toString();
                 //根据ID获取内容
-                if (shift.equals(getResources().getString(R.string.team1))) {
-                    shift = "1";
-                } else if (shift.equals(getResources().getString(R.string.team2))) {
-                    shift = "2";
-                } else if (shift.equals(getResources().getString(R.string.team3))) {
-                    shift = "3";
-                } else {
-                    shift = "15";//丁班
+                for(int i = 0;i<teamList.size();i++){
+                    if (shift.equals(teamList.get(i).getName())) {
+                        shift = teamList.get(i).getId();
+                        break;
+                    } else if (shift.equals(teamList.get(i).getName())) {
+                        shift = teamList.get(i).getId();
+                        break;
+                    } else if (shift.equals(teamList.get(i).getName())) {
+                        shift = teamList.get(i).getId();
+                        break;
+                    } else if (shift.equals(teamList.get(i).getName())) {
+                        shift = teamList.get(i).getId();
+                        break;
+                    } else {
+//                        Toast.makeText(LoginActivity.this, "班组数据异常", Toast.LENGTH_LONG).show();
+                        break;
+                    }
                 }
                 App.shift = shift;
             }
@@ -173,7 +185,12 @@ public class LoginActivity extends BaseActivity {
                 Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                 }.getType());
                 List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                List<Team> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<Team>>(){}.getType());
                 if (res.get("code").equals("200")) {
+                    //班组数据清空
+                    teamList.clear();
+                    teamList.addAll(datas);
+                    //班组名称数据清空
                     shiftlist.clear();
                     for (int i = 0; i < map.size(); i++) {
                         shiftlist.add(map.get(i).get("name"));
@@ -327,7 +344,7 @@ public class LoginActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         String 当前版本 = App.version;
                         if (null != datas) {
-                            String 最新版本 = datas.get(0).getItemid();
+                            String 最新版本 = datas.get(0).getItemname();
                             // 版本判断
                             if (!最新版本.equals(当前版本)) {
                                 App.version = 最新版本;
@@ -339,7 +356,7 @@ public class LoginActivity extends BaseActivity {
                                     save("myVersion", 最新版本);
                                 }
                                 //文件下载
-//                                download(PathUtil.文件下载);
+                                download(PathUtil.文件下载);
 
                             } else {
                                 Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_LONG).show();

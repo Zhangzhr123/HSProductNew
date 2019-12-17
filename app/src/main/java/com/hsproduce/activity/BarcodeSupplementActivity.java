@@ -16,6 +16,7 @@ import com.hsproduce.R;
 import com.hsproduce.adapter.BarCodeAdapter;
 import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.PlanDialogItemAdapter;
+import com.hsproduce.bean.Team;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
@@ -38,6 +39,8 @@ public class BarcodeSupplementActivity extends BaseActivity {
     //下拉列表
     private List<String> shiftlist = new ArrayList<>();
     private ArrayAdapter<String> shiftadapter;
+    //存放班组数据
+    private List<Team> teamList = new ArrayList<>();
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //定义变量
@@ -97,14 +100,31 @@ public class BarcodeSupplementActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Team = parent.getItemAtPosition(position).toString();
-                if(Team.equals("甲班")){
-                    Team = "1";
-                }else if(Team.equals("乙班")){
-                    Team = "2";
-                }else if(Team.equals("丙班")) {
-                    Team = "3";
-                }else{
-                    Team = "15";
+//                if(Team.equals("甲班")){
+//                    Team = "1";
+//                }else if(Team.equals("乙班")){
+//                    Team = "2";
+//                }else if(Team.equals("丙班")) {
+//                    Team = "3";
+//                }else{
+//                    Team = "15";
+//                }
+                for(int i = 0;i<teamList.size();i++){
+                    if (Team.equals(teamList.get(i).getName())) {
+                        Team = teamList.get(i).getId();
+                        break;
+                    } else if (Team.equals(teamList.get(i).getName())) {
+                        Team = teamList.get(i).getId();
+                        break;
+                    } else if (Team.equals(teamList.get(i).getName())) {
+                        Team = teamList.get(i).getId();
+                        break;
+                    } else if (Team.equals(teamList.get(i).getName())) {
+                        Team = teamList.get(i).getId();
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
             @Override
@@ -289,10 +309,18 @@ public class BarcodeSupplementActivity extends BaseActivity {
             }else{
                 Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
                 List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
-                for(int i=0;i<map.size();i++){
-                    shiftlist.add(map.get(i).get("name"));
+                List<com.hsproduce.bean.Team> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<Team>>(){}.getType());
+                if (res.get("code").equals("200")) {
+                    //班组数据清空
+                    teamList.clear();
+                    teamList.addAll(datas);
+                    //班组名称数据清空
+                    shiftlist.clear();
+                    for (int i = 0; i < map.size(); i++) {
+                        shiftlist.add(map.get(i).get("name"));
+                    }
+                    team.setAdapter(shiftadapter);
                 }
-                team.setAdapter(shiftadapter);
             }
         }
     }

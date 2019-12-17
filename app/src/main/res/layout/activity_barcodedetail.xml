@@ -39,6 +39,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
                     android:hint="@string/vul_barcode_scan"
+                    android:focusableInTouchMode="true"
                     android:textAlignment="center"/>
             <com.xuexiang.xui.widget.button.ButtonView
                     style="@style/ButtonView.Blue"

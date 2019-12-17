@@ -1,18 +1,18 @@
 package com.hsproduce.activity;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
+import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.FormingItemAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.util.HttpUtil;
@@ -28,8 +28,10 @@ public class FormingActivity extends BaseActivity {
 
     //当前计划展示list  规格交替列表
     private ListView lvplan;
-    //机台号  轮胎条码  条码记录
-    private TextView tvMchid;
+    //机台号
+//    private TextView tvMchid;
+    private AutoCompleteTextView tvMchid;
+    private List<String> data1 = new ArrayList<>();
     //获取计划按钮
     private ImageButton btGetplan;
     //计划展示适配器  规格交替适配器
@@ -38,6 +40,7 @@ public class FormingActivity extends BaseActivity {
     private long mExitTime = 0;
     //定义变量 当前计划ID
     private String currid = "";
+    public String mchid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,9 @@ public class FormingActivity extends BaseActivity {
         //list列表
         lvplan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
-        tvMchid = (TextView) findViewById(R.id.mchid);
+        tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
+        new MCHIDTask().execute("TYPE_ID=10107");
+        eventsViews();
         //获取计划按钮
         btGetplan = (ImageButton) findViewById(R.id.getPlan);
 
@@ -70,10 +75,15 @@ public class FormingActivity extends BaseActivity {
         });
     }
 
+    private void eventsViews() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data1);
+        tvMchid.setAdapter(adapter);
+    }
+
     //查询计划
     public void getCurrentVPlan() {
         //获取输入机台上barcode
-        String mchid = tvMchid.getText().toString().trim();
+        mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(FormingActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
         } else {
@@ -97,6 +107,46 @@ public class FormingActivity extends BaseActivity {
         } else {
             String param = "VID=" + planid + "&PreviousNum=" + preCode + "&CurrentNum=" + nextCode + "&User_Name=shao" + "&TEAM=" + App.shift;
             new StartProductionTask().execute(param); //App.username   051901100000  051901100001
+        }
+    }
+
+    //根据TYPEID 获取数据字典内容  成型机台
+    class MCHIDTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.FORMINGSELECTMCHID, strs[0]);
+            return result;
+        }
+
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+                        for (int i = 0; i < map.size(); i++) {
+                            data1.add(map.get(i).get("itemid"));
+                        }
+//                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("500")) {
+                        Toast.makeText(FormingActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(FormingActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -165,7 +215,7 @@ public class FormingActivity extends BaseActivity {
                         Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        getCurrentVPlan();//展示替换后的计划
+//                        getCurrentVPlan();//展示替换后的计划
 //                        tvMchid.setText("");
                         Toast.makeText(FormingActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {

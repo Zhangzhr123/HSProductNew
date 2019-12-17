@@ -38,6 +38,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
                 android:hint="请扫描报废条码"
+                android:focusableInTouchMode="true"
                 android:textAlignment="center"/>
         <com.xuexiang.xui.widget.button.ButtonView
                 style="@style/ButtonView.Blue"
@@ -252,6 +253,7 @@
                         android:inputType="textMultiLine"
                         android:scrollbars="vertical"
                         android:textSize="15sp"
+                        android:focusable="false"
                         android:textAlignment="center"
                         android:layout_marginLeft="-65dp"/>
                 <TextView

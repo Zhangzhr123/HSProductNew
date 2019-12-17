@@ -26,13 +26,13 @@
                 android:text="请扫描机台号"
                 android:textAlignment="center"
                 android:textSize="30sp"/>
-        <com.xuexiang.xui.widget.edittext.ClearEditText
-                style="@style/EditText.Normal"
+        <AutoCompleteTextView
                 android:id="@+id/mchid"
                 android:layout_width="200dp"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:hint="@string/vul_scan_mchid"
                 android:textAlignment="center"
+                android:completionThreshold="1"
                 android:layout_marginLeft="-200dp"
                 android:layout_marginTop="180dp"/>
         <com.xuexiang.xui.widget.button.ButtonView

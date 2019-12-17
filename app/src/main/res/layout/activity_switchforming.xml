@@ -27,25 +27,34 @@
                     android:layout_width="60dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     android:text="机台号"
                     android:textAlignment="textStart"
                     android:textSize="15sp"/>
-            <com.xuexiang.xui.widget.edittext.ClearEditText
-                    style="@style/EditText.Normal"
+            <AutoCompleteTextView
                     android:id="@+id/mchid"
                     android:layout_width="160dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="10dp"
                     android:hint="@string/vul_scan_mchid"
+                    android:completionThreshold="1"
                     android:textAlignment="center"/>
+<!--            <com.xuexiang.xui.widget.edittext.ClearEditText-->
+<!--                    style="@style/EditText.Normal"-->
+<!--                    android:id="@+id/mchid"-->
+<!--                    android:layout_width="160dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:hint="@string/vul_scan_mchid"-->
+<!--                    android:textAlignment="center"/>-->
             <com.xuexiang.xui.widget.button.ButtonView
                     style="@style/ButtonView.Blue"
                     android:id="@+id/getSwitchPlan"
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginLeft="10dp"
                     android:text="查询"
                     android:textColor="@color/white"

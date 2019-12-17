@@ -15,6 +15,7 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingItemAdapter;
 import com.hsproduce.bean.VPlan;
+import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -53,6 +54,8 @@ public class BarCodeDetailActivity extends BaseActivity {
     public void initView() {
         //扫描框
         barCode = (TextView) findViewById(R.id.BarCode);
+        //获得焦点
+        barCode.requestFocus();
         //获取计划按钮
         btGetplan = (ButtonView) findViewById(R.id.getBarCode);
         //成型
@@ -117,7 +120,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
-                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
+                    List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
@@ -135,7 +138,18 @@ public class BarCodeDetailActivity extends BaseActivity {
                         fspesc.setText(datas.get(0).getItnbr());
                         fspescname.setText(datas.get(0).getItdsc());
                         fmchid.setText(datas.get(0).getMchid());
-                        fdate.setText(datas.get(0).getAdate());
+                        fdate.setText(datas.get(0).getWdate().substring(0,10));
+//                        if(datas.get(0).getShift().equals("1")){
+//                            fshift.setText("甲班");
+//                        }else if(datas.get(0).getShift().equals("2")){
+//                            fshift.setText("乙班");
+//                        }else if(datas.get(0).getShift().equals("3")){
+//                            fshift.setText("丙班");
+//                        }else if(datas.get(0).getShift().equals("4")){
+//                            fshift.setText("丁班");
+//                        }else{
+//                            fshift.setText("未知数据");
+//                        }
                         fshift.setText(datas.get(0).getShift());
                         fmaster.setText(datas.get(0).getCreateuser());
                         fstate.setText(datas.get(0).getState());
@@ -143,7 +157,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(BarCodeDetailActivity.this, "轮胎条码不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(BarCodeDetailActivity.this, "没有此轮胎条码！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarCodeDetailActivity.this, "成型没有此轮胎条码！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(BarCodeDetailActivity.this, "查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }
@@ -174,7 +188,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
-                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
+                    List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
@@ -194,7 +208,18 @@ public class BarCodeDetailActivity extends BaseActivity {
                         vspescname.setText(datas.get(0).getItdsc());
                         vmchid.setText(datas.get(0).getMchid());
                         lorR.setText(datas.get(0).getLr());
-                        vdate.setText(datas.get(0).getAdate());
+                        vdate.setText(datas.get(0).getWdate().substring(0,10).replaceAll("/","-"));
+//                        if(datas.get(0).getShift().equals("1")){
+//                            vshift.setText("甲班");
+//                        }else if(datas.get(0).getShift().equals("2")){
+//                            vshift.setText("乙班");
+//                        }else if(datas.get(0).getShift().equals("3")){
+//                            vshift.setText("丙班");
+//                        }else if(datas.get(0).getShift().equals("4")){
+//                            vshift.setText("丁班");
+//                        }else{
+//                            vshift.setText("未知数据");
+//                        }
                         vshift.setText(datas.get(0).getShift());
                         vmaster.setText(datas.get(0).getCreateuser());
                         vstate.setText(datas.get(0).getState());
@@ -202,7 +227,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(BarCodeDetailActivity.this, "轮胎条码不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(BarCodeDetailActivity.this, "没有此轮胎条码！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarCodeDetailActivity.this, "硫化没有此轮胎条码！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(BarCodeDetailActivity.this, "查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }

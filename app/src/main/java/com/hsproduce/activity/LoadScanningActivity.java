@@ -94,7 +94,6 @@ public class LoadScanningActivity extends BaseActivity {
             }
 
             if(isNew){
-                codelist.add(scanbarcode);
                 String parm = "TYRE_CODE="+scanbarcode+"&USER_NAME="+App.username;
                 new OutsVLoadTask().execute(parm);
             }else{
@@ -124,6 +123,7 @@ public class LoadScanningActivity extends BaseActivity {
                         Toast.makeText(LoadScanningActivity.this, "未获取到数据，数据返回异常", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
+                        codelist.add(scanbarcode);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         list.add("["+date+"]"+scanbarcode);

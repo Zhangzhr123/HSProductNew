@@ -332,7 +332,6 @@ public class LoadFactoryActivity extends BaseActivity {
         }
 
         if (isNew) {
-            codelist.add(code);
             //查询轮胎条码规格
             String parm1 = "TYRE_CODE=" + code;
             new SelCodeTask().execute(parm1);
@@ -359,7 +358,6 @@ public class LoadFactoryActivity extends BaseActivity {
         }
 
         if (outIsNew) {
-            outcodelist.add(outCode);
             String parm = "TYRE_CODE=" + outCode + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
             new DelVLoadTask().execute(parm);
         } else {
@@ -545,6 +543,7 @@ public class LoadFactoryActivity extends BaseActivity {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        codelist.add(code);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         log.add("[" + date + "]" + code);
@@ -601,6 +600,7 @@ public class LoadFactoryActivity extends BaseActivity {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        outcodelist.add(outCode);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         outlog.add("[" + date + "]" + outCode);

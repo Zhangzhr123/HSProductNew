@@ -23,24 +23,24 @@
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:text="机台号"
                 android:textAlignment="textStart"
                 android:textSize="15sp"/>
-        <com.xuexiang.xui.widget.edittext.ClearEditText
-                style="@style/EditText.Normal"
+        <AutoCompleteTextView
                 android:id="@+id/mchid"
                 android:layout_width="160dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:hint="@string/vul_scan_mchid"
+                android:completionThreshold="1"
                 android:textAlignment="center"/>
         <ImageButton
                 android:id="@+id/getPlan"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:background="@mipmap/searth"
         />

@@ -59,6 +59,8 @@ public class FormingBarCodeActivity extends BaseActivity {
     public void initView() {
         //扫描框
         barCode = (TextView) findViewById(R.id.barCode);
+        //获得焦点
+        barCode.requestFocus();
         //计划信息
 //        spesc = (TextView) findViewById(R.id.spesc);
 //        spescname = (TextView) findViewById(R.id.spescname);
@@ -139,18 +141,15 @@ public class FormingBarCodeActivity extends BaseActivity {
         } else {
             if(codelist.size() == 0 || codelist == null){
                 isNew = true;
-                return;
             }else{
                 for (int i = 0; i < codelist.size(); i++) {
                     if (tvbarcode.equals(codelist.get(i))) {
                         isNew = false;
-                        return;
+                        break;
                     }
                 }
             }
-
             if (isNew) {
-                codelist.add(tvbarcode);
                 //判断轮胎条码是否重复
                 String param1 = "ScrapCode=" + tvbarcode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
                 new TypeCodeTask().execute(param1);
@@ -230,6 +229,7 @@ public class FormingBarCodeActivity extends BaseActivity {
                         Toast.makeText(FormingBarCodeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        codelist.add(tvbarcode);
                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                         list.add("[" + date + "]" + tvbarcode + "报废成功");
                         //list.add(tvbarcode);

@@ -6,9 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
@@ -22,6 +20,7 @@ import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,9 @@ public class SwitchPlanActivity extends BaseActivity {
     //当前计划展示list  规格交替列表
     private ListView lvplan,replplan;
     //机台号  轮胎条码  条码记录
-    private TextView tvMchid;
+//    private TextView tvMchid;
+    private AutoCompleteTextView tvMchid;
+    private List<String> data1 = new ArrayList<>();
     //获取计划按钮
     private ButtonView btGetplan;
     //计划展示适配器  规格交替适配器
@@ -62,11 +63,19 @@ public class SwitchPlanActivity extends BaseActivity {
         lvplan = (ListView) findViewById(R.id.lv_plan);
         replplan = (ListView) findViewById(R.id.lv_vplan);
         //扫描框
-        tvMchid = (TextView) findViewById(R.id.mchid);
+        tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
+        new MCHIDTask().execute("TYPE_ID=10098");
+        eventsViews();
         //获取计划按钮
         btGetplan = (ButtonView) findViewById(R.id.bt_getPlan);
 
     }
+
+    private void eventsViews() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data1);
+        tvMchid.setAdapter(adapter);
+    }
+
     public void initEvent(){
         //点击当期计划 和 规格交替计划
         btGetplan.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +85,7 @@ public class SwitchPlanActivity extends BaseActivity {
             }
         });
     }
+
     //根据状态查询计划
     public void getCurrentVPlan() {
         //获取输入机台上barcode
@@ -83,18 +93,18 @@ public class SwitchPlanActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(mchid)){
             Toast.makeText(SwitchPlanActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
         }else{
-            String lr = mchid.substring(mchid.length() - 1);
-            if(!"LR".contains(lr.toUpperCase())){//判断有无大写字母LR
-                Toast.makeText(SwitchPlanActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
-                tvMchid.setText("");
-            }else{
+//            String lr = mchid.substring(mchid.length() - 1);
+//            if(!"LR".contains(lr.toUpperCase())){//判断有无大写字母LR
+//                Toast.makeText(SwitchPlanActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
+//                tvMchid.setText("");
+//            }else{
                 //生产中
                 String param1 = "MCHIDLR="+mchid+"&SHIFT="+App.shift+"&TYPE_N=30";
                 new GetPlanTask().execute(param1);
                 //等待中
                 String param2 = "MCHIDLR="+mchid+"&SHIFT="+App.shift+"&TYPE_N=20";
                 new GetPlanTask().execute(param2);
-            }
+//            }
         }
 //        tvMchid.setText("");
     }
@@ -106,6 +116,44 @@ public class SwitchPlanActivity extends BaseActivity {
         }else{
             String param = "CurrentID="+currid+"&SwitchID="+planid+"&USER_NAME="+App.username;
             new SwitchVplanTask().execute(param);
+        }
+    }
+
+    //根据TYPEID 获取数据字典内容  机台
+    class MCHIDTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
+            return result;
+        }
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if(StringUtil.isNullOrBlank(s)){
+                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            }else{
+                try{
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
+                    List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+                        for (int i = 0; i < map.size(); i++) {
+                            data1.add(map.get(i).get("itemid"));
+                        }
+//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                    }else if(res.get("code").equals("500")){
+                        Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(SwitchPlanActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 

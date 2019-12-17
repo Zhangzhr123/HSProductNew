@@ -294,8 +294,8 @@ public class FunctionActivity extends BaseActivity {
                                 jc.setVisibility(View.VISIBLE);
                                 view13.setVisibility(View.VISIBLE);
                             } else {
-                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
-                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
+//                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
+//                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
                             }
                         }
 
