@@ -53,6 +53,16 @@ public class VPlan {
     private String remark;
     //删除标识
     private int deletflag;
+    //控制按键标识  1:显示开始和返回 2:只显示修改和完成  3:只显示返回
+    private String btnflag;
+
+    public String getBtnflag() {
+        return btnflag;
+    }
+
+    public void setBtnflag(String btnflag) {
+        this.btnflag = btnflag;
+    }
 
     public String getId() {
         return id;

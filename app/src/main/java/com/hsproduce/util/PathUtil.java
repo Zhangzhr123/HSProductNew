@@ -92,5 +92,9 @@ public interface PathUtil {
     public static final String FORMINGSELECTMCHID = SERVER + "api/PDA/GetDictionaries";
     //成型明细变更
     public static final String FORMINGCHANGE = SERVER + "api/PDA/ChangeDetailed_Forming";
+    //成型生产 开始按钮
+    public static final String START = SERVER + "";
+    //成型生产 开始按钮
+    public static final String GETSTART = SERVER + "";
 
 }

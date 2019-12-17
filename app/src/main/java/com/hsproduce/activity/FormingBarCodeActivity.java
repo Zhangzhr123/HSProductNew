@@ -250,6 +250,8 @@ public class FormingBarCodeActivity extends BaseActivity {
                         Toast.makeText(FormingBarCodeActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(FormingBarCodeActivity.this, "此条码还未产生生产实绩，不可作废！", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("600")) {
+                        Toast.makeText(FormingBarCodeActivity.this, "已经报废条码不能重复作废！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingBarCodeActivity.this, "错误！", Toast.LENGTH_LONG).show();
                     }
@@ -287,7 +289,11 @@ public class FormingBarCodeActivity extends BaseActivity {
         //返回键时间间隔超过两秒 返回功能页面
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
-                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
+                list.clear();
+                codelist.clear();
+                num.setText("0");
+                tofunction();
+//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
                 //并记录下本次点击“返回键”的时刻，以便下次进行判断
                 mExitTime = System.currentTimeMillis();
             } else {
@@ -297,10 +303,10 @@ public class FormingBarCodeActivity extends BaseActivity {
 
         //左方向键
         if (keyCode == 21) {
-            list.clear();
-            codelist.clear();
-            num.setText("0");
-            tofunction(); //BaseActivity  返回功能页面函数
+//            list.clear();
+//            codelist.clear();
+//            num.setText("0");
+//            tofunction(); //BaseActivity  返回功能页面函数
 //            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;

@@ -1,6 +1,7 @@
 package com.hsproduce.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,14 @@ import java.util.Map;
 
 public class FormingActivity extends BaseActivity {
 
+    private LinearLayout showlist, llmchid;
+    private TableLayout showVplan;
+    private LinearLayout onclick;
+    private Button start, update, finish, out;
+    private TextView spesc, spescname, pro, state, pnum;
     //当前计划展示list  规格交替列表
     private ListView lvplan;
+    private VPlan v = new VPlan();
     //机台号
 //    private TextView tvMchid;
     private AutoCompleteTextView tvMchid;
@@ -41,6 +49,8 @@ public class FormingActivity extends BaseActivity {
     //定义变量 当前计划ID
     private String currid = "";
     public String mchid = "";
+    public Boolean show = true;
+    public String nextCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,23 @@ public class FormingActivity extends BaseActivity {
     }
 
     public void initView() {
+        //点击之前页面
+        llmchid = findViewById(R.id.ll_mchid);
+        showlist = findViewById(R.id.showlist);
+        //点击之后页面
+        showVplan = (TableLayout) findViewById(R.id.showVplan);
+        onclick = findViewById(R.id.onclick);
+        //点击之后的按钮
+        start = (Button) findViewById(R.id.start);
+        update = (Button) findViewById(R.id.update);
+        finish = (Button) findViewById(R.id.finish);
+        out = (Button) findViewById(R.id.out);
+        //点击之后显示明细
+        spesc = (TextView) findViewById(R.id.spesc);
+        spescname = (TextView) findViewById(R.id.spescname);
+        pro = (TextView) findViewById(R.id.pro);
+        state = (TextView) findViewById(R.id.state);
+        pnum = (TextView) findViewById(R.id.pnum);
         //list列表
         lvplan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
@@ -73,6 +100,139 @@ public class FormingActivity extends BaseActivity {
                 getCurrentVPlan();
             }
         });
+        //点击跳转
+        lvplan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //初始化一下控件属性
+                start.setEnabled(true);
+                update.setEnabled(true);
+                finish.setEnabled(true);
+                out.setEnabled(true);
+                //获取点击的数据
+                v = adapter.getItem(position);
+                //展示数据在页面
+                spesc.setText(v.getItnbr());
+                spescname.setText(v.getItdsc());
+                pro.setText(v.getPro());
+                if (v.getState().equals("10")) {
+                    state.setText("新计划");
+                } else if (v.getState().equals("20")) {
+                    state.setText("等待中");
+                } else if (v.getState().equals("30")) {
+                    state.setText("生产中");
+                } else if (v.getState().equals("40")) {
+                    state.setText("已完成");
+                } else {
+                    state.setText("未知状态");
+                }
+                pnum.setText(v.getPnum());
+                //设置按钮是否可用
+                if (v.getBtnflag().equals("1")) {//修改和完成不可用
+                    //按钮不可用
+                    update.setEnabled(false);
+                    finish.setEnabled(false);
+                } else if (v.getBtnflag().equals("2")) {//开始不可用
+                    start.setEnabled(false);
+                } else {//只有返回
+                    start.setEnabled(false);
+                    update.setEnabled(false);
+                    finish.setEnabled(false);
+                }
+                //点击之后隐藏
+                llmchid.setVisibility(View.GONE);
+                showlist.setVisibility(View.GONE);
+                lvplan.setVisibility(View.GONE);
+                //点击之后显示
+                showVplan.setVisibility(View.VISIBLE);
+                onclick.setVisibility(View.VISIBLE);
+            }
+        });
+        //返回
+        out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击之后隐藏
+                showVplan.setVisibility(View.GONE);
+                onclick.setVisibility(View.GONE);
+                //点击之后显示
+                llmchid.setVisibility(View.VISIBLE);
+                showlist.setVisibility(View.VISIBLE);
+                lvplan.setVisibility(View.VISIBLE);
+            }
+        });
+        //开始
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new STARTTask().execute();
+                //显示弹窗
+                final MaterialDialog dialog = new MaterialDialog.Builder(FormingActivity.this)
+                        .customView(R.layout.dialog_input, true)
+                        .show();
+                //控件
+                View customeView = dialog.getCustomView();
+                final EditText next = dialog.findViewById(R.id.input);
+                final EditText number = dialog.findViewById(R.id.input2);
+                Button finish = customeView.findViewById(R.id.finish);
+                finish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                Button ok = customeView.findViewById(R.id.ok);
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //条码位数为12为   05（工厂代码）19（年份）25（机台编码最后两位）123456（流水码）
+                        String jt = mchid;
+                        jt = jt.substring(jt.length() - 2, jt.length());
+                        nextCode = next.getText().toString();
+
+                        //如果为空则进行操作
+                        if (!number.getText().toString().equals("") && Integer.valueOf(number.getText().toString()) > 0) {
+                            if (nextCode.equals("")) {
+                                Toast.makeText(FormingActivity.this, "请输入当前计划开始条码", Toast.LENGTH_LONG).show();
+                            } else {
+                                if (nextCode.length() != 12) {
+                                    Toast.makeText(FormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+                                } else {
+                                    String nextjt = nextCode.substring(4, 6);
+                                    if (!jt.equals(nextjt)) {
+                                        Toast.makeText(FormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        //执行操作接口
+                                        new GETSTARTTask().execute();
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }
+                        } else {
+                            Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+
+            }
+        });
+        //修改
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        //完成
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     private void eventsViews() {
@@ -92,9 +252,9 @@ public class FormingActivity extends BaseActivity {
 //                Toast.makeText(FormingActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
 //                tvMchid.setText("");
 //            } else {
-                //已下达的计划
-                String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
-                new GetFormingPlanTask().execute(param1);
+            //已下达的计划
+            String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
+            new GetFormingPlanTask().execute(param1);
 //            }
         }
 //        tvMchid.setText("");
@@ -107,6 +267,82 @@ public class FormingActivity extends BaseActivity {
         } else {
             String param = "VID=" + planid + "&PreviousNum=" + preCode + "&CurrentNum=" + nextCode + "&User_Name=shao" + "&TEAM=" + App.shift;
             new StartProductionTask().execute(param); //App.username   051901100000  051901100001
+        }
+    }
+
+    //查询有没有已完成的计划
+    class STARTTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.START, strs[0]);
+            return result;
+        }
+
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+
+//                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("500")) {
+                        Toast.makeText(FormingActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(FormingActivity.this, "错误", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    //执行开始按钮
+    class GETSTARTTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.GETSTART, strs[0]);
+            return result;
+        }
+
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+
+//                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("500")) {
+                        Toast.makeText(FormingActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(FormingActivity.this, "错误", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -150,7 +386,7 @@ public class FormingActivity extends BaseActivity {
         }
     }
 
-    //获取等待中的计划
+    //获取成型计划
     class GetFormingPlanTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -173,6 +409,53 @@ public class FormingActivity extends BaseActivity {
                         Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        boolean zxz = false;//执行中
+                        boolean ywc = false;//已完成
+                        for (int j = 0; j < datas.size(); j++) {
+                            if (datas.get(j).getState().equals("30")) {
+                                zxz = true;
+                                continue;
+                            }
+                            if (datas.get(j).getState().equals("40")) {
+                                ywc = true;
+                                continue;
+                            }
+                        }
+                        if (!zxz && !ywc) {//没有正在执行和已完成的
+                            for (int i = 0; i < datas.size(); i++) {
+                                datas.get(i).setBtnflag("1");//显示开始和返回
+                            }
+                        } else if (zxz && !ywc) {//有正在执行
+                            for (int i = 0; i < datas.size(); i++) {
+                                if (datas.get(i).getState().equals("30")) {
+                                    datas.get(i).setBtnflag("2");//只显示修改和完成
+                                } else {
+                                    datas.get(i).setBtnflag("3");//只有返回
+                                }
+                            }
+                        } else if (ywc && !zxz) {//有已完成
+                            for (int i = 0; i < datas.size(); i++) {
+                                datas.get(i).setBtnflag("3");//只有返回
+                            }
+                        } else {//有执行中和已完成的
+                            for (int i = 0; i < datas.size(); i++) {
+                                if (datas.get(i).getState().equals("30")) {
+                                    datas.get(i).setBtnflag("2");//只显示修改和完成
+                                } else {
+                                    datas.get(i).setBtnflag("3");//只有返回
+                                }
+                            }
+                        }
+
+//                        for (int i = 0; i < datas.size(); i++) {
+//                            if(datas.get(i).getState().equals("30")){
+//                                show = false;
+//                                break;
+//                            }else{
+//                                show = true;
+//                                break;
+//                            }
+//                        }
                         //展示计划列表
                         adapter = new FormingItemAdapter(FormingActivity.this, datas);
                         lvplan.setAdapter(adapter);
@@ -220,6 +503,8 @@ public class FormingActivity extends BaseActivity {
                         Toast.makeText(FormingActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("500")) {
+                        Toast.makeText(FormingActivity.this, "操作失败，请确认上一计划的结束条码！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingActivity.this, "错误，请重新操作！", Toast.LENGTH_LONG).show();
                     }
@@ -246,7 +531,8 @@ public class FormingActivity extends BaseActivity {
         }
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
-                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
+                tofunction();
+//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
                 //并记录下本次点击“返回键”的时刻，以便下次进行判断
                 mExitTime = System.currentTimeMillis();
             } else {
@@ -255,7 +541,7 @@ public class FormingActivity extends BaseActivity {
         }
         //左方向键
         if (keyCode == 21) {
-            tofunction(); //BaseActivity  返回功能页面函数
+//            tofunction(); //BaseActivity  返回功能页面函数
 //            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;

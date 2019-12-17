@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -16,7 +17,7 @@
                 android:background="@color/xui_btn_blue_normal_color"
                 app:tb_barHeight="40dp"
                 app:tb_dividerColor="@color/xui_config_color_red"
-                app:tb_titleText="成型规格切换"/>
+                app:tb_titleText="成型规格更替"/>
         <LinearLayout
                 android:id="@+id/ll_mchid"
                 android:layout_width="match_parent"
@@ -107,34 +108,6 @@
                         android:layout_margin="5dp"
                         android:textSize="15sp"/>
             </TableRow>
-            <TableRow>
-                <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="优先级"
-                        android:textSize="15sp"/>
-                <TextView
-                        android:id="@+id/pro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textSize="15sp"/>
-            </TableRow>
-            <TableRow>
-                <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="状态"
-                        android:textSize="15sp"/>
-                <TextView
-                        android:id="@+id/state"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textSize="15sp"/>
-            </TableRow>
         </TableLayout>
         <LinearLayout
                 android:layout_width="match_parent"
@@ -187,6 +160,7 @@
                 android:id="@+id/lv_replplan"
                 android:divider="@color/btn_gray_normal"
                 android:dividerHeight="2dp"
+                android:fillViewport="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible">

@@ -3,10 +3,7 @@ package com.hsproduce.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -30,7 +27,7 @@ public class SwitchFormingActivity extends BaseActivity {
     //当前计划展示list  规格交替列表
     private ListView replplan;
     //机台号  轮胎条码  条码记录
-    private TextView spesc, spescname, pro, state, anum, pnum;
+    private TextView spesc, spescname, anum, pnum;
     private AutoCompleteTextView tvMchid;
     private List<String> data1 = new ArrayList<>();
     //获取计划按钮
@@ -42,6 +39,7 @@ public class SwitchFormingActivity extends BaseActivity {
     //定义变量 当前计划ID
     private String currid = "";
     public String mchid = "";
+    public Boolean show = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +64,6 @@ public class SwitchFormingActivity extends BaseActivity {
         //当前声称计划控件
         spesc = (TextView) findViewById(R.id.spesc);
         spescname = (TextView) findViewById(R.id.spescname);
-        pro = (TextView) findViewById(R.id.pro);
-        state = (TextView) findViewById(R.id.state);
         anum = (TextView) findViewById(R.id.anum);
         pnum = (TextView) findViewById(R.id.pnum);
 
@@ -108,6 +104,25 @@ public class SwitchFormingActivity extends BaseActivity {
 //        }
 //        return super.onInterceptTouchEvent(e);
 //    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {    
+        ListAdapter listAdapter = listView.getAdapter();     
+        if (listAdapter == null) {    
+            return;    
+        }    
+    
+        int totalHeight = 0;    
+        for (int i = 0; i < listAdapter.getCount(); i++) {    
+            View listItem = listAdapter.getView(i, null, listView);    
+            listItem.measure(0, 0);    
+            totalHeight += listItem.getMeasuredHeight();    
+        }    
+    
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));    
+//        params.height += 5;//上面的分割线设置为5dp,所以这里每次加5个像素
+        listView.setLayoutParams(params);    
+    } 
 
     public void initEvent() {
         //点击当期计划 和 规格交替计划
@@ -211,39 +226,30 @@ public class SwitchFormingActivity extends BaseActivity {
                     }.getType());
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchFormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    }
                     if (res.get("code").equals("200")) {
+                        //显示切换按钮
+                        show = true;
                         //获取当前计划ID
                         currid = datas.get(0).getId();
                         //展示当前计划
                         spesc.setText(datas.get(0).getItnbr());
                         spescname.setText(datas.get(0).getItdsc());
-                        pro.setText(datas.get(0).getPro());
-                        if (datas.get(0).getState() != null) {
-                            if (datas.get(0).getState().equals("10")) {
-                                state.setText("新计划");
-                            } else if (datas.get(0).getState().equals("20")) {
-                                state.setText("等待中");
-                            } else if (datas.get(0).getState().equals("30")) {
-                                state.setText("进行中");
-                            } else if (datas.get(0).getState().equals("40")) {
-                                state.setText("已完成");
-                            } else {
-                                state.setText("未知状态");
-                            }
-                        }
                         anum.setText(datas.get(0).getAnum());
                         pnum.setText(datas.get(0).getPnum());
 //                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
+                        //隐藏切换按钮
+                        show = false;
                         Toast.makeText(SwitchFormingActivity.this, "查询成功，没有生产中的计划！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
                     }
-                    if (datas == null || datas.isEmpty()) {
-                        Toast.makeText(SwitchFormingActivity.this, "未获取到计划", Toast.LENGTH_LONG).show();
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
@@ -279,6 +285,8 @@ public class SwitchFormingActivity extends BaseActivity {
                         repladaprer = new FormingReplAdapter(SwitchFormingActivity.this, datas);
                         replplan.setAdapter(repladaprer);
                         repladaprer.notifyDataSetChanged();
+                        //调整高度
+                        setListViewHeightBasedOnChildren(replplan);
 //                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
@@ -350,7 +358,8 @@ public class SwitchFormingActivity extends BaseActivity {
         }
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
-                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
+                tofunction();
+//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
                 //并记录下本次点击“返回键”的时刻，以便下次进行判断
                 mExitTime = System.currentTimeMillis();
             } else {
@@ -359,7 +368,7 @@ public class SwitchFormingActivity extends BaseActivity {
         }
         //左方向键
         if (keyCode == 21) {
-            tofunction(); //BaseActivity  返回功能页面函数
+//            tofunction(); //BaseActivity  返回功能页面函数
 //            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
