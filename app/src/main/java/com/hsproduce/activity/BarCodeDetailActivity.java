@@ -94,6 +94,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         tvbarCode = barCode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(tvbarCode)) {
             Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            return;
         } else {
             String parm = "SwitchTYRE_CODE=" + tvbarCode;
             new GetFormingDetail().execute(parm);
@@ -116,6 +117,7 @@ public class BarCodeDetailActivity extends BaseActivity {
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -124,6 +126,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //清空
@@ -156,15 +159,19 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(BarCodeDetailActivity.this, "轮胎条码不正确！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(BarCodeDetailActivity.this, "成型没有此轮胎条码！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarCodeDetailActivity.this, "成型没有此轮胎条码信息！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(BarCodeDetailActivity.this, "查询错误,请重新操作！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
             }
@@ -184,6 +191,7 @@ public class BarCodeDetailActivity extends BaseActivity {
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -192,6 +200,7 @@ public class BarCodeDetailActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //清空
@@ -226,15 +235,19 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(BarCodeDetailActivity.this, "轮胎条码不正确！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(BarCodeDetailActivity.this, "硫化没有此轮胎条码！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarCodeDetailActivity.this, "硫化没有此轮胎条码信息！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(BarCodeDetailActivity.this, "查询错误,请重新操作！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
             }

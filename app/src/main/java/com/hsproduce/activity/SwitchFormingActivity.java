@@ -218,7 +218,11 @@ public class SwitchFormingActivity extends BaseActivity {
                     Toast.makeText(SwitchFormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
                     return;
                 }
-
+                Integer sum = Integer.valueOf(nextCode.substring(6,12))+Integer.valueOf(num);
+                if(Integer.valueOf(num)>500 || sum>999999){
+                    Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -275,7 +279,12 @@ public class SwitchFormingActivity extends BaseActivity {
                     Toast.makeText(SwitchFormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
                     return;
                 }
-
+                String pre = vplan.getBarcodeend().substring(0,6);
+                String now = code.substring(0,6);
+                if(!pre.equals(now)){
+                    Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 //执行操作接口
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + code + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
@@ -307,6 +316,7 @@ public class SwitchFormingActivity extends BaseActivity {
         mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(SwitchFormingActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+            return;
         } else {
             String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
             new GetFormingPlanTask().execute(param1);
@@ -337,6 +347,7 @@ public class SwitchFormingActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(SwitchFormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
@@ -344,6 +355,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(SwitchFormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         for (int i = 0; i < map.size(); i++) {
@@ -352,13 +364,16 @@ public class SwitchFormingActivity extends BaseActivity {
 //                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(SwitchFormingActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -377,6 +392,7 @@ public class SwitchFormingActivity extends BaseActivity {
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(SwitchFormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -385,6 +401,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(SwitchFormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         List<VPlan> zxz = new ArrayList<>();//执行中
@@ -410,20 +427,27 @@ public class SwitchFormingActivity extends BaseActivity {
                             lvplan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                         } else {
+                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
+                            lvplan.setAdapter(adaprer);
+                            adaprer.notifyDataSetChanged();
                             Toast.makeText(SwitchFormingActivity.this, "无可规格交替的计划！", Toast.LENGTH_LONG).show();
                         }
 
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "未到换班时间不可进行倒班！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(SwitchFormingActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
             }
@@ -501,21 +525,28 @@ public class SwitchFormingActivity extends BaseActivity {
                         repl.setEnabled(false);
                         out.setEnabled(true);
                         Toast.makeText(SwitchFormingActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(SwitchFormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(SwitchFormingActivity.this, "该计划不是等待中计划，无法执行！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("600")) {
                         Toast.makeText(SwitchFormingActivity.this, "条码并非12位，请重新输入！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("700")) {
                         Toast.makeText(SwitchFormingActivity.this, "该条码已经被使用，无法开始！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "错误", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -549,11 +580,13 @@ public class SwitchFormingActivity extends BaseActivity {
 //                        Toast.makeText(FormingActivity.this, "修改成功！", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }

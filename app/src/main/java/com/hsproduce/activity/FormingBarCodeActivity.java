@@ -152,13 +152,13 @@ public class FormingBarCodeActivity extends BaseActivity {
 //
 //            if (isNew) {
                 //判断轮胎条码是否重复
-            if (tvbarcode.length() == 12) {
+//            if (tvbarcode.length() == 12) {
                 String param1 = "ScrapCode=" + tvbarcode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
                 new TypeCodeTask().execute(param1);
-            }else{
-                Toast.makeText(FormingBarCodeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
-                return;
-            }
+//            }else{
+//                Toast.makeText(FormingBarCodeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+//                return;
+//            }
 
 //            } else {
 //                isNew = true;
@@ -257,12 +257,16 @@ public class FormingBarCodeActivity extends BaseActivity {
                         Toast.makeText(FormingBarCodeActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingBarCodeActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(FormingBarCodeActivity.this, "此条码还未产生生产实绩，不可作废！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("600")) {
                         Toast.makeText(FormingBarCodeActivity.this, "已经报废条码不能重复作废！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(FormingBarCodeActivity.this, "错误！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {

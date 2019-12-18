@@ -21,6 +21,7 @@ import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,10 +32,10 @@ import java.util.Map;
 public class FormingDetailChangeActivity extends BaseActivity {
 
     //定义控件
-    private TextView barcode, spesc, mchid, createuser, date;
-    private ButtonView ok, getitnbr, getmchid;
+    private TextView barcode, spesc, mchid, createuser;
+    private ButtonView ok, getitnbr, getmchid, out;
     private ImageButton btgetcode;
-    private Spinner LorR, shift, team;
+    private Spinner shift;
     //下拉列表
     private List<String> teamlist = new ArrayList<>();
     private ArrayAdapter<String> adapter;
@@ -43,7 +44,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //定义变量
-    private String BarCode = "", Spesc = "", CreateUser = "", lorR = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", Date = "";
+    private String BarCode = "", Spesc = "", CreateUser = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", Date = "";
     //Dialog显示列表
     private List<String> itnbrlist = new ArrayList<>();
     private DialogItemAdapter itnbradapter;
@@ -74,50 +75,51 @@ public class FormingDetailChangeActivity extends BaseActivity {
         //机台号
         mchid = (TextView) findViewById(R.id.mchid);
         //生产日期
-        date = (TextView) findViewById(R.id.cdate);
-        //左右膜
-        LorR = (Spinner) findViewById(R.id.lorR);
+//        date = (TextView) findViewById(R.id.cdate);
         //班组
-        team = (Spinner) findViewById(R.id.team);
-        new ShiftTask().execute();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamlist);
-        team.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Team = parent.getItemAtPosition(position).toString();
-                for(int i = 0;i<teamList.size();i++){
-                    if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
-                        break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
-                        break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
-                        break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
-                        break;
-                    } else {
-                        break;
-                    }
-                }
-//                if (Team.equals("甲班")) {
-//                    Team = "1";
-//                } else if (Team.equals("乙班")) {
-//                    Team = "2";
-//                } else if (Team.equals("丙班")) {
-//                    Team = "3";
-//                } else {
-//                    Team = "15";
-//                }
-//                App.shift = Team;
-            }
+//        team = (Spinner) findViewById(R.id.team);
+        //返回
+        out = (ButtonView)findViewById(R.id.out);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+//        new ShiftTask().execute();
+//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamlist);
+//        team.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Team = parent.getItemAtPosition(position).toString();
+//                for(int i = 0;i<teamList.size();i++){
+//                    if (Team.equals(teamList.get(i).getName())) {
+//                        Team = teamList.get(i).getId();
+//                        break;
+//                    } else if (Team.equals(teamList.get(i).getName())) {
+//                        Team = teamList.get(i).getId();
+//                        break;
+//                    } else if (Team.equals(teamList.get(i).getName())) {
+//                        Team = teamList.get(i).getId();
+//                        break;
+//                    } else if (Team.equals(teamList.get(i).getName())) {
+//                        Team = teamList.get(i).getId();
+//                        break;
+//                    } else {
+//                        break;
+//                    }
+//                }
+////                if (Team.equals("甲班")) {
+////                    Team = "1";
+////                } else if (Team.equals("乙班")) {
+////                    Team = "2";
+////                } else if (Team.equals("丙班")) {
+////                    Team = "3";
+////                } else {
+////                    Team = "15";
+////                }
+////                App.shift = Team;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
         //班次
         shift = (Spinner) findViewById(R.id.shift);
         //查询条码明细
@@ -130,27 +132,33 @@ public class FormingDetailChangeActivity extends BaseActivity {
     }
 
     public void initEvent() {
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar c = Calendar.getInstance();
-                // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
-                new DatePickerDialog(FormingDetailChangeActivity.this,
-                        // 绑定监听器
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                TextView show = (TextView) findViewById(R.id.cdate);
-                                show.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
-                            }
-                        }
-                        // 设置初始日期
-                        , c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
-                        .get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+//        date.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar c = Calendar.getInstance();
+//                // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
+//                new DatePickerDialog(FormingDetailChangeActivity.this,
+//                        // 绑定监听器
+//                        new DatePickerDialog.OnDateSetListener() {
+//
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year,
+//                                                  int monthOfYear, int dayOfMonth) {
+//                                TextView show = (TextView) findViewById(R.id.cdate);
+//                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//                                try {
+//                                    String isdate = formatter.format(formatter.parse(year + "-" + (monthOfYear+1) + "-" + dayOfMonth));
+//                                    show.setText(isdate);
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }
+//                        // 设置初始日期
+//                        , c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
+//                        .get(Calendar.DAY_OF_MONTH)).show();
+//            }
+//        });
         btgetcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,14 +177,29 @@ public class FormingDetailChangeActivity extends BaseActivity {
                 //补录条码
                 BarCode = barcode.getText().toString().trim();
                 //时间
-                Date = date.getText().toString().trim();
-                //班组
-//                Team = team.getSelectedItem().toString().trim();
+//                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//                try {
+//                    Date = formatter.format(formatter.parse(date.getText().toString()));
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//                Date = date.getText().toString().trim();
+                //班次
+                Shift = shift.getSelectedItem().toString().trim();
+                if(Shift.equals("早")){
+                    Shift = "1";
+                }else if(Shift.equals("中")){
+                    Shift = "2";
+                }else if(Shift.equals("晚")){
+                    Shift = "3";
+                }else{
+                    Team = "";
+                }
                 //ST205/75R14-6PR(TR643)L 胎胚
                 //MCHID=01 &ITNBR=BBZ20514H02 &ITDSC=ST205%2F75R14-6PR(TR643)L%20%E8%83%8E%E8%83%9A
                 // &SHIFT=2 &USER_NAME=shao &DateTime_W=2019-12-11 &SwitchID=208
                 String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
-                        + "&SHIFT=" + Team + "&USER_NAME=" + CreateUser + "&DateTime_W=" + Date + "&SwitchID=" + codeid;
+                        + "&SHIFT=" + Shift + "&USER_NAME=" + CreateUser + "&DateTime_W=" + Date + "&SwitchID=" + codeid;
                 new ChangeDetailedTask().execute(parm);
 //                barcode.setText("");
             }
@@ -204,59 +227,68 @@ public class FormingDetailChangeActivity extends BaseActivity {
                 new MCHIDTask().execute(parm);
             }
         });
+        //返回
+        out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //返回功能菜单
+                tofunction();
+            }
+        });
     }
 
     //获取条码明细
     public void getCodeDetail() {
         //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
         BarCode = barcode.getText().toString().trim();
-        if (BarCode.length() == 12) {
+//        if (BarCode.length() == 12) {
             String parm = "SwitchTYRE_CODE=" + BarCode;
             new SelDetailedTask().execute(parm);
-        }else{
-            Toast.makeText(FormingDetailChangeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
-            return;
-        }
+//        }else{
+//            Toast.makeText(FormingDetailChangeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+//            return;
+//        }
 
         //barcode.setText("");
     }
 
     //班组
-    class ShiftTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strs) {
-            String result = HttpUtil.sendGet(PathUtil.GET_SHIFT, null);
-            return result;
-        }
-
-        //事后执行
-        @Override
-        protected void onPostExecute(String s) {
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
-                }.getType());
-                List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
-                List<Team> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<Team>>(){}.getType());
-                if (res.get("code").equals("200")) {
-                    //班组数据清空
-                    teamList.clear();
-                    teamList.addAll(datas);
-                    //班组名称数据清空
-                    teamlist.clear();
-                    for (int i = 0; i < map.size(); i++) {
-                        teamlist.add(map.get(i).get("name"));
-                    }
-                    team.setAdapter(adapter);
-                }
-//                for (int i = 0; i < map.size(); i++) {
-//                    teamlist.add(map.get(i).get("name"));
+//    class ShiftTask extends AsyncTask<String, Void, String> {
+//        @Override
+//        protected String doInBackground(String... strs) {
+//            String result = HttpUtil.sendGet(PathUtil.GET_SHIFT, null);
+//            return result;
+//        }
+//
+//        //事后执行
+//        @Override
+//        protected void onPostExecute(String s) {
+//            if (StringUtil.isNullOrBlank(s)) {
+//                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+//                return;
+//            } else {
+//                Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+//                }.getType());
+//                List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+//                List<Team> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<Team>>(){}.getType());
+//                if (res.get("code").equals("200")) {
+//                    //班组数据清空
+//                    teamList.clear();
+//                    teamList.addAll(datas);
+//                    //班组名称数据清空
+//                    teamlist.clear();
+//                    for (int i = 0; i < map.size(); i++) {
+//                        teamlist.add(map.get(i).get("name"));
+//                    }
+//                    team.setAdapter(adapter);
 //                }
-//                team.setAdapter(adapter);
-            }
-        }
-    }
+////                for (int i = 0; i < map.size(); i++) {
+////                    teamlist.add(map.get(i).get("name"));
+////                }
+////                team.setAdapter(adapter);
+//            }
+//        }
+//    }
 
     //根据条码查询明细
     class SelDetailedTask extends AsyncTask<String, Void, String> {
@@ -270,6 +302,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -278,32 +311,28 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //填入规格信息
                         spesc.setText(datas.get(0).getItnbr());
                         mchid.setText(datas.get(0).getMchid());
                         //转换时间格式
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        date.setText(formatter.format(formatter.parse(datas.get(0).getWdate())));
-                        //设置默认值
-                        if (datas.get(0).getLr().equals("L")) {
-                            LorR.setSelection(0, true);
-                        } else {
-                            LorR.setSelection(1, true);
-                        }
-                        if (datas.get(0).getTeam().equals("1")) {
-                            team.setSelection(0, true);
-                        } else if (datas.get(0).getTeam().equals("2")) {
-                            team.setSelection(1, true);
-                        } else if (datas.get(0).getTeam().equals("3")) {
-                            team.setSelection(2, true);
-                        } else {
-                            team.setSelection(3, true);
-                        }
-                        if (datas.get(0).getShift().equals("1")) {
+//                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//                        date.setText(formatter.format(formatter.parse(datas.get(0).getWdate())));
+
+//                        if (datas.get(0).getTeam().equals("甲班")) {
+//                            team.setSelection(0, true);
+//                        } else if (datas.get(0).getTeam().equals("乙班")) {
+//                            team.setSelection(1, true);
+//                        } else if (datas.get(0).getTeam().equals("丙班")) {
+//                            team.setSelection(2, true);
+//                        } else {
+//                            team.setSelection(3, true);
+//                        }
+                        if (datas.get(0).getShift().equals("早")) {
                             shift.setSelection(0, true);
-                        } else if (datas.get(0).getShift().equals("2")) {
+                        } else if (datas.get(0).getShift().equals("中")) {
                             shift.setSelection(1, true);
                         } else {
                             shift.setSelection(2, true);
@@ -317,20 +346,23 @@ public class FormingDetailChangeActivity extends BaseActivity {
 //                        System.out.println("空格和斜杠转换："+toUtf8String(datas.get(0).getItdsc()).replace("/","%2F").replaceAll(" ","%20"));
                         spescname = toUtf8String(datas.get(0).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
                         Team = datas.get(0).getTeam();
-                        Date = formatter.format(formatter.parse(datas.get(0).getWdate()));
+//                        Date = formatter.format(formatter.parse(datas.get(0).getWdate()));
 //                        System.out.println("转换后的时间："+Date);
                         CreateUser = datas.get(0).getCreateuser();
                         codeid = datas.get(0).getId();
                         Toast.makeText(FormingDetailChangeActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, "轮胎查询错误", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -349,6 +381,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
@@ -356,6 +389,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         String search = mchid.getText().toString().trim();
@@ -382,13 +416,16 @@ public class FormingDetailChangeActivity extends BaseActivity {
 //                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, "错误", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -406,6 +443,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -414,6 +452,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //填入规格信息
@@ -445,13 +484,16 @@ public class FormingDetailChangeActivity extends BaseActivity {
 //                        Toast.makeText(DetailChangeActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的规格！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, "查询错误", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -469,34 +511,39 @@ public class FormingDetailChangeActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
 //                        barcode.setText("");
                         spesc.setText("");
                         mchid.setText("");
-                        date.setText("");
-                        LorR.setSelection(1, true);
-                        team.setSelection(1, true);
-                        shift.setSelection(1, true);
+//                        date.setText("");
+//                        team.setSelection(0, true);
+                        shift.setSelection(0, true);
                         createuser.setText("");
                         Toast.makeText(FormingDetailChangeActivity.this, "变更成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未找到轮胎信息，变更失败！", Toast.LENGTH_LONG).show();
+                        return;
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "变更失败！", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
