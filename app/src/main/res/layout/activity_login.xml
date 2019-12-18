@@ -74,10 +74,10 @@
     </LinearLayout>
     <com.xuexiang.xui.widget.button.ButtonView
             style="@style/ButtonView.Blue"
+            android:id="@+id/login"
             android:background="@color/xui_config_color_titlebar"
             android:text="@string/login"
             android:layout_width="match_parent"
-            android:onClick="login"
             android:layout_height="35dp"
             android:layout_margin="10dp"/>
 </LinearLayout>

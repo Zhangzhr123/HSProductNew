@@ -630,7 +630,7 @@ public class FormingActivity extends BaseActivity {
         }
     }
 
-    //点击开始后执行完成
+    //结束上一个计划
     class DIALOGFINISHTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strs) {

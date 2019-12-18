@@ -89,7 +89,7 @@ public class LoadScanningActivity extends BaseActivity {
             for (int i = 0; i < codelist.size(); i++) {
                 if (scanbarcode.equals(codelist.get(i))) {
                     isNew = false;
-                    return;
+                    break;
                 }
             }
 

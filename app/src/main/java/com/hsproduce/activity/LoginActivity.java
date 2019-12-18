@@ -22,6 +22,7 @@ import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.hsproduce.util.TaskUtil;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.io.*;
 import java.util.*;
@@ -34,6 +35,8 @@ public class LoginActivity extends BaseActivity {
     private TextView tv_code, tv_password;
     //班组下拉列表
     private Spinner sp_shift;
+    //登录按钮
+    private ButtonView login;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //点击图片更换ip地址
@@ -88,6 +91,8 @@ public class LoginActivity extends BaseActivity {
         sp_shift = findViewById(R.id.shift);
         //ip地址
         ip = (ImageView) findViewById(R.id.ip);
+        //登录
+        login = (ButtonView)findViewById(R.id.login);
 
         //自行输入IP
         ip.setOnClickListener(new View.OnClickListener() {
@@ -157,10 +162,17 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+        //点击登录
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
 
     }
 
-    public void login(View v) {
+    public void login() {
         String username = tv_code.getText().toString().trim();
         String password = tv_password.getText().toString().trim();
         App.username = username;
@@ -318,7 +330,10 @@ public class LoginActivity extends BaseActivity {
                 System.exit(0);//注销操作
             }
         }
-        return true;
+        if (keyCode == 22){
+            login();
+        }
+            return true;
     }
 
     //版本更新
