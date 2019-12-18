@@ -74,7 +74,7 @@ public interface PathUtil {
     //APK文件下载
     public static final String 文件下载 = SERVER + "app-debug.apk";
 
-    //成型生产                  获取等待中生产计划
+    //成型生产                  获取生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";
     //开始生产计划
 //    public static final String StartProduction = SERVER + "api/PDA/StartProduction";

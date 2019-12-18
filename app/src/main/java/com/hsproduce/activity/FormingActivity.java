@@ -232,7 +232,7 @@ public class FormingActivity extends BaseActivity {
         //修改
         update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v1) {
                 final EditText et = new EditText(FormingActivity.this);
                 et.setText("");
                 et.setHint("请修改数量");
@@ -246,13 +246,19 @@ public class FormingActivity extends BaseActivity {
                                 }
                                 number = et.getText().toString();
                                 if (number != null && !number.equals("") && Integer.valueOf(number) != 0) {
+
+                                    Integer sum = Integer.valueOf(v.getBarcodestart().substring(6,12))+Integer.valueOf(number);
+                                    if(Integer.valueOf(number)>500 || sum>999999){
+                                        Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+                                    //修改操作接口
                                     String param = "VPLANID=" + currid + "&Num=" + number + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                                     new UPDATETask().execute(param);
+
                                 } else {
                                     Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
                                 }
-                                //?VPLANID=62&Num=10&TEAM=1&User_Name=shao
-                                //修改操作接口
 
                             }
                         }).setNegativeButton("取消", null).show();
@@ -354,6 +360,11 @@ public class FormingActivity extends BaseActivity {
                     Toast.makeText(FormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
                     return;
                 }
+                Integer sum = Integer.valueOf(nextCode.substring(6,12))+Integer.valueOf(num);
+                if(Integer.valueOf(num)>500 || sum>999999){
+                    Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 //执行开始计划接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -410,6 +421,12 @@ public class FormingActivity extends BaseActivity {
                     Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
                     return;
                 }
+                String pre = vplan.getBarcodeend().substring(0,6);
+                String now = code.substring(0,6);
+                if(!pre.equals(now)){
+                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 //执行操作接口  ?VPLANID=53&EndBarcode=051901000018&TEAM=1&User_Name=shao
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + code + "&TEAM=" + App.shift + "&User_Name=" + App.username;
@@ -447,7 +464,7 @@ public class FormingActivity extends BaseActivity {
         Button ok = customeView.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v1) {
                 String jt = mchid;
                 jt = jt.substring(jt.length() - 2, jt.length());
                 String code = precode.getText().toString();
@@ -467,7 +484,12 @@ public class FormingActivity extends BaseActivity {
                     Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
                     return;
                 }
-
+                String pre = v.getBarcodestart().substring(0,6);
+                String now = code.substring(0,6);
+                if(!pre.equals(now)){
+                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&EndBarcode=" + code + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);

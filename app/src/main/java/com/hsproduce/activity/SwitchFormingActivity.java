@@ -389,6 +389,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         List<VPlan> zxz = new ArrayList<>();//执行中
                         List<VPlan> ddz = new ArrayList<>();//等待中
+                        List<VPlan> ywc = new ArrayList<>();//等待中
                         for (int j = 0; j < datas.size(); j++) {
                             if (datas.get(j).getState().equals("30")) {
                                 zxz.add(datas.get(j));
@@ -398,8 +399,12 @@ public class SwitchFormingActivity extends BaseActivity {
                                 ddz.add(datas.get(j));;
                                 continue;
                             }
+                            if (datas.get(j).getState().equals("40")) {
+                                ywc.add(datas.get(j));;
+                                continue;
+                            }
                         }
-                        if (zxz.size()>0 && ddz.size()>0) {//有正在执行，并且有等待中的计划
+                        if ((zxz.size()>0 && ddz.size()>0) || (ywc.size()>0 && ddz.size()>0)) {//有正在执行，并且有等待中的计划
                             //显示等待中的计划；
                             adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
                             lvplan.setAdapter(adaprer);
