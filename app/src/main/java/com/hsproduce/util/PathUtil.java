@@ -77,11 +77,11 @@ public interface PathUtil {
     //成型生产                  获取等待中生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";
     //开始生产计划
-    public static final String StartProduction = SERVER + "api/PDA/StartProduction";
+//    public static final String StartProduction = SERVER + "api/PDA/StartProduction";
     //成型查询正在生产或者等待中的计划
-    public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
+//    public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
     //成型规格交替
-    public static final String SWITCHFORMING = SERVER + "api/PDA/SwitchVplan_Forming";
+//    public static final String SWITCHFORMING = SERVER + "api/PDA/SwitchVplan_Forming";
     //成型胚胎报废
     public static final String FORMINGBARCODE = SERVER + "api/PDA/FormingScrap";
     //成型生产根据条码查询明细   生产追溯成型信息
@@ -92,9 +92,13 @@ public interface PathUtil {
     public static final String FORMINGSELECTMCHID = SERVER + "api/PDA/GetDictionaries";
     //成型明细变更
     public static final String FORMINGCHANGE = SERVER + "api/PDA/ChangeDetailed_Forming";
-    //成型生产 开始按钮
-    public static final String START = SERVER + "";
-    //成型生产 开始按钮
-    public static final String GETSTART = SERVER + "";
+    //成型生产 查询生产中的计划
+    public static final String START = SERVER + "api/PDA/GetCurrentVPlan_Forming_New";
+    //成型生产 开始计划
+    public static final String GETSTART = SERVER + "api/PDA/StartVplan";
+    //成型生产 修改计划
+    public static final String UPDATE = SERVER + "api/PDA/UpdateVplan";
+    //成型生产 完成计划
+    public static final String FINISH = SERVER + "api/PDA/CompleteVplan";
 
 }

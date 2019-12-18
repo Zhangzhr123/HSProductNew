@@ -41,8 +41,8 @@ public class FormingBarCodeActivity extends BaseActivity {
     private String tvbarcode = "", planid = "";
     private List<String> list = new ArrayList<>();
     //添加条码防止重复扫描
-    private List<String> codelist = new ArrayList<>();
-    private Boolean isNew = true;
+//    private List<String> codelist = new ArrayList<>();
+//    private Boolean isNew = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,23 +139,31 @@ public class FormingBarCodeActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(tvbarcode)) {
             Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            if(codelist.size() == 0 || codelist == null){
-                isNew = true;
-            }else{
-                for (int i = 0; i < codelist.size(); i++) {
-                    if (tvbarcode.equals(codelist.get(i))) {
-                        isNew = false;
-                        break;
-                    }
-                }
-            }
-            if (isNew) {
+//            if (codelist.size() == 0 || codelist == null) {
+//                isNew = true;
+//                return;
+//            }
+//            for (int i = 0; i < codelist.size(); i++) {
+//                if (tvbarcode.equals(codelist.get(i))) {
+//                    isNew = false;
+//                    break;
+//                }
+//            }
+//
+//            if (isNew) {
                 //判断轮胎条码是否重复
+            if (tvbarcode.length() == 12) {
                 String param1 = "ScrapCode=" + tvbarcode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
                 new TypeCodeTask().execute(param1);
-            } else {
-                Toast.makeText(FormingBarCodeActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(FormingBarCodeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+                return;
             }
+
+//            } else {
+//                isNew = true;
+//                Toast.makeText(FormingBarCodeActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+//            }
 
         }
         //barcode.setText("");
@@ -229,7 +237,8 @@ public class FormingBarCodeActivity extends BaseActivity {
                         Toast.makeText(FormingBarCodeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        codelist.add(tvbarcode);
+                        //判断用户是否重复输入
+//                        codelist.add(tvbarcode);
                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                         list.add("[" + date + "]" + tvbarcode + "报废成功");
                         //list.add(tvbarcode);
@@ -290,7 +299,7 @@ public class FormingBarCodeActivity extends BaseActivity {
         if (keyCode == 4) {
             if (System.currentTimeMillis() - mExitTime > 2000) {
                 list.clear();
-                codelist.clear();
+//                codelist.clear();
                 num.setText("0");
                 tofunction();
 //                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();

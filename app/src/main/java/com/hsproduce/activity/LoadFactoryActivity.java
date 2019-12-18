@@ -319,23 +319,24 @@ public class LoadFactoryActivity extends BaseActivity {
     public void loadcode() {
         //获取轮胎条码
         code = barcode.getText().toString().trim();
-        if(codelist.size() == 0 || codelist == null){
+        if (codelist.size() == 0 || codelist == null) {
             isNew = true;
             return;
-        }else{
-            for (int i = 0; i < codelist.size(); i++) {
-                if (code.equals(codelist.get(i))) {
-                    isNew = false;
-                    return;
-                }
+        }
+        for (int i = 0; i < codelist.size(); i++) {
+            if (code.equals(codelist.get(i))) {
+                isNew = false;
+                break;
             }
         }
+
 
         if (isNew) {
             //查询轮胎条码规格
             String parm1 = "TYRE_CODE=" + code;
             new SelCodeTask().execute(parm1);
         } else {
+            isNew = true;
             Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
         }
 
@@ -345,22 +346,23 @@ public class LoadFactoryActivity extends BaseActivity {
     //取消扫描
     public void outcode() {
         outCode = outbarcode.getText().toString().trim();
-        if(outcodelist.size() == 0 || outcodelist == null){
+        if (outcodelist.size() == 0 || outcodelist == null) {
             outIsNew = true;
             return;
-        }else{
-            for (int j = 0; j < outcodelist.size(); j++) {
-                if (outCode.equals(outcodelist.get(j))) {
-                    outIsNew = false;
-                    return;
-                }
+        }
+        for (int j = 0; j < outcodelist.size(); j++) {
+            if (outCode.equals(outcodelist.get(j))) {
+                outIsNew = false;
+                break;
             }
         }
+
 
         if (outIsNew) {
             String parm = "TYRE_CODE=" + outCode + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
             new DelVLoadTask().execute(parm);
         } else {
+            outIsNew = true;
             Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
         }
         //outbarcode.setText("");

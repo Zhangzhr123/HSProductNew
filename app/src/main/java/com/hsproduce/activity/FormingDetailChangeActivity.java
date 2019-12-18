@@ -210,8 +210,14 @@ public class FormingDetailChangeActivity extends BaseActivity {
     public void getCodeDetail() {
         //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
         BarCode = barcode.getText().toString().trim();
-        String parm = "SwitchTYRE_CODE=" + BarCode;
-        new SelDetailedTask().execute(parm);
+        if (BarCode.length() == 12) {
+            String parm = "SwitchTYRE_CODE=" + BarCode;
+            new SelDetailedTask().execute(parm);
+        }else{
+            Toast.makeText(FormingDetailChangeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         //barcode.setText("");
     }
 

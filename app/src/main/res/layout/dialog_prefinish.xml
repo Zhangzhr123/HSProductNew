@@ -1,0 +1,107 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/contentConstraintLayout"
+                                             android:layout_width="200dp"
+                                             android:layout_height="250dp">
+    <TextView
+            android:id="@+id/textview"
+            android:textSize="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前机台有未完成的计划，请先结束计划"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="0dp"
+            app:layout_constraintVertical_bias="0.013"/>
+
+    <TextView
+            android:id="@+id/input"
+            android:textSize="15sp"
+            android:layout_width="180dp"
+            android:layout_height="20dp"
+            android:textColor="@color/black_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview" app:layout_constraintStart_toStartOf="@+id/textview"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="@+id/textview"/>
+
+    <TextView
+            android:id="@+id/input4"
+            android:textSize="15sp"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/input"
+            app:layout_constraintStart_toStartOf="@+id/textview" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/textview"/>
+
+    <TextView
+            android:id="@+id/typeTextview2"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数量："
+            android:textColor="@color/black_textview"
+            app:layout_constraintEnd_toEndOf="@+id/textview" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/textview" android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/input4" app:layout_constraintHorizontal_bias="0.0"/>
+    <TextView
+            android:id="@+id/input2"
+            android:textSize="15sp"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:textColor="@color/black_textview"
+            app:layout_constraintEnd_toEndOf="@+id/input4"
+            app:layout_constraintStart_toStartOf="@+id/input4" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/input4" app:layout_constraintHorizontal_bias="0.565"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/typeTextview3"/>
+    <TextView
+            android:id="@+id/typeTextview3"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="结束条码："
+            android:textColor="@color/black_textview"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextview2"
+            app:layout_constraintStart_toStartOf="@+id/input4" app:layout_constraintEnd_toEndOf="@+id/input4"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <EditText
+            android:id="@+id/input3"
+            android:textSize="15sp"
+            android:layout_width="180dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edit_background"
+            android:textColor="@color/black_textview"
+            app:layout_constraintEnd_toEndOf="@+id/typeTextview2"
+            app:layout_constraintStart_toStartOf="@+id/typeTextview2" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextview2"
+            android:layout_marginTop="44dp" app:layout_constraintHorizontal_bias="0.041"/>
+    <Button
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:id="@+id/finish"
+            app:layout_editor_absoluteX="16dp"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:background="@color/green"
+            app:layout_constraintStart_toStartOf="@+id/input3" android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/input3" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/input3" app:layout_constraintHorizontal_bias="0.008"/>
+
+    <Button
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:text="确定"
+            android:id="@+id/ok"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/input3"
+            app:layout_constraintEnd_toEndOf="@+id/input3" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/input3" app:layout_constraintHorizontal_bias="1.0"/>
+
+
+</android.support.constraint.ConstraintLayout>

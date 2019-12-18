@@ -142,7 +142,7 @@ public class VPlanItemAdapter extends BaseAdapter {
                                     vPlan.setState("2");
                                     //开始计划
 //                                    new MyTask().execute(PathUtil.VUL_START_PLAN, App.gson.toJson(vPlan));
-                                    vPlan.setBarcodeStart(barcode);
+                                    vPlan.setBarcodestart(barcode);
                                     //绑定计划
 //                                    new InRecordTask().execute(PathUtil.VUL_IN_RECORD, App.gson.toJson(vPlan));
                                 }
@@ -179,12 +179,12 @@ public class VPlanItemAdapter extends BaseAdapter {
     private void seScan(View convertView, final VPlan vPlan, TextView tvBarcodeStart, TextView tvBarcodeEnd) {
         convertView = LayoutInflater.from(context).inflate(R.layout.list_plan_item, null);
         //判断是否显示条码和按钮
-        if(vPlan.getBarcodeStart() != null){
-            tvBarcodeStart.setText(vPlan.getBarcodeStart());
+        if(vPlan.getBarcodestart() != null){
+            tvBarcodeStart.setText(vPlan.getBarcodestart());
             convertView.findViewById(R.id.tr_barcode_start).setVisibility(View.VISIBLE);
         }
-        if(vPlan.getBarcodeEnd() != null){
-            tvBarcodeEnd.setText(vPlan.getBarcodeEnd());
+        if(vPlan.getBarcodeend() != null){
+            tvBarcodeEnd.setText(vPlan.getBarcodeend());
             convertView.findViewById(R.id.tr_barcode_end).setVisibility(View.VISIBLE);
         }
         //未生产的计划不显示条码
@@ -241,7 +241,7 @@ public class VPlanItemAdapter extends BaseAdapter {
                                 if(StringUtil.isNullOrBlank(barcode)){
                                     Toast.makeText(context, "请扫描条码", Toast.LENGTH_LONG).show();
                                 }else{
-                                    vPlan.setBarcodeStart(barcode);
+                                    vPlan.setBarcodestart(barcode);
                                     vPlan.setState("2");
 //                                    new MyTask().execute(PathUtil.VUL_START_PLAN, App.gson.toJson(vPlan));
                                 }
@@ -284,7 +284,7 @@ public class VPlanItemAdapter extends BaseAdapter {
                                 if(StringUtil.isNullOrBlank(barcode)){
                                     Toast.makeText(context, "请扫描结束条码", Toast.LENGTH_LONG).show();
                                 }else{
-                                    vPlan.setBarcodeEnd(barcode);
+                                    vPlan.setBarcodeend(barcode);
                                     vPlan.setState("3");
                                     vPlan.setUpdateuser(App.username);
                                     submit(vPlan);

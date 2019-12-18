@@ -153,42 +153,46 @@
             android:visibility="gone">
         <Button
                 android:id="@+id/start"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:text="开始"/>
         <Button
                 android:id="@+id/update"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:text="修改"/>
         <Button
                 android:id="@+id/finish"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:text="完成"/>
         <Button
                 android:id="@+id/out"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:text="返回"/>
     </LinearLayout>

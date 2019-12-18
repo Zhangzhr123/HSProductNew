@@ -139,8 +139,8 @@ public class VulcanizationActivity extends BaseActivity {
 //                tvMchid.setText("");
 //            } else {
 //                App.lr = lr.toUpperCase();
-                String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
-                new MyTask().execute(param);
+            String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
+            new MyTask().execute(param);
 //            }
         }
 //        tvMchid.setText("");
@@ -153,17 +153,17 @@ public class VulcanizationActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(tvbarcode)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            if(codelist.size() == 0 || codelist == null){
+            if (codelist.size() == 0 || codelist == null) {
                 isNew = true;
                 return;
-            }else{
-                for (int i = 0; i < codelist.size(); i++) {
-                    if (tvbarcode.equals(codelist.get(i))) {
-                        isNew = false;
-                        return;
-                    }
+            }
+            for (int i = 0; i < codelist.size(); i++) {
+                if (tvbarcode.equals(codelist.get(i))) {
+                    isNew = false;
+                    break;
                 }
             }
+
 
             if (isNew) {
                 //判断规格是否合格
@@ -173,6 +173,7 @@ public class VulcanizationActivity extends BaseActivity {
                 String param1 = "TYRE_CODE=" + tvbarcode;
                 new TypeCodeTask().execute(param1);
             } else {
+                isNew = true;
                 Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
             }
 
@@ -243,15 +244,17 @@ public class VulcanizationActivity extends BaseActivity {
             String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
             return result;
         }
+
         //事后执行
         @Override
         protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
+            if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
-                    List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
@@ -260,13 +263,13 @@ public class VulcanizationActivity extends BaseActivity {
                             data1.add(map.get(i).get("itemid"));
                         }
 //                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("500")){
+                    } else if (res.get("code").equals("500")) {
                         Toast.makeText(VulcanizationActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(VulcanizationActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
                 }
@@ -421,7 +424,7 @@ public class VulcanizationActivity extends BaseActivity {
     }
 
     //用户提示信息
-    public void error(String v){
+    public void error(String v) {
         final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
         normalDialog.setTitle("提示");
         normalDialog.setMessage(v);

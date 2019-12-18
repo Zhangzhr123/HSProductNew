@@ -38,9 +38,9 @@ public class VPlan {
     //胎胚规格名称
     private String itdsct;
     //开始条码
-    private String barcodeStart;
+    private String barcodestart;
     //结束条码
-    private String barcodeEnd;
+    private String barcodeend;
     //创建人
     private String createuser;
     //创建时间
@@ -192,20 +192,20 @@ public class VPlan {
         this.remark = remark;
     }
 
-    public String getBarcodeStart() {
-        return barcodeStart;
+    public String getBarcodestart() {
+        return barcodestart;
     }
 
-    public void setBarcodeStart(String barcodeStart) {
-        this.barcodeStart = barcodeStart;
+    public void setBarcodestart(String barcodestart) {
+        this.barcodestart = barcodestart;
     }
 
-    public String getBarcodeEnd() {
-        return barcodeEnd;
+    public String getBarcodeend() {
+        return barcodeend;
     }
 
-    public void setBarcodeEnd(String barcodeEnd) {
-        this.barcodeEnd = barcodeEnd;
+    public void setBarcodeend(String barcodeend) {
+        this.barcodeend = barcodeend;
     }
 
     public String getUpdateuser() {
