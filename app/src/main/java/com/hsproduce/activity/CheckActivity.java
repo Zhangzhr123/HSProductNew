@@ -35,8 +35,6 @@ public class CheckActivity extends BaseActivity {
     private String ERROR = "";
     //定义变量  质检条码
     private String BarCode = "";
-    //是否合格
-//    private String show = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

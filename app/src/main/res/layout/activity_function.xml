@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="成型规格交替"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
             <LinearLayout
@@ -101,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="成型胎胚报废"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
             <LinearLayout
@@ -123,11 +123,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="成型生产变更"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
 
         </RelativeLayout>
+
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
@@ -167,6 +168,7 @@
                         android:textSize="13sp"
                 />
             </LinearLayout>
+
             <LinearLayout
                     android:id="@+id/view5"
                     android:orientation="vertical"
@@ -186,10 +188,11 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="规格交替"
-                        android:textSize="13sp"
+                        android:text="硫化规格交替"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
+
             <LinearLayout
                     android:id="@+id/view2"
                     android:orientation="vertical"
@@ -208,10 +211,11 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="条码补录"
-                        android:textSize="13sp"
+                        android:text="硫化条码补录"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
+
             <LinearLayout
                     android:id="@+id/view3"
                     android:orientation="vertical"
@@ -230,8 +234,8 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="条码变更"
-                        android:textSize="13sp"
+                        android:text="硫化条码变更"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
             <LinearLayout
@@ -252,8 +256,8 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="明细变更"
-                        android:textSize="13sp"
+                        android:text="硫化明细变更"
+                        android:textSize="11sp"
                 />
             </LinearLayout>
 
