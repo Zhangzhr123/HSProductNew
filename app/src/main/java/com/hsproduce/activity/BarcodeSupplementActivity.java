@@ -140,7 +140,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 TextView show = (TextView) findViewById(R.id.date);
-                                show.setText(year+"-"+monthOfYear+"-"+dayOfMonth);
+                                show.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }
                         // 设置初始日期
