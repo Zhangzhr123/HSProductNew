@@ -91,7 +91,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         //获取输入机台上barcode
         tvbarCode = barCode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(tvbarCode)) {
-            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+//            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
             String parm = "SwitchTYRE_CODE=" + tvbarCode;

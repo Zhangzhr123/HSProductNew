@@ -317,7 +317,7 @@ public class SwitchFormingActivity extends BaseActivity {
         //获取输入机台上barcode
         mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
-            Toast.makeText(SwitchFormingActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+//            Toast.makeText(SwitchFormingActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
             return;
         } else {
             String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
@@ -506,8 +506,8 @@ public class SwitchFormingActivity extends BaseActivity {
                         //开始按钮不可用
                         repl.setEnabled(false);
                         out.setEnabled(true);
-                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
-                        return;
+//                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+//                        return;
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
@@ -566,6 +566,12 @@ public class SwitchFormingActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        //弹开
         switch (keyCode){
             case 22://右方向键
                 getCurrentVPlan();//查询计划
@@ -585,13 +591,6 @@ public class SwitchFormingActivity extends BaseActivity {
             default:
                 break;
         }
-
-        return true;
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //弹开
         return true;
     }
 

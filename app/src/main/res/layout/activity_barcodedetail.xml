@@ -16,7 +16,7 @@
                 android:background="@color/xui_btn_blue_normal_color"
                 app:tb_barHeight="40dp"
                 app:tb_dividerColor="@color/xui_config_color_red"
-                app:tb_titleText="条码追溯"/>
+                app:tb_titleText="生产追溯"/>
         <LinearLayout
                 android:id="@+id/ll_mchid"
                 android:layout_width="match_parent"

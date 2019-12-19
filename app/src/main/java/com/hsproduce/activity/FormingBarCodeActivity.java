@@ -83,7 +83,8 @@ public class FormingBarCodeActivity extends BaseActivity {
         //获取轮胎上barcode
         tvbarcode = barCode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(tvbarcode)) {
-            Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+//            Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            return;
         } else {
             String param1 = "ScrapCode=" + tvbarcode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
             new TypeCodeTask().execute(param1);
@@ -103,12 +104,14 @@ public class FormingBarCodeActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingBarCodeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(FormingBarCodeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //判断用户是否重复输入
@@ -126,7 +129,7 @@ public class FormingBarCodeActivity extends BaseActivity {
                         num.setText("");
                         number++;//计算成功次数
                         num.setText(number + "");
-                        Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;

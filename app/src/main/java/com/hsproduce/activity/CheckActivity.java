@@ -36,7 +36,7 @@ public class CheckActivity extends BaseActivity {
     //定义变量  质检条码
     private String BarCode = "";
     //是否合格
-    private String show = "";
+//    private String show = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,8 @@ public class CheckActivity extends BaseActivity {
         BarCode = barcode.getText().toString().trim();
         //判断是否是空
         if (StringUtil.isNullOrEmpty(BarCode)) {
-            Toast.makeText(CheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+//            Toast.makeText(CheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            return;
         } else {
             String parm = "SwitchTYRE_CODE=" + BarCode;
             new SelDetailedTask().execute(parm);
@@ -117,16 +118,12 @@ public class CheckActivity extends BaseActivity {
 
     //修改轮胎合格与否
     public void check() {
-        ERROR = error.getText().toString().trim();
-        ERROR = ERROR.replace(".","-");
+        ERROR = error.getText().toString().trim().replace(".","-");
         if(ERROR == null || ERROR.equals("")){
             Toast.makeText(CheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_LONG).show();
             return;
         }
-        if(show.equals("不合格")){
-            Toast.makeText(CheckActivity.this, "此条码已经设为不合格", Toast.LENGTH_LONG).show();
-            return;
-        }
+
         String parm = "TYRE_CODE=" + BarCode + "&IS_H=1" + "&USER_NAME=" + App.username + "&H_REASON=" + ERROR;
         new QualityTestingTask().execute(parm);
     }
@@ -172,10 +169,6 @@ public class CheckActivity extends BaseActivity {
                         lorR.setText(datas.get(0).getLr());
                         shift.setText(datas.get(0).getShift());
                         creatuser.setText(datas.get(0).getCreateuser());
-                        if (show != null || !show.equals("")) {
-                            show = "";
-                        }
-                        show = datas.get(0).getiS_H();
 
                     } else {
                         Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();

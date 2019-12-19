@@ -152,8 +152,13 @@ public class FormingDetailChangeActivity extends BaseActivity {
     //获取条码明细
     public void getCodeDetail() {
         BarCode = barcode.getText().toString().trim();
-        String parm = "SwitchTYRE_CODE=" + BarCode;
-        new SelDetailedTask().execute(parm);
+        if (StringUtil.isNullOrEmpty(BarCode)) {
+//            Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            String parm = "SwitchTYRE_CODE=" + BarCode;
+            new SelDetailedTask().execute(parm);
+        }
     }
 
     //根据条码查询明细
@@ -166,6 +171,11 @@ public class FormingDetailChangeActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            //清空
+            spesc.setText("");
+            mchid.setText("");
+            shift.setSelection(0, true);
+
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
                 return;
@@ -197,7 +207,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         Team = datas.get(0).getTeam();
                         CreateUser = datas.get(0).getCreateuser();
                         codeid = datas.get(0).getId();
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
@@ -357,9 +367,6 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        spesc.setText("");
-                        mchid.setText("");
-                        shift.setSelection(0, true);
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();

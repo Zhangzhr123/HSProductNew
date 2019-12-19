@@ -824,6 +824,12 @@ public class FormingActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        //按键弹开
         switch (keyCode) {
             case 22://右方向键
                 getCurrentVPlan();//查询当前机台的生产计划
@@ -846,13 +852,6 @@ public class FormingActivity extends BaseActivity {
             default:
                 break;
         }
-
-        return true;
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //按键弹开
         return true;
     }
 

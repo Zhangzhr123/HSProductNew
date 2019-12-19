@@ -13,7 +13,7 @@
             android:background="@color/xui_btn_blue_normal_color"
             app:tb_barHeight="40dp"
             app:tb_dividerColor="@color/xui_config_color_red"
-            app:tb_titleText="成型胚胎报废"/>
+            app:tb_titleText="成型胎胚报废"/>
 
 
     <LinearLayout
