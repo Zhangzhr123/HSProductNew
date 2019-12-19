@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,6 +27,8 @@ import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 
 import java.security.Key;
@@ -153,32 +157,15 @@ public class VulcanizationActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(tvbarcode)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            if (codelist.size() == 0 || codelist == null) {
-                isNew = true;
-                return;
-            }
-            for (int i = 0; i < codelist.size(); i++) {
-                if (tvbarcode.equals(codelist.get(i))) {
-                    isNew = false;
-                    break;
-                }
-            }
-
-
-            if (isNew) {
-                //判断规格是否合格
-//                String param = "PLAN_ID="+planid+"&TYRE_CODE="+tvbarcode;
-//                new ErrorJudgeTask().execute(param);
-                //判断轮胎条码是否重复
-                String param1 = "TYRE_CODE=" + tvbarcode;
-                new TypeCodeTask().execute(param1);
-            } else {
-                isNew = true;
+            //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
+            if(codelist.contains(tvbarcode)){
                 Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+            }else{
+                //记录硫化生产记录
+                String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name="+ App.username + "&TEAM=" + App.shift + "&doit=0";
+                new TypeCodeTask().execute(param1);
             }
-
         }
-//        barcode.setText("");
     }
 
     //查询任务
@@ -277,47 +264,11 @@ public class VulcanizationActivity extends BaseActivity {
         }
     }
 
-    //判断轮胎条码是否重复
-    class ErrorJudgeTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.ErrorJudge, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
-                    }.getType());
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        //Toast.makeText(VulcanizationActivity.this, "全新轮胎条码", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        error("条码轮胎规格与计划轮胎规格不一致，是否继续？");
-                        //Toast.makeText(VulcanizationActivity.this, "已扫描过该轮胎条码！", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误！", Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    //判断轮胎条码是否重复
+    //新增硫化生产记录
     class TypeCodeTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_SelActual_TYRE_CODE, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
             return result;
         }
 
@@ -333,20 +284,31 @@ public class VulcanizationActivity extends BaseActivity {
                         Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        App.Iu = "I";
-                        //扫描条码绑定计划
-                        String param2 = "PLAN_ID=" + planid + "&TYRE_CODE=" + tvbarcode + "&IorU=I" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
-                        new CodeInPlanTask().execute(param2);
-                        //Toast.makeText(VulcanizationActivity.this, "全新轮胎条码", Toast.LENGTH_LONG).show();
+                        barcodelog.append(tvbarcode + ";");
+                        barcode.setText("");
+                        codelist.add(tvbarcode);
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
-                        App.Iu = "U";
-                        //扫描条码绑定计划
-                        String param2 = "PLAN_ID=" + planid + "&TYRE_CODE=" + tvbarcode + "&IorU=U" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
-                        new CodeInPlanTask().execute(param2);
-                        //Toast.makeText(VulcanizationActivity.this, "已扫描过该轮胎条码！", Toast.LENGTH_LONG).show();
-                    } else {
+                        Toast.makeText(VulcanizationActivity.this, res.get("msg") + "", Toast.LENGTH_LONG).show();
+                    } else if (res.get("code").equals("400")) {
+                        new MaterialDialog.Builder(VulcanizationActivity.this)
+                                .title("提示")
+                                .content(res.get("msg") + "")
+                                .positiveText(R.string.vul_confirm)
+                                .negativeText(R.string.vul_cancel)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        //强制记录硫化生产记录
+                                        String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name="+ App.username + "&TEAM=" + App.shift + "&doit=1";
+                                        new TypeCodeTask().execute(param1);
+                                    }
+                                })
+                                .cancelable(false)
+                                .show();
+                    }
+                    else {
                         Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG).show();
                     }
 

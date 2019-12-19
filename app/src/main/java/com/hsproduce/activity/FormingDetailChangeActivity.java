@@ -32,7 +32,7 @@ import java.util.Map;
 public class FormingDetailChangeActivity extends BaseActivity {
 
     //定义控件
-    private TextView barcode, spesc, mchid, createuser;
+    private TextView barcode, spesc, mchid;
     private ButtonView ok, getitnbr, getmchid, out;
     private ImageButton btgetcode;
     private Spinner shift;
@@ -71,7 +71,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         //规格编码
         spesc = (TextView) findViewById(R.id.spesc);
         //主手
-        createuser = (TextView) findViewById(R.id.master);
+//        createuser = (TextView) findViewById(R.id.master);
         //机台号
         mchid = (TextView) findViewById(R.id.mchid);
         //生产日期
@@ -79,7 +79,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         //班组
 //        team = (Spinner) findViewById(R.id.team);
         //返回
-        out = (ButtonView)findViewById(R.id.out);
+        out = (ButtonView) findViewById(R.id.out);
 
 //        new ShiftTask().execute();
 //        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamlist);
@@ -168,40 +168,41 @@ public class FormingDetailChangeActivity extends BaseActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                change();
                 //机台号
-                MchId = mchid.getText().toString().trim();
-                //规格编码
-                Spesc = spesc.getText().toString().trim();
-                //主手
-                CreateUser = createuser.getText().toString().trim();
-                //补录条码
-                BarCode = barcode.getText().toString().trim();
-                //时间
-//                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//                try {
-//                    Date = formatter.format(formatter.parse(date.getText().toString()));
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
+//                MchId = mchid.getText().toString().trim();
+//                //规格编码
+//                Spesc = spesc.getText().toString().trim();
+//                //主手
+////                CreateUser = createuser.getText().toString().trim();
+//                //补录条码
+//                BarCode = barcode.getText().toString().trim();
+//                //时间
+////                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+////                try {
+////                    Date = formatter.format(formatter.parse(date.getText().toString()));
+////                } catch (ParseException e) {
+////                    e.printStackTrace();
+////                }
+////                Date = date.getText().toString().trim();
+//                //班次
+//                Shift = shift.getSelectedItem().toString().trim();
+//                if (Shift.equals("早")) {
+//                    Shift = "1";
+//                } else if (Shift.equals("中")) {
+//                    Shift = "2";
+//                } else if (Shift.equals("晚")) {
+//                    Shift = "3";
+//                } else {
+//                    Team = "";
 //                }
-//                Date = date.getText().toString().trim();
-                //班次
-                Shift = shift.getSelectedItem().toString().trim();
-                if(Shift.equals("早")){
-                    Shift = "1";
-                }else if(Shift.equals("中")){
-                    Shift = "2";
-                }else if(Shift.equals("晚")){
-                    Shift = "3";
-                }else{
-                    Team = "";
-                }
-                //ST205/75R14-6PR(TR643)L 胎胚
-                //MCHID=01 &ITNBR=BBZ20514H02 &ITDSC=ST205%2F75R14-6PR(TR643)L%20%E8%83%8E%E8%83%9A
-                // &SHIFT=2 &USER_NAME=shao &DateTime_W=2019-12-11 &SwitchID=208
-                String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
-                        + "&SHIFT=" + Shift + "&USER_NAME=" + CreateUser + "&DateTime_W=" + Date + "&SwitchID=" + codeid;
-                new ChangeDetailedTask().execute(parm);
-//                barcode.setText("");
+//                //ST205/75R14-6PR(TR643)L 胎胚
+//                //MCHID=01 &ITNBR=BBZ20514H02 &ITDSC=ST205%2F75R14-6PR(TR643)L%20%E8%83%8E%E8%83%9A
+//                // &SHIFT=2 &USER_NAME=shao &DateTime_W=2019-12-11 &SwitchID=208
+//                String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
+//                        + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + "&SwitchID=" + codeid;
+//                new ChangeDetailedTask().execute(parm);
+////                barcode.setText("");
             }
         });
         //筛选规格
@@ -237,13 +238,36 @@ public class FormingDetailChangeActivity extends BaseActivity {
         });
     }
 
+    public void change() {
+        //机台号
+        MchId = mchid.getText().toString().trim();
+        //规格编码
+        Spesc = spesc.getText().toString().trim();
+        //补录条码
+        BarCode = barcode.getText().toString().trim();
+        //班次
+        Shift = shift.getSelectedItem().toString().trim();
+        if (Shift.equals("早")) {
+            Shift = "1";
+        } else if (Shift.equals("中")) {
+            Shift = "2";
+        } else if (Shift.equals("晚")) {
+            Shift = "3";
+        } else {
+            Team = "";
+        }
+        String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
+                + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + "&SwitchID=" + codeid;
+        new ChangeDetailedTask().execute(parm);
+    }
+
     //获取条码明细
     public void getCodeDetail() {
         //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
         BarCode = barcode.getText().toString().trim();
 //        if (BarCode.length() == 12) {
-            String parm = "SwitchTYRE_CODE=" + BarCode;
-            new SelDetailedTask().execute(parm);
+        String parm = "SwitchTYRE_CODE=" + BarCode;
+        new SelDetailedTask().execute(parm);
 //        }else{
 //            Toast.makeText(FormingDetailChangeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
 //            return;
@@ -337,7 +361,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         } else {
                             shift.setSelection(2, true);
                         }
-                        createuser.setText(datas.get(0).getCreateuser());
+//                        createuser.setText(datas.get(0).getCreateuser());
                         //获取信息
                         MchId = datas.get(0).getMchid();
                         Spesc = datas.get(0).getItnbr();
@@ -527,7 +551,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
 //                        date.setText("");
 //                        team.setSelection(0, true);
                         shift.setSelection(0, true);
-                        createuser.setText("");
+//                        createuser.setText("");
                         Toast.makeText(FormingDetailChangeActivity.this, "变更成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(FormingDetailChangeActivity.this, "未找到轮胎信息，变更失败！", Toast.LENGTH_LONG).show();
@@ -596,6 +620,14 @@ public class FormingDetailChangeActivity extends BaseActivity {
             } else {
                 System.exit(0);//注销功能
             }
+        }
+        //F1
+        if (keyCode == 131) {
+            change();
+        }
+        //F2
+        if (keyCode == 132) {
+            tofunction();
         }
         //左方向键
         if (keyCode == 21) {

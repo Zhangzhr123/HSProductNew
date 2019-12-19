@@ -152,26 +152,47 @@ public class SwitchFormingActivity extends BaseActivity {
         repl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNull == 1) {
-                    //开始计划
-                    dialogToStart();
-                    //返回上一页面，并且上一页面重新查询。
-
-                } else if (isNull == 2) {
-                    //完成计划
-                    dialogToFinish();
-                    //返回上一页面，并且上一页面重新查询。
-
-                } else if (isNull == 3) {
-                    Toast.makeText(SwitchFormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    Toast.makeText(SwitchFormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                replace();
+//                if (isNull == 1) {
+//                    //开始计划
+//                    dialogToStart();
+//                    //返回上一页面，并且上一页面重新查询。
+//
+//                } else if (isNull == 2) {
+//                    //完成计划
+//                    dialogToFinish();
+//                    //返回上一页面，并且上一页面重新查询。
+//
+//                } else if (isNull == 3) {
+//                    Toast.makeText(SwitchFormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
+//                    return;
+//                } else {
+//                    Toast.makeText(SwitchFormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
             }
         });
 
+    }
+
+    public void replace(){
+        if (isNull == 1) {
+            //开始计划
+            dialogToStart();
+            //返回上一页面，并且上一页面重新查询。
+
+        } else if (isNull == 2) {
+            //完成计划
+            dialogToFinish();
+            //返回上一页面，并且上一页面重新查询。
+
+        } else if (isNull == 3) {
+            Toast.makeText(SwitchFormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            Toast.makeText(SwitchFormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
+            return;
+        }
     }
 
     //开始计划
@@ -747,6 +768,14 @@ public class SwitchFormingActivity extends BaseActivity {
             } else {
                 System.exit(0);//注销功能
             }
+        }
+        //F1
+        if(keyCode == 131){
+            replace();
+        }
+        //F2
+        if(keyCode == 132){
+            returnPager();
         }
         //左方向键
         if (keyCode == 21) {

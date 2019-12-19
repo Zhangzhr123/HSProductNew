@@ -173,6 +173,7 @@ public class FormingActivity extends BaseActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startPlan();
                 //查询生产中计划
 //                String parm = "?MCHID=" + mchid;
 //                String str = PathUtil.START+parm;
@@ -204,27 +205,27 @@ public class FormingActivity extends BaseActivity {
 //                }
 //                new STARTTask().execute("MCHID=" + mchid);
 
-                if (isNull == 1) {
-                    //开始计划
-                    dialogToStart();
-                    //返回上一页面，并且上一页面重新查询。
-
-
-                } else if (isNull == 2) {
-                    //完成计划
-                    dialogToFinish();
-                    //返回上一页面，并且上一页面重新查询。
-
-//                    String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
-//                    new GetFormingPlanTask().execute(param1);
-//                    adapter.notifyDataSetChanged();
-                } else if (isNull == 3) {
-                    Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    Toast.makeText(FormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
-                    return;
-                }
+//                if (isNull == 1) {
+//                    //开始计划
+//                    dialogToStart();
+//                    //返回上一页面，并且上一页面重新查询。
+//
+//
+//                } else if (isNull == 2) {
+//                    //完成计划
+//                    dialogToFinish();
+//                    //返回上一页面，并且上一页面重新查询。
+//
+////                    String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
+////                    new GetFormingPlanTask().execute(param1);
+////                    adapter.notifyDataSetChanged();
+//                } else if (isNull == 3) {
+//                    Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
+//                    return;
+//                } else {
+//                    Toast.makeText(FormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
 
 
             }
@@ -233,35 +234,36 @@ public class FormingActivity extends BaseActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v1) {
-                final EditText et = new EditText(FormingActivity.this);
-                et.setText("");
-                et.setHint("请修改数量");
-                new AlertDialog.Builder(FormingActivity.this).setTitle("修改")
-                        .setView(et)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if(number != null || !number.equals("")){
-                                    number = "";
-                                }
-                                number = et.getText().toString();
-                                if (number != null && !number.equals("") && Integer.valueOf(number) != 0) {
-
-                                    Integer sum = Integer.valueOf(v.getBarcodestart().substring(6,12))+Integer.valueOf(number);
-                                    if(Integer.valueOf(number)>500 || sum>999999){
-                                        Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                    //修改操作接口
-                                    String param = "VPLANID=" + currid + "&Num=" + number + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                                    new UPDATETask().execute(param);
-
-                                } else {
-                                    Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
-                                }
-
-                            }
-                        }).setNegativeButton("取消", null).show();
+                updateNumber();
+//                final EditText et = new EditText(FormingActivity.this);
+//                et.setText("");
+//                et.setHint("请修改数量");
+//                new AlertDialog.Builder(FormingActivity.this).setTitle("修改")
+//                        .setView(et)
+//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                if(number != null || !number.equals("")){
+//                                    number = "";
+//                                }
+//                                number = et.getText().toString();
+//                                if (number != null && !number.equals("") && Integer.valueOf(number) != 0) {
+//
+//                                    Integer sum = Integer.valueOf(v.getBarcodestart().substring(6,12))+Integer.valueOf(number);
+//                                    if(Integer.valueOf(number)>500 || sum>999999){
+//                                        Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+//                                        return;
+//                                    }
+//                                    //修改操作接口
+//                                    String param = "VPLANID=" + currid + "&Num=" + number + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+//                                    new UPDATETask().execute(param);
+//
+//                                } else {
+//                                    Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
+//                                }
+//
+//                            }
+//                        }).setNegativeButton("取消", null).show();
             }
         });
         //完成
@@ -272,6 +274,57 @@ public class FormingActivity extends BaseActivity {
             }
         });
 
+    }
+
+    public void startPlan(){
+        if (isNull == 1) {
+            //开始计划
+            dialogToStart();
+            //返回上一页面，并且上一页面重新查询。
+
+        } else if (isNull == 2) {
+            //完成计划
+            dialogToFinish();
+            //返回上一页面，并且上一页面重新查询。
+        } else if (isNull == 3) {
+            Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            Toast.makeText(FormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
+
+    public void updateNumber(){
+        final EditText et = new EditText(FormingActivity.this);
+        et.setText("");
+        et.setHint("请修改数量");
+        new AlertDialog.Builder(FormingActivity.this).setTitle("修改")
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(number != null || !number.equals("")){
+                            number = "";
+                        }
+                        number = et.getText().toString();
+                        if (number != null && !number.equals("") && Integer.valueOf(number) != 0) {
+
+                            Integer sum = Integer.valueOf(v.getBarcodestart().substring(6,12))+Integer.valueOf(number);
+                            if(Integer.valueOf(number)>500 || sum>999999){
+                                Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            //修改操作接口
+                            String param = "VPLANID=" + currid + "&Num=" + number + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                            new UPDATETask().execute(param);
+
+                        } else {
+                            Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                }).setNegativeButton("取消", null).show();
     }
 
     //跳转页面
@@ -966,6 +1019,22 @@ public class FormingActivity extends BaseActivity {
             } else {
                 System.exit(0);//注销功能
             }
+        }
+        //F1
+        if(keyCode == 131){
+            startPlan();
+        }
+        //F1
+        if(keyCode == 132){
+            updateNumber();
+        }
+        //F1
+        if(keyCode == 133){
+            finishPlan();
+        }
+        //F1
+        if(keyCode == 134){
+            returnPager();
         }
         //左方向键
         if (keyCode == 21) {
