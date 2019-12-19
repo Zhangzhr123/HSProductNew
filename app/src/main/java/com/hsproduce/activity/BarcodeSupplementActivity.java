@@ -2,6 +2,7 @@ package com.hsproduce.activity;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -33,9 +34,10 @@ import java.util.Map;
 public class BarcodeSupplementActivity extends BaseActivity {
 
     //定义控件
-    private TextView barcode,spesc,spescname,date,master,mchid;
+    private TextView barcode,spesc,date,master, spescname;
+    private AutoCompleteTextView mchid;
     private Spinner shift,LorR,team;
-    private ButtonView btplan,ok,getitnbr,getmchid;
+    private ButtonView ok,getitnbr;
     //下拉列表
     private List<String> shiftlist = new ArrayList<>();
     private ArrayAdapter<String> shiftadapter;
@@ -73,12 +75,13 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //规格编码
         spesc = (TextView)findViewById(R.id.spesc);
         //规格名称
-        spescname = (TextView)findViewById(R.id.spescname);
+        spescname = (TextView) findViewById(R.id.spescname);
+        getitnbr = (ButtonView) findViewById(R.id.getitnbr);
         //生产时间
         date = (TextView)findViewById(R.id.date);
         date.setFocusable(false);//让EditText失去焦点，然后获取点击事件
         //机台号
-        mchid = (TextView)findViewById(R.id.mchid);
+        mchid = (AutoCompleteTextView)findViewById(R.id.mchid);
         //左右膜
         LorR = (Spinner)findViewById(R.id.LorR);
         //班组
@@ -86,10 +89,8 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //班次
         shift = (Spinner)findViewById(R.id.shift);
         //主手
-        master = (TextView)findViewById(R.id.master);
-        master.setText(App.username);
-        //绑定生产计划
-        btplan = (ButtonView)findViewById(R.id.bt_in_plan);
+//        master = (TextView)findViewById(R.id.master);
+//        master.setText(App.username);
         //条码补录
         ok = (ButtonView)findViewById(R.id.ok);
 
@@ -100,15 +101,6 @@ public class BarcodeSupplementActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Team = parent.getItemAtPosition(position).toString();
-//                if(Team.equals("甲班")){
-//                    Team = "1";
-//                }else if(Team.equals("乙班")){
-//                    Team = "2";
-//                }else if(Team.equals("丙班")) {
-//                    Team = "3";
-//                }else{
-//                    Team = "15";
-//                }
                 for(int i = 0;i<teamList.size();i++){
                     if (Team.equals(teamList.get(i).getName())) {
                         Team = teamList.get(i).getId();
@@ -131,9 +123,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        //筛选按钮
-        getitnbr = (ButtonView)findViewById(R.id.getitnbr);
-        getmchid = (ButtonView)findViewById(R.id.getmchid);
+        getMchid();
     }
 
     public void initEvent(){
@@ -158,88 +148,20 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        //选择计划
-        btplan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPlan();
-//                //清空数据
-//                planlist.clear();
-//                //选择计划
-//                String parm1 ="MCHIDLR="+"&SHIFT="+"&TIME_A=";
-//                new GetVPlan_TTask().execute(parm1);
-            }
-        });
         //条码补录
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 supCode();
-//                //规格编码
-//                Spesc = spesc.getText().toString().trim();
-//                //规格名称
-//                SpescName = spescname.getText().toString().trim();
-//                SpescName = SpescName.replace(" ","%20");
-//                //补录条码
-//                BarCode = barcode.getText().toString().trim();
-//                //生产日期
-//                Pddate = date.getText().toString().trim();
-//                //左右膜
-//                lorR = LorR.getSelectedItem().toString().trim();
-//                //班次
-//                Shift = shift.getSelectedItem().toString().trim();
-//                //主手
-//                creatuser = master.getText().toString().trim();
-//                if(StringUtil.isNullOrBlank(Spesc)){
-//                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格编码", Toast.LENGTH_LONG).show();
-//                }else if(StringUtil.isNullOrBlank(SpescName)){
-//                    Toast.makeText(BarcodeSupplementActivity.this, "请填写规格名称", Toast.LENGTH_LONG).show();
-//                }else if(StringUtil.isNullOrBlank(BarCode)){
-//                    Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
-//                }else{
-//                    //MCHID=  &ITNBR=  &ITDSC=  &LoR=  &SHIFT=  &TIME_A=  &USER_NAME=  &SwitchTYRE_CODE= 111600000451
-//                    String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
-//                            +"&TIME_A="+Pddate+"&USER_NAME="+creatuser+"&SwitchTYRE_CODE="+BarCode;
-//                    System.out.println(parm);
-//                    new SupCodeTask().execute(parm);
-//                }
-//                barcode.setText("");
             }
         });
-        //筛选规格
+        //查询规格编码
         getitnbr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getItnbr();
-//                //清空数据
-//                itnbrlist.clear();
-//                itndsc.clear();
-//                String search = spesc.getText().toString().trim();
-//                search = search.toUpperCase();//大写转换
-//                String parm = "ITNBR="+search;
-//                new GetSpecTask().execute(parm);
             }
         });
-        //筛选机台
-        getmchid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getMchid();
-//                //清空数据
-//                mchidlist.clear();
-//                String parm = "TYPE_ID=10098";
-//                new MCHIDTask().execute(parm);
-            }
-        });
-    }
-
-    //选择计划
-    public void getPlan(){
-        //清空数据
-        planlist.clear();
-        //选择计划
-        String parm1 ="MCHIDLR="+"&SHIFT="+"&TIME_A=";
-        new GetVPlan_TTask().execute(parm1);
     }
 
     //条码补录
@@ -249,6 +171,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //规格名称
         SpescName = spescname.getText().toString().trim();
         SpescName = SpescName.replace(" ","%20");
+
         //补录条码
         BarCode = barcode.getText().toString().trim();
         //生产日期
@@ -258,7 +181,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //班次
         Shift = shift.getSelectedItem().toString().trim();
         //主手
-        creatuser = master.getText().toString().trim();
+//        creatuser = master.getText().toString().trim();
         if(StringUtil.isNullOrBlank(Spesc)){
             Toast.makeText(BarcodeSupplementActivity.this, "请填写规格编码", Toast.LENGTH_LONG).show();
         }else if(StringUtil.isNullOrBlank(SpescName)){
@@ -266,13 +189,11 @@ public class BarcodeSupplementActivity extends BaseActivity {
         }else if(StringUtil.isNullOrBlank(BarCode)){
             Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
         }else{
-            //MCHID=  &ITNBR=  &ITDSC=  &LoR=  &SHIFT=  &TIME_A=  &USER_NAME=  &SwitchTYRE_CODE= 111600000451
             String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
-                    +"&TIME_A="+Pddate+"&USER_NAME="+creatuser+"&SwitchTYRE_CODE="+BarCode;
+                    +"&TIME_A="+Pddate+"&USER_NAME="+App.username+"&SwitchTYRE_CODE="+BarCode;
             System.out.println(parm);
             new SupCodeTask().execute(parm);
         }
-//        barcode.setText("");
     }
 
     //筛选规格
@@ -280,9 +201,10 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //清空数据
         itnbrlist.clear();
         itndsc.clear();
-        String search = spesc.getText().toString().trim();
+        spesc.setText("");
+        String search = spescname.getText().toString().trim();
         search = search.toUpperCase();//大写转换
-        String parm = "ITNBR="+search;
+        String parm = "ITDSC="+search;
         new GetSpecTask().execute(parm);
     }
 
@@ -350,22 +272,13 @@ public class BarcodeSupplementActivity extends BaseActivity {
                             if(search.contains(map.get(i).get("itemid"))){}
                             mchidlist.add(map.get(i).get("itemid"));
                         }
-                        mchidadapter = new DialogItemAdapter(BarcodeSupplementActivity.this,mchidlist);
-                        //弹窗显示选中消失
-                        AlertDialog alertDialog = new AlertDialog
-                                .Builder(BarcodeSupplementActivity.this)
-                                .setSingleChoiceItems(mchidadapter, 0, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        MchId = mchidlist.get(which);
-                                        mchid.setText("");
-                                        mchid.setText(MchId);
-                                        dialog.dismiss();
-                                        Toast.makeText(BarcodeSupplementActivity.this,"选择了"+MchId,Toast.LENGTH_SHORT).show();
-                                    }
-                                }).create();
-                        alertDialog.show();
-//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
+                        //创建 AutoCompleteTextView 适配器 (输入提示)
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                BarcodeSupplementActivity.this, android.R.layout.simple_dropdown_item_1line,mchidlist);
+                        //初始化autoCompleteTextView
+                        mchid.setAdapter(adapter);
+                        //设置输入多少字符后提示，默认值为2，在此设为１
+                        mchid.setThreshold(1);
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(BarcodeSupplementActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
                     }else{
@@ -442,68 +355,6 @@ public class BarcodeSupplementActivity extends BaseActivity {
         }
     }
 
-    //根据条件获取计划
-    class GetVPlan_TTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.GetVPlan_T, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
-                Toast.makeText(BarcodeSupplementActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>(){}.getType());
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
-                    }
-                    if(res.get("code").equals("200")){
-                        for(int i=0;i<datas.size();i++){
-                            planlist.add(datas.get(i));
-                        }
-                        planadapter = new PlanDialogItemAdapter(BarcodeSupplementActivity.this,planlist);
-                        //弹窗显示选中消失
-                        AlertDialog alertDialog = new AlertDialog
-                                .Builder(BarcodeSupplementActivity.this)
-                                .setSingleChoiceItems(planadapter, 0, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        spesc.setText("");
-                                        spescname.setText("");
-                                        date.setText("");
-                                        mchid.setText("");
-                                        spesc.setText(planlist.get(which).getItnbr());
-                                        spescname.setText(planlist.get(which).getItdsc());
-                                        date.setText(planlist.get(which).getPdate().substring(0,10).replaceAll("/","-"));
-                                        mchid.setText(planlist.get(which).getMchid());
-                                        PlanID = planlist.get(which).getId();
-                                        CodeInPlan();
-                                        dialog.dismiss();
-                                        Toast.makeText(BarcodeSupplementActivity.this,"选择了"+planlist.get(which).getId(),Toast.LENGTH_SHORT).show();
-                                    }
-                                }).create();
-                        alertDialog.show();
-                        //显示绑定条码数量
-//                        Toast.makeText(BarcodeSupplementActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("300")){
-                        Toast.makeText(BarcodeSupplementActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("500")){
-                        Toast.makeText(BarcodeSupplementActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(BarcodeSupplementActivity.this, "计划查询错误："+res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
 
     //条码补录
     class SupCodeTask extends AsyncTask<String, Void, String> {
@@ -529,6 +380,8 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         spescname.setText("");
                         date.setText("");
                         mchid.setText("");
+                        barcode.setText("");
+                        barcode.requestFocus();
                         Toast.makeText(BarcodeSupplementActivity.this, "补录成功！", Toast.LENGTH_LONG).show();
                     }else if(res.get("code").equals("100")){
                         Toast.makeText(BarcodeSupplementActivity.this, "新条码被使用过无法更换！", Toast.LENGTH_LONG).show();
@@ -545,113 +398,21 @@ public class BarcodeSupplementActivity extends BaseActivity {
             }
         }
     }
-
-    //选择计划直接绑定条码
-    public void CodeInPlan(){
-        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
-        normalDialog.setTitle("提示");
-        normalDialog.setMessage("该条码是否直接绑定绑定此计划");
-        normalDialog.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //直接绑定生产计划
-                        if(StringUtil.isNullOrBlank(BarCode)){
-                            Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
-                        }else{
-                            String param = "PLAN_ID="+PlanID+"&TYRE_CODE="+barcode+"&IorU=I"+"&User_Name="+creatuser;
-                            new CodeInPlanTask().execute(param);
-                        }
-                    }
-                });
-        normalDialog.setNegativeButton("取消",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        // 显示
-        normalDialog.show();
-    }
-
-    //条码绑定计划
-    class CodeInPlanTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
-                Toast.makeText(BarcodeSupplementActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(BarcodeSupplementActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if(res.get("code").equals("200")){
-//                        barcode.setText("");
-                        spesc.setText("");
-                        spescname.setText("");
-                        date.setText("");
-                        mchid.setText("");
-                        Toast.makeText(BarcodeSupplementActivity.this, "条码插入成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("100")){
-                        Toast.makeText(BarcodeSupplementActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("300")){
-                        Toast.makeText(BarcodeSupplementActivity.this, "条码插入数据库失败！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(BarcodeSupplementActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(BarcodeSupplementActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    //键盘监听
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        Log.e("key", keyCode + "  ");
-        //扫描键 按下时清除
-        if(keyCode == 22){
-            getPlan();
-        }
-        if(keyCode == 0){
-            barcode.setText("");
-        }
-        if(keyCode == 4){
-            if(System.currentTimeMillis() - mExitTime > 2000){
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            }else{
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if(keyCode == 21){
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-    }
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时获取计划
-//        if(keyCode == 0){
-//
-//        }
-        super.onKeyDown(keyCode, event);
+        //右方向键
+        String msg = "";
+        switch (keyCode){
+            //返回键
+            case 4:
+                //返回上级页面
+                startActivity(new Intent(BarcodeSupplementActivity.this, FunctionActivity.class));
+                this.finish();
+                break;
+        }
         return true;
     }
+
 
 }

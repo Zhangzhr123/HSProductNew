@@ -73,7 +73,7 @@ public class FunctionActivity extends BaseActivity {
         barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
 
         //菜单权限管理
-        String parm = "UserName=" + App.username;
+        String parm = "UserName=" + App.usercode;
         new TeamTask().execute(parm);
 
         //Button点击事件
@@ -298,7 +298,12 @@ public class FunctionActivity extends BaseActivity {
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
                             }
                         }
-
+                        for(int u=0;u<map.size();u++){
+                            if(map.get(u).get("moduleid").equals("0")){
+                                App.username = map.get(u).get("m_CNAME");
+                                break;
+                            }
+                        }
                     } else {
                         Toast.makeText(FunctionActivity.this, "您没有操作PDA权限,请退出", Toast.LENGTH_LONG).show();
                     }

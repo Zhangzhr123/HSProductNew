@@ -167,7 +167,7 @@ public class LoginActivity extends BaseActivity {
     public void login() {
         String username = tv_code.getText().toString().trim();
         String password = tv_password.getText().toString().trim();
-        App.username = username;
+        App.usercode = username;
         String param = "UserName=" + username + "&PWD=" + password;
         new MyTask().execute(param);
     }

@@ -8,6 +8,7 @@ public class App extends Application {
 
     public static Gson gson = new Gson();
     public static String username = "";
+    public static String usercode = "";
     public static String shift = "";
     public static String lr = "";
     public static String access_token = "";
