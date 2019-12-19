@@ -21,8 +21,9 @@ import java.util.List;
 public class VPlanReplAdapter extends BaseAdapter {
     private Context context;
     private List<VPlan> vPlanList = new ArrayList<>();
+    private String preCode = "", nextCode = "";
 
-    public VPlanReplAdapter(Context context, List<VPlan> vPlanList){
+    public VPlanReplAdapter(Context context, List<VPlan> vPlanList) {
         this.context = context;
         this.vPlanList = vPlanList;
     }
@@ -44,16 +45,9 @@ public class VPlanReplAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.list_vplan_repl_item, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_forming_repl_item, null);
         final VPlan vPlan = vPlanList.get(position);
         //设置页面数据
-        if (vPlan.getPdate() != null) {
-            int index = vPlan.getPdate().indexOf(" ");
-            ((TextView) convertView.findViewById(R.id.plandata)).setText(vPlan.getPdate().substring(0,index).replaceAll("/","-"));
-        }
-        if (vPlan.getMchid() != null) {
-            ((TextView) convertView.findViewById(R.id.mchid)).setText(vPlan.getMchid());
-        }
         if (vPlan.getItnbr() != null) {
             ((TextView) convertView.findViewById(R.id.spesc)).setText(vPlan.getItnbr());
         }
@@ -61,38 +55,21 @@ public class VPlanReplAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.spescname)).setText(vPlan.getItdsc());
         }
         if (vPlan.getState() != null) {
-            if(vPlan.getState().equals("10")){
+            if (vPlan.getState().equals("10")) {
                 ((TextView) convertView.findViewById(R.id.state)).setText("新计划");
-            }else if(vPlan.getState().equals("20")){
+            } else if (vPlan.getState().equals("20")) {
                 ((TextView) convertView.findViewById(R.id.state)).setText("等待中");
-            }else if(vPlan.getState().equals("30")){
-                ((TextView) convertView.findViewById(R.id.state)).setText("进行中");
-            }else if(vPlan.getState().equals("40")){
+            } else if (vPlan.getState().equals("30")) {
+                ((TextView) convertView.findViewById(R.id.state)).setText("生产中");
+            } else if (vPlan.getState().equals("40")) {
                 ((TextView) convertView.findViewById(R.id.state)).setText("已完成");
-            }else{
+            } else {
                 ((TextView) convertView.findViewById(R.id.state)).setText("未知状态");
             }
         }
-        convertView.findViewById(R.id.replace).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //显示dialog
-                new MaterialDialog.Builder(context)
-//                        .iconRes(R.drawable.icon_warning)
-                        .title("提示")
-                        .content("是否切换规格？")
-                        .positiveText(R.string.vul_confirm)
-                        .negativeText(R.string.vul_cancel)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                ((SwitchPlanActivity)context).repItndes(vPlan.getId());
-                            }
-                        })
-                        .cancelable(false)
-                        .show();
-            }
-        });
+        if (vPlan.getPnum() != null) {
+            ((TextView) convertView.findViewById(R.id.pnum)).setText(vPlan.getPnum());
+        }
         return convertView;
     }
 }

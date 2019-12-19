@@ -32,7 +32,7 @@ import static android.support.constraint.Constraints.TAG;
 public class LoginActivity extends BaseActivity {
 
     //用户名  密码
-    private TextView tv_code, tv_password;
+    private TextView tv_code, tv_password,VersionName;
     //班组下拉列表
     private Spinner sp_shift;
     //登录按钮
@@ -58,24 +58,13 @@ public class LoginActivity extends BaseActivity {
         String version = get("myVersion");
         if (!TextUtils.isEmpty(version)) {
             App.version = version;
-//            Toast.makeText(this, "读取成功", Toast.LENGTH_LONG).show();
         }
         new 版本更新Task().execute();
-
-        //更新版本
-//        findViewById(R.id.title).setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                new 版本更新Task().execute();
-//                return false;
-//            }
-//        });
 
         // 获取设置的IP地址
         String text = get("myIP");
         if (!TextUtils.isEmpty(text)) {
             App.ip = text;
-//            Toast.makeText(this, "读取成功", Toast.LENGTH_LONG).show();
             new ShiftTask().execute();
         }
 
@@ -93,6 +82,9 @@ public class LoginActivity extends BaseActivity {
         ip = (ImageView) findViewById(R.id.ip);
         //登录
         login = (ButtonView)findViewById(R.id.login);
+        //版本信息
+        VersionName = (TextView)findViewById(R.id.VersionName);
+        VersionName.setText("华盛条码系统 v"+App.version);
 
         //自行输入IP
         ip.setOnClickListener(new View.OnClickListener() {
@@ -363,13 +355,6 @@ public class LoginActivity extends BaseActivity {
                             // 版本判断
                             if (!最新版本.equals(当前版本)) {
                                 App.version = 最新版本;
-                                File file = getDir("myVersion", Context.MODE_PRIVATE);
-                                if (file != null) {
-                                    deleteFile(file);
-                                    save("myVersion", 最新版本);
-                                } else {
-                                    save("myVersion", 最新版本);
-                                }
                                 //文件下载
                                 download(PathUtil.文件下载);
 
@@ -418,6 +403,14 @@ public class LoginActivity extends BaseActivity {
             }
         };
         registerReceiver(receiver, filter);
+        //数据持久化
+        File file = getDir("myVersion", Context.MODE_PRIVATE);
+        if (file != null) {
+            deleteFile(file);
+            save("myVersion", App.version);
+        } else {
+            save("myVersion", App.version);
+        }
     }
 
 

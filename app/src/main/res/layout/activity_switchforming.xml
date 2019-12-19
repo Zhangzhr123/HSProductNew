@@ -169,7 +169,7 @@
             android:visibility="gone">
         <Button
                 android:id="@+id/repl"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
@@ -177,10 +177,11 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:text="规格交替"/>
         <Button
                 android:id="@+id/out"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_change"
@@ -188,6 +189,7 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:text="返回"/>
     </LinearLayout>
 

@@ -33,16 +33,10 @@ public class FormingDetailChangeActivity extends BaseActivity {
 
     //定义控件
     private TextView barcode, spesc, mchid;
-    private ButtonView ok, getitnbr, getmchid, out;
+    private ButtonView getitnbr, getmchid;
+    private Button ok, out;
     private ImageButton btgetcode;
     private Spinner shift;
-    //下拉列表
-    private List<String> teamlist = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
-    //存放班组数据
-    private List<Team> teamList = new ArrayList<>();
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
     //定义变量
     private String BarCode = "", Spesc = "", CreateUser = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", Date = "";
     //Dialog显示列表
@@ -70,139 +64,34 @@ public class FormingDetailChangeActivity extends BaseActivity {
         barcode.requestFocus();
         //规格编码
         spesc = (TextView) findViewById(R.id.spesc);
-        //主手
-//        createuser = (TextView) findViewById(R.id.master);
         //机台号
         mchid = (TextView) findViewById(R.id.mchid);
-        //生产日期
-//        date = (TextView) findViewById(R.id.cdate);
-        //班组
-//        team = (Spinner) findViewById(R.id.team);
         //返回
-        out = (ButtonView) findViewById(R.id.out);
-
-//        new ShiftTask().execute();
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamlist);
-//        team.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Team = parent.getItemAtPosition(position).toString();
-//                for(int i = 0;i<teamList.size();i++){
-//                    if (Team.equals(teamList.get(i).getName())) {
-//                        Team = teamList.get(i).getId();
-//                        break;
-//                    } else if (Team.equals(teamList.get(i).getName())) {
-//                        Team = teamList.get(i).getId();
-//                        break;
-//                    } else if (Team.equals(teamList.get(i).getName())) {
-//                        Team = teamList.get(i).getId();
-//                        break;
-//                    } else if (Team.equals(teamList.get(i).getName())) {
-//                        Team = teamList.get(i).getId();
-//                        break;
-//                    } else {
-//                        break;
-//                    }
-//                }
-////                if (Team.equals("甲班")) {
-////                    Team = "1";
-////                } else if (Team.equals("乙班")) {
-////                    Team = "2";
-////                } else if (Team.equals("丙班")) {
-////                    Team = "3";
-////                } else {
-////                    Team = "15";
-////                }
-////                App.shift = Team;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
+        out = (Button) findViewById(R.id.out);
         //班次
         shift = (Spinner) findViewById(R.id.shift);
         //查询条码明细
         btgetcode = (ImageButton) findViewById(R.id.searchdetail);
         //条码补录
-        ok = (ButtonView) findViewById(R.id.ok);
+        ok = (Button) findViewById(R.id.ok);
         //筛选按钮
         getitnbr = (ButtonView) findViewById(R.id.getitnbr);
         getmchid = (ButtonView) findViewById(R.id.getmchid);
     }
 
     public void initEvent() {
-//        date.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar c = Calendar.getInstance();
-//                // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
-//                new DatePickerDialog(FormingDetailChangeActivity.this,
-//                        // 绑定监听器
-//                        new DatePickerDialog.OnDateSetListener() {
-//
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year,
-//                                                  int monthOfYear, int dayOfMonth) {
-//                                TextView show = (TextView) findViewById(R.id.cdate);
-//                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//                                try {
-//                                    String isdate = formatter.format(formatter.parse(year + "-" + (monthOfYear+1) + "-" + dayOfMonth));
-//                                    show.setText(isdate);
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        }
-//                        // 设置初始日期
-//                        , c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
-//                        .get(Calendar.DAY_OF_MONTH)).show();
-//            }
-//        });
+        //搜索按钮
         btgetcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCodeDetail();
             }
         });
+        //变更按钮
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 change();
-                //机台号
-//                MchId = mchid.getText().toString().trim();
-//                //规格编码
-//                Spesc = spesc.getText().toString().trim();
-//                //主手
-////                CreateUser = createuser.getText().toString().trim();
-//                //补录条码
-//                BarCode = barcode.getText().toString().trim();
-//                //时间
-////                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-////                try {
-////                    Date = formatter.format(formatter.parse(date.getText().toString()));
-////                } catch (ParseException e) {
-////                    e.printStackTrace();
-////                }
-////                Date = date.getText().toString().trim();
-//                //班次
-//                Shift = shift.getSelectedItem().toString().trim();
-//                if (Shift.equals("早")) {
-//                    Shift = "1";
-//                } else if (Shift.equals("中")) {
-//                    Shift = "2";
-//                } else if (Shift.equals("晚")) {
-//                    Shift = "3";
-//                } else {
-//                    Team = "";
-//                }
-//                //ST205/75R14-6PR(TR643)L 胎胚
-//                //MCHID=01 &ITNBR=BBZ20514H02 &ITDSC=ST205%2F75R14-6PR(TR643)L%20%E8%83%8E%E8%83%9A
-//                // &SHIFT=2 &USER_NAME=shao &DateTime_W=2019-12-11 &SwitchID=208
-//                String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
-//                        + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + "&SwitchID=" + codeid;
-//                new ChangeDetailedTask().execute(parm);
-////                barcode.setText("");
             }
         });
         //筛选规格
@@ -228,11 +117,10 @@ public class FormingDetailChangeActivity extends BaseActivity {
                 new MCHIDTask().execute(parm);
             }
         });
-        //返回
+        //返回功能菜单
         out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //返回功能菜单
                 tofunction();
             }
         });
@@ -263,56 +151,10 @@ public class FormingDetailChangeActivity extends BaseActivity {
 
     //获取条码明细
     public void getCodeDetail() {
-        //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
         BarCode = barcode.getText().toString().trim();
-//        if (BarCode.length() == 12) {
         String parm = "SwitchTYRE_CODE=" + BarCode;
         new SelDetailedTask().execute(parm);
-//        }else{
-//            Toast.makeText(FormingDetailChangeActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
-//            return;
-//        }
-
-        //barcode.setText("");
     }
-
-    //班组
-//    class ShiftTask extends AsyncTask<String, Void, String> {
-//        @Override
-//        protected String doInBackground(String... strs) {
-//            String result = HttpUtil.sendGet(PathUtil.GET_SHIFT, null);
-//            return result;
-//        }
-//
-//        //事后执行
-//        @Override
-//        protected void onPostExecute(String s) {
-//            if (StringUtil.isNullOrBlank(s)) {
-//                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-//                return;
-//            } else {
-//                Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
-//                }.getType());
-//                List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
-//                List<Team> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<Team>>(){}.getType());
-//                if (res.get("code").equals("200")) {
-//                    //班组数据清空
-//                    teamList.clear();
-//                    teamList.addAll(datas);
-//                    //班组名称数据清空
-//                    teamlist.clear();
-//                    for (int i = 0; i < map.size(); i++) {
-//                        teamlist.add(map.get(i).get("name"));
-//                    }
-//                    team.setAdapter(adapter);
-//                }
-////                for (int i = 0; i < map.size(); i++) {
-////                    teamlist.add(map.get(i).get("name"));
-////                }
-////                team.setAdapter(adapter);
-//            }
-//        }
-//    }
 
     //根据条码查询明细
     class SelDetailedTask extends AsyncTask<String, Void, String> {
@@ -341,19 +183,6 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         //填入规格信息
                         spesc.setText(datas.get(0).getItnbr());
                         mchid.setText(datas.get(0).getMchid());
-                        //转换时间格式
-//                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//                        date.setText(formatter.format(formatter.parse(datas.get(0).getWdate())));
-
-//                        if (datas.get(0).getTeam().equals("甲班")) {
-//                            team.setSelection(0, true);
-//                        } else if (datas.get(0).getTeam().equals("乙班")) {
-//                            team.setSelection(1, true);
-//                        } else if (datas.get(0).getTeam().equals("丙班")) {
-//                            team.setSelection(2, true);
-//                        } else {
-//                            team.setSelection(3, true);
-//                        }
                         if (datas.get(0).getShift().equals("早")) {
                             shift.setSelection(0, true);
                         } else if (datas.get(0).getShift().equals("中")) {
@@ -361,25 +190,16 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         } else {
                             shift.setSelection(2, true);
                         }
-//                        createuser.setText(datas.get(0).getCreateuser());
                         //获取信息
                         MchId = datas.get(0).getMchid();
                         Spesc = datas.get(0).getItnbr();
-//                        System.out.println("规格名称："+datas.get(0).getItdsc());
-//                        System.out.println("规格名称中文转url格式："+toUtf8String(datas.get(0).getItdsc()));
-//                        System.out.println("空格和斜杠转换："+toUtf8String(datas.get(0).getItdsc()).replace("/","%2F").replaceAll(" ","%20"));
                         spescname = toUtf8String(datas.get(0).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
                         Team = datas.get(0).getTeam();
-//                        Date = formatter.format(formatter.parse(datas.get(0).getWdate()));
-//                        System.out.println("转换后的时间："+Date);
                         CreateUser = datas.get(0).getCreateuser();
                         codeid = datas.get(0).getId();
-                        Toast.makeText(FormingDetailChangeActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
-                        return;
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, "轮胎查询错误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -437,12 +257,8 @@ public class FormingDetailChangeActivity extends BaseActivity {
                                     }
                                 }).create();
                         alertDialog.show();
-//                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
-                        return;
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, "错误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -505,12 +321,8 @@ public class FormingDetailChangeActivity extends BaseActivity {
                                     }
                                 }).create();
                         alertDialog.show();
-//                        Toast.makeText(DetailChangeActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "查询成功，没有匹配的规格！", Toast.LENGTH_LONG).show();
-                        return;
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, "查询错误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -545,22 +357,12 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-//                        barcode.setText("");
                         spesc.setText("");
                         mchid.setText("");
-//                        date.setText("");
-//                        team.setSelection(0, true);
                         shift.setSelection(0, true);
-//                        createuser.setText("");
-                        Toast.makeText(FormingDetailChangeActivity.this, "变更成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "未找到轮胎信息，变更失败！", Toast.LENGTH_LONG).show();
-                        return;
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "变更失败！", Toast.LENGTH_LONG).show();
-                        return;
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -603,47 +405,40 @@ public class FormingDetailChangeActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //右方向键
-        if (keyCode == 22) {
-            getCodeDetail();
-            //barcode.setText("");
+        //按键按下
+        switch (keyCode){
+            case 0:
+                barcode.requestFocus();
+                barcode.setText("");
+                break;
         }
-        if (keyCode == 0) {
-            barcode.setText("");
-        }
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //F1
-        if (keyCode == 131) {
-            change();
-        }
-        //F2
-        if (keyCode == 132) {
-            tofunction();
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
-        }
+
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //扫描键 弹开时获取计划
-//        if(keyCode == 0){
-//            getCodeDetail();
-//        }
-        super.onKeyDown(keyCode, event);
+        //弹开时
+        switch (keyCode){
+            case 0://扫描键
+                getCodeDetail();//查询明细
+                break;
+            case 22://右方向键
+                getCodeDetail();
+                break;
+            case 4:
+                tofunction();
+                break;
+            case 131://F1键
+                change();//变更
+                break;
+            case 132://F2键
+                tofunction();
+                break;
+            default:
+                break;
+        }
+
         return true;
     }
 

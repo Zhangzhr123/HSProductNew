@@ -1,7 +1,9 @@
 package com.hsproduce.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,15 +12,14 @@ import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.adapter.VPlanAdapter;
-import com.hsproduce.adapter.VPlanItnbrAdapter;
 import com.hsproduce.adapter.VPlanReplAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
-import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +27,26 @@ import java.util.Map;
 
 public class SwitchPlanActivity extends BaseActivity {
 
-    //view  机台号
-    private View llmchid,lltext1,lltext2;
+    private LinearLayout showlist, llmchid;
+    private TableLayout showVplan;
+    private LinearLayout onclick;
+    private Button repl, out;
+    private TextView spesc, spescname, pro, state, pnum;
     //当前计划展示list  规格交替列表
-    private ListView lvplan,replplan;
-    //机台号  轮胎条码  条码记录
-//    private TextView tvMchid;
-    private AutoCompleteTextView tvMchid;
-    private List<String> data1 = new ArrayList<>();
+    private ListView lvplan;
+    private VPlan v = new VPlan();
+    private List<VPlan> planList = new ArrayList<>();
+    //输入框
+    private TextView tvMchid;
     //获取计划按钮
     private ButtonView btGetplan;
     //计划展示适配器  规格交替适配器
-    private VPlanItnbrAdapter adapter;
-    private VPlanReplAdapter repladaprer;
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
+    private VPlanReplAdapter adaprer;
     //定义变量 当前计划ID
-    private String currid="";
+    private String currid = "";
+    public String mchid = "";
+    private String num = "";
+    private boolean iscomplate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,29 +58,33 @@ public class SwitchPlanActivity extends BaseActivity {
         //设置控件事件
         initEvent();
     }
-    public void initView(){
-        //显示首页
+
+    public void initView() {
+        //点击之前页面
         llmchid = findViewById(R.id.ll_mchid);
-        lltext1 = findViewById(R.id.ll_text1);
-        lltext2 = findViewById(R.id.ll_text2);
+        showlist = findViewById(R.id.showlist);
+        //点击之后页面
+        showVplan = (TableLayout) findViewById(R.id.showVplan);
+        onclick = findViewById(R.id.onclick);
+        //点击之后的按钮
+        repl = (Button) findViewById(R.id.repl);
+        out = (Button) findViewById(R.id.out);
+        //点击之后显示明细
+        spesc = (TextView) findViewById(R.id.spesc);
+        spescname = (TextView) findViewById(R.id.spescname);
+        pro = (TextView) findViewById(R.id.pro);
+        state = (TextView) findViewById(R.id.state);
+        pnum = (TextView) findViewById(R.id.pnum);
         //list列表
         lvplan = (ListView) findViewById(R.id.lv_plan);
-        replplan = (ListView) findViewById(R.id.lv_vplan);
         //扫描框
-        tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
-        new MCHIDTask().execute("TYPE_ID=10098");
-        eventsViews();
+        tvMchid = (TextView) findViewById(R.id.mchid);
         //获取计划按钮
-        btGetplan = (ButtonView) findViewById(R.id.bt_getPlan);
+        btGetplan = (ButtonView) findViewById(R.id.getSwitchPlan);
 
     }
 
-    private void eventsViews() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data1);
-        tvMchid.setAdapter(adapter);
-    }
-
-    public void initEvent(){
+    public void initEvent() {
         //点击当期计划 和 规格交替计划
         btGetplan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,80 +92,118 @@ public class SwitchPlanActivity extends BaseActivity {
                 getCurrentVPlan();
             }
         });
+        //点击跳转
+        lvplan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(currid != null || !currid.equals("")){
+                    currid = "";
+                }
+                //初始化一下控件属性
+                repl.setEnabled(true);
+                out.setEnabled(true);
+                //获取选中的计划
+                v = adaprer.getItem(position);
+                //计划id
+                currid = v.getId();
+                //展示数据在页面
+                spesc.setText(v.getItnbr());
+                spescname.setText(v.getItdsc());
+                pro.setText(v.getPro());
+                if (v.getState().equals("10")) {
+                    state.setText("新计划");
+                } else if (v.getState().equals("20")) {
+                    state.setText("等待中");
+                } else if (v.getState().equals("30")) {
+                    state.setText("生产中");
+                } else if (v.getState().equals("40")) {
+                    state.setText("已完成");
+                } else {
+                    state.setText("未知状态");
+                }
+                pnum.setText(v.getPnum());
+                //点击之后隐藏
+                llmchid.setVisibility(View.GONE);
+                showlist.setVisibility(View.GONE);
+                lvplan.setVisibility(View.GONE);
+                //点击之后显示
+                showVplan.setVisibility(View.VISIBLE);
+                onclick.setVisibility(View.VISIBLE);
+            }
+        });
+        //返回
+        out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnPager();
+            }
+        });
+        //切换规格
+        repl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogToStart();
+            }
+        });
+
+    }
+
+    //开始计划
+    public void dialogToStart() {
+        //显示弹窗
+        new MaterialDialog.Builder(SwitchPlanActivity.this)
+                .title("提示")
+                .content("请确认是否切换规格")
+                .positiveText(R.string.vul_confirm)
+                .negativeText(R.string.vul_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //开始计划
+                        String param = "SwitchID=" + v.getId() + "&USER_NAME=" + App.username;
+                        new ChangePlanTask().execute(param);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        iscomplate = true;
+                    }
+                })
+                .cancelable(false)
+                .show();
+    }
+
+    //跳转页面
+    public void returnPager() {
+//        //清空ID
+//        currid = "";
+        //点击之后隐藏
+        showVplan.setVisibility(View.GONE);
+        onclick.setVisibility(View.GONE);
+        //点击之后显示
+        llmchid.setVisibility(View.VISIBLE);
+        showlist.setVisibility(View.VISIBLE);
+        lvplan.setVisibility(View.VISIBLE);
+        //刷新数据
+        String param1 = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift + "&&TYPE_N=20";
+        new GetPlanTask().execute(param1);
+        adaprer.notifyDataSetChanged();
     }
 
     //根据状态查询计划
     public void getCurrentVPlan() {
         //获取输入机台上barcode
-        String mchid = tvMchid.getText().toString().trim();
-        if(StringUtil.isNullOrEmpty(mchid)){
+        mchid = tvMchid.getText().toString().trim();
+        if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(SwitchPlanActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
-        }else{
-//            String lr = mchid.substring(mchid.length() - 1);
-//            if(!"LR".contains(lr.toUpperCase())){//判断有无大写字母LR
-//                Toast.makeText(SwitchPlanActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
-//                tvMchid.setText("");
-//            }else{
-                //生产中
-                String param1 = "MCHIDLR="+mchid+"&SHIFT="+App.shift+"&TYPE_N=30";
-                new GetPlanTask().execute(param1);
-                //等待中
-                String param2 = "MCHIDLR="+mchid+"&SHIFT="+App.shift+"&TYPE_N=20";
-                new GetPlanTask().execute(param2);
-//            }
-        }
-//        tvMchid.setText("");
-    }
-
-    //切换规格显示列表
-    public void repItndes(String planid){
-        if(StringUtil.isNullOrEmpty(planid)){
-            Toast.makeText(SwitchPlanActivity.this, "请选择您要替换规格", Toast.LENGTH_LONG).show();
-        }else{
-            String param = "CurrentID="+currid+"&SwitchID="+planid+"&USER_NAME="+App.username;
-            new SwitchVplanTask().execute(param);
+        } else {
+            String param1 = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift + "&TYPE_N=20";
+            new GetPlanTask().execute(param1);
         }
     }
 
-    //根据TYPEID 获取数据字典内容  机台
-    class MCHIDTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strs) {
-            String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
-            return result;
-        }
-        //事后执行
-        @Override
-        protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
-                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
-                    List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        for (int i = 0; i < map.size(); i++) {
-                            data1.add(map.get(i).get("itemid"));
-                        }
-//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("500")){
-                        Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(SwitchPlanActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    //获取不同状态的生产计划
+    //获取硫化计划
     class GetPlanTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -167,56 +213,50 @@ public class SwitchPlanActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            //关闭
-            llmchid.setVisibility(View.GONE);
-            //显示
-            lltext1.setVisibility(View.VISIBLE);
-            lvplan.setVisibility(View.VISIBLE);
-            lltext2.setVisibility(View.VISIBLE);
-            replplan.setVisibility(View.VISIBLE);
-
-            if(StringUtil.isNullOrBlank(s)){
+            iscomplate = true;
+            if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>(){}.getType());
-                    if(res == null || res.isEmpty()){
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
                         Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
-                    if(res.get("code").equals("200")){
-                        //tvMchid.setText("");
-                        for(int i=0;i<datas.size();i++){
-                            if(datas.get(i).getState().equals("30")){
-                                //获取当前计划ID
-                                currid = datas.get(i).getId();
-                                //展示当前计划列表
-                                adapter = new VPlanItnbrAdapter(SwitchPlanActivity.this, datas);
-                                lvplan.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            }else if(datas.get(i).getState().equals("20")){
-                                //展示规格替换列表
-                                repladaprer = new VPlanReplAdapter(SwitchPlanActivity.this, datas);
-                                replplan.setAdapter(repladaprer);
-                                repladaprer.notifyDataSetChanged();
-                            }else{
-                                //Toast.makeText(SwitchPlanActivity.this, "没有适合规格交替的计划", Toast.LENGTH_LONG).show();
-                            }
+                    if (res.get("code").equals("200")) {
+                        if (datas != null && datas.size() > 0) {//有正在执行，并且有等待中的计划
+                            //显示等待中的计划；
+                            adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, datas);
+                            lvplan.setAdapter(adaprer);
+                            adaprer.notifyDataSetChanged();
+                            planList = datas;
+                        } else {
+                            Toast.makeText(SwitchPlanActivity.this, "无可规格交替的计划！", Toast.LENGTH_LONG).show();
+                            adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
+                            lvplan.setAdapter(adaprer);
+                            adaprer.notifyDataSetChanged();
+                            planList = datas;
                         }
-//                        Toast.makeText(SwitchPlanActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("300")){
-                        Toast.makeText(SwitchPlanActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("500")){
-                        if(datas.get(0).getState().equals("30")){
-                            Toast.makeText(SwitchPlanActivity.this, "查询成功，没有正在执行的计划！", Toast.LENGTH_LONG).show();
-                        }else if(datas.get(0).getState().equals("20")){
-                            Toast.makeText(SwitchPlanActivity.this, "查询成功，没有可以替换的计划！", Toast.LENGTH_LONG).show();
-                        }
-                    }else{
+
+                    } else if (res.get("code").equals("300")) {
+                        Toast.makeText(SwitchPlanActivity.this, "未到换班时间不可进行倒班！", Toast.LENGTH_LONG).show();
+                        return;
+                    } else if (res.get("code").equals("500")) {
+                        Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
+                        adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
+                        lvplan.setAdapter(adaprer);
+                        adaprer.notifyDataSetChanged();
+                        planList = datas;
+                        return;
+                    } else {
                         Toast.makeText(SwitchPlanActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
                 }
@@ -226,7 +266,8 @@ public class SwitchPlanActivity extends BaseActivity {
     }
 
     //切换规格
-    class SwitchVplanTask extends AsyncTask<String, Void, String> {
+    class ChangePlanTask extends AsyncTask<String, Void, String>{
+
         @Override
         protected String doInBackground(String... strings) {
             String result = HttpUtil.sendGet(PathUtil.SwitchVplan, strings[0]);
@@ -235,28 +276,30 @@ public class SwitchPlanActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
-                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据，数据返回为空", Toast.LENGTH_LONG).show();
+            iscomplate = true;
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    if(res.get("code").equals("200")){
-                        getCurrentVPlan();//展示替换后的计划
-                        Toast.makeText(SwitchPlanActivity.this, "切换成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("100")){
-                        Toast.makeText(SwitchPlanActivity.this, "新切换的计划变动，切换失败，请刷新！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("300")){
-                        Toast.makeText(SwitchPlanActivity.this, "切换失败！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(SwitchPlanActivity.this, "错误，请重新操作！", Toast.LENGTH_LONG).show();
+                    if (res.get("code").equals("200")) {
+                        Toast.makeText(SwitchPlanActivity.this, "规格交替成功！", Toast.LENGTH_SHORT).show();
+                        returnPager();
+                    } else {
+                        Toast.makeText(SwitchPlanActivity.this, res.get("msg") + "", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -267,38 +310,55 @@ public class SwitchPlanActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         Log.e("key", keyCode + "  ");
-        //右方向键
-        if(keyCode == 22){
-            getCurrentVPlan();
-        }
-        if(keyCode == 0){
-            tvMchid.setText("");
-        }
-        if(keyCode == 4){
-            if(System.currentTimeMillis() - mExitTime > 2000){
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            }else{
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if(keyCode == 21){
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+        switch (keyCode){
+            case 0:
+                //按下扫描键时，先清空之前内容
+                tvMchid.setText("");
+                break;
         }
         return true;
     }
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event){
         //扫描键 弹开时获取计划
-//        if(keyCode == 66){
-//            getCurrentVPlan();
-//        }
-        super.onKeyDown(keyCode, event);
+        //右方向键
+        String msg = "";
+        switch (keyCode){
+            //返回键
+            case 4:
+                //返回上级页面
+                startActivity(new Intent(SwitchPlanActivity.this, FunctionActivity.class));
+                this.finish();
+                break;
+            //右方向键
+            case 22:
+                msg = "扫描失败！";
+                operate(msg);
+                break;
+            //扫描键
+            case 0:
+                msg = "扫描失败！";
+                operate(msg);
+                break;
+            default:
+
+                break;
+
+        }
         return true;
+    }
+    private void operate(String msg) {
+//        if(!iscomplate){
+//            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        iscomplate = false;
+        if (!StringUtil.isNullOrBlank(tvMchid.getText().toString().trim())) {
+            getCurrentVPlan();
+        } else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            iscomplate = true;
+        }
     }
 
 }

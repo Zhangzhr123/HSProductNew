@@ -26,20 +26,17 @@ import java.util.Map;
 public class CheckActivity extends BaseActivity {
 
     //定义控件  条码 机台 规格编码 规格名称 日期 LR 班组 主手
-    private TextView barcode,mchid,spesc,spescname,productdate,lorR,shift,creatuser;
+    private TextView barcode, mchid, spesc, spescname, productdate, lorR, shift, creatuser;
     //质检测试按钮  不合格按钮
-    private ButtonView btgetcode,not;
+    private ImageButton btgetcode;
+    private Button not, out;
     //不合格原因下拉列表
-    private Spinner error;
-    //下拉列表
-    private List<String> errorlist = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
-    private List<Map<String,String>> errorid = new ArrayList<>();
+    private TextView error;
     private String ERROR = "";
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
     //定义变量  质检条码
-    private String BarCode="";
+    private String BarCode = "";
+    //是否合格
+    private String show = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,44 +48,32 @@ public class CheckActivity extends BaseActivity {
         //设置控件事件
         initEvent();
     }
-    public void initView(){
+
+    public void initView() {
         //检测条码
-        barcode = (TextView)findViewById(R.id.barcode);
+        barcode = (TextView) findViewById(R.id.barcode);
         //显示控件
-        mchid = (TextView)findViewById(R.id.mchid);//机台
-        spesc = (TextView)findViewById(R.id.spesc);//规格编码
-        spescname = (TextView)findViewById(R.id.spescname);//规格名称
-        productdate = (TextView)findViewById(R.id.product_date);//日期
-        lorR = (TextView)findViewById(R.id.LorR);//LR
-        shift = (TextView)findViewById(R.id.shift);//班组
-        creatuser = (TextView)findViewById(R.id.creatuser);//主手 创建人
+        mchid = (TextView) findViewById(R.id.mchid);//机台
+        spesc = (TextView) findViewById(R.id.spesc);//规格编码
+        spescname = (TextView) findViewById(R.id.spescname);//规格名称
+        productdate = (TextView) findViewById(R.id.product_date);//日期
+        lorR = (TextView) findViewById(R.id.LorR);//LR
+        shift = (TextView) findViewById(R.id.shift);//班组
+        creatuser = (TextView) findViewById(R.id.creatuser);//主手 创建人
         //获得焦点
         barcode.requestFocus();
         //检测
-        btgetcode = (ButtonView)findViewById(R.id.bt_getCode);
+        btgetcode = (ImageButton) findViewById(R.id.bt_getCode);
         //合格或不合格
-        not = (ButtonView)findViewById(R.id.not);
+        not = (Button) findViewById(R.id.not);
         //不合格原因
-        error = (Spinner)findViewById(R.id.error);
-        //下拉列表
-        new ERRORTask().execute();
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, errorlist);
-        error.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String Error = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<errorid.size();i++){
-                    if(Error.equals(errorid.get(i).get("itemname"))){
-                        ERROR = errorid.get(i).get("itemid");
-                    }
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        error = (TextView) findViewById(R.id.error);
+        //返回
+        out = (Button) findViewById(R.id.out);
+
     }
 
-    public void initEvent(){
+    public void initEvent() {
         //测试按钮
         btgetcode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,69 +88,47 @@ public class CheckActivity extends BaseActivity {
                 check();
             }
         });
+
+        out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                outfinish();
+            }
+        });
+    }
+
+    public void outfinish() {
+        tofunction();
     }
 
     //检测操作
-    public void getCodeCheck(){
+    public void getCodeCheck() {
         //质检条码
         BarCode = barcode.getText().toString().trim();
         //判断是否是空
-        if(StringUtil.isNullOrEmpty(BarCode)){
+        if (StringUtil.isNullOrEmpty(BarCode)) {
             Toast.makeText(CheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
-        }else{
-            String parm = "SwitchTYRE_CODE="+BarCode;
+        } else {
+            String parm = "SwitchTYRE_CODE=" + BarCode;
             new SelDetailedTask().execute(parm);
         }
 
     }
 
     //修改轮胎合格与否
-    public void check(){
-        String parm = "TYRE_CODE="+BarCode+"&IS_H=1"+"&USER_NAME="+App.username+"&H_REASON="+ERROR;
+    public void check() {
+        ERROR = error.getText().toString().trim();
+        ERROR = ERROR.replace(".","-");
+        if(ERROR == null || ERROR.equals("")){
+            Toast.makeText(CheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(show.equals("不合格")){
+            Toast.makeText(CheckActivity.this, "此条码已经设为不合格", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String parm = "TYRE_CODE=" + BarCode + "&IS_H=1" + "&USER_NAME=" + App.username + "&H_REASON=" + ERROR;
         new QualityTestingTask().execute(parm);
-    }
-
-    //根据TYPEID 获取数据字典内容  不合格原因
-    class ERRORTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strs) {
-            //TYPE_ID=10106
-            String result = HttpUtil.sendGet(PathUtil.ERRORGetDictionaries, "TYPE_ID=10106");
-            return result;
-        }
-        //事后执行
-        @Override
-        protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
-                Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>(){}.getType());
-                    List<Map<String,String>> map = (List<Map<String,String>>)res.get("data");
-                    if(res == null || res.isEmpty()){
-                        Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if(res.get("code").equals("200")){
-                        errorid.clear();
-                        errorlist.clear();
-                        for(int i=0;i<map.size();i++){
-                            errorid.add(map.get(i));
-                            errorlist.add(map.get(i).get("itemname"));
-                        }
-                        error.setAdapter(adapter);
-//                        Toast.makeText(CheckActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("500")){
-                        Toast.makeText(CheckActivity.this, "查询成功，没有匹配的信息！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(CheckActivity.this, "错误："+res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
     }
 
     //根据规条码模糊查询明细
@@ -178,42 +141,51 @@ public class CheckActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
+            //清空
+            mchid.setText("");
+            spesc.setText("");
+            spescname.setText("");
+            productdate.setText("");
+            lorR.setText("");
+            shift.setText("");
+            creatuser.setText("");
+
+            if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>(){}.getType());
-                    if(res == null || res.isEmpty()){
+                return;
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
                         Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
-                    if(res.get("code").equals("200")){
+                    if (res.get("code").equals("200")) {
                         //展示信息
                         mchid.setText(datas.get(0).getMchid());
                         spesc.setText(datas.get(0).getItnbr());
                         spescname.setText(datas.get(0).getItdsc());
-                        productdate.setText(datas.get(0).getWdate().substring(0,10));
+                        productdate.setText(datas.get(0).getWdate().substring(0, 10));
                         lorR.setText(datas.get(0).getLr());
-                        if(datas.get(0).getShift().equals("1")){
-                            shift.setText("甲班");
-                        }else if(datas.get(0).getShift().equals("2")){
-                            shift.setText("乙班");
-                        }else if(datas.get(0).getShift().equals("3")){
-                            shift.setText("丙班");
-                        }else{
-                            shift.setText("丁班");
-                        }
+                        shift.setText(datas.get(0).getShift());
                         creatuser.setText(datas.get(0).getCreateuser());
-//                        Toast.makeText(CheckActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("400")){
-                        Toast.makeText(CheckActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(CheckActivity.this, "轮胎查询错误！", Toast.LENGTH_LONG).show();
+                        if (show != null || !show.equals("")) {
+                            show = "";
+                        }
+                        show = datas.get(0).getiS_H();
+
+                    } else {
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        return;
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -229,28 +201,26 @@ public class CheckActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(StringUtil.isNullOrBlank(s)){
+            if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            }else{
-                try{
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>(){}.getType());
-                    if(res == null || res.isEmpty()){
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
                         Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        return;
                     }
-                    if(res.get("code").equals("200")){
-//                        barcode.setText("");
-                        Toast.makeText(CheckActivity.this, "标记成功！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("100")){
-                        Toast.makeText(CheckActivity.this, "未找到轮胎信息，标记失败！", Toast.LENGTH_LONG).show();
-                    }else if(res.get("code").equals("300")){
-                        Toast.makeText(CheckActivity.this, "标记失败！", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(CheckActivity.this, "错误，请重新操作！", Toast.LENGTH_LONG).show();
+                    if (res.get("code").equals("200")) {
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -258,42 +228,41 @@ public class CheckActivity extends BaseActivity {
 
     //键盘监听
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        //右方向键
-        if(keyCode == 22){
-            //获取信息
-            getCodeCheck();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //按键按下
+        switch (keyCode){
+            case 0://扫描键
+                barcode.requestFocus();
+                barcode.setText("");//成功后清空输入框
+                break;
         }
-        if(keyCode == 0){
-            barcode.setText("");
-        }
-        if(keyCode == 4){
-            if(System.currentTimeMillis() - mExitTime > 2000){
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            }else{
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if(keyCode == 21){
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
-        }
+
         return true;
     }
 
     //键盘监听
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event){
-        //扫描键 弹开时执行操作
-//        if(keyCode == 0){
-//            //获取信息
-//            getCodeCheck();
-//        }
-        super.onKeyDown(keyCode, event);
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        //按键弹开
+        switch (keyCode){
+            case 0://扫描键
+                getCodeCheck();//查询明细
+                break;
+            case 22://右方向键
+                getCodeCheck();//查询明细
+                break;
+            case 4://返回键
+                tofunction();//返回功能菜单页面
+                break;
+            case 131://F1键
+                check();
+                break;
+            case 132://F2键
+                outfinish();//返回菜单页面
+                break;
+            default:
+                break;
+        }
         return true;
     }
 }

@@ -54,7 +54,7 @@ public interface PathUtil {
     //质检标记接口
     public static final String QualityTesting = SERVER + "api/PDA/QualityTesting";
     //根据数据字典获取不合格原因
-    public static final String ERRORGetDictionaries = SERVER + "api/PDA/GetDictionaries";
+//    public static final String ERRORGetDictionaries = SERVER + "api/PDA/GetDictionaries";
 
     //获取装车单信息
     public static final String SelVLOADList = SERVER + "api/PDA/SelVLOADList";
@@ -72,7 +72,7 @@ public interface PathUtil {
     //APP更新
     public static final String 获取最新版本 = SERVER + "api/PDA/GetVERSION";
     //APK文件下载
-    public static final String 文件下载 = SERVER + "app-debug.apk";
+    public static final String 文件下载 = SERVER + "hstm.apk";
 
     //成型生产                  获取生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";

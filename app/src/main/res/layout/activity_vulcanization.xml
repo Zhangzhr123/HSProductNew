@@ -134,7 +134,7 @@
                 android:inputType="textMultiLine"
                 android:scrollbars="vertical"
                 android:textSize="15sp"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:layout_marginLeft="-65dp"/>
         <TextView
                 android:layout_width="40dp"

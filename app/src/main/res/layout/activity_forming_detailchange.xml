@@ -15,223 +15,224 @@
             app:tb_titleText="成型生产变更">
     </com.xuexiang.xui.widget.actionbar.TitleBar>
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-        <TextView
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:layout_margin="5dp"
-                android:text="条码"
-                android:textAlignment="textStart"
-                android:textSize="15sp"/>
-        <!-- 条码扫描框 -->
-        <com.xuexiang.xui.widget.edittext.ClearEditText
-                style="@style/EditText.Normal"
-                android:id="@+id/barcode"
-                android:layout_width="160dp"
-                android:layout_height="30dp"
-                android:hint="请扫描成型条码"
-                android:textAlignment="center"
-                android:layout_margin="5dp"/>
-        <!-- 搜索按钮 -->
-        <ImageButton
-                style="@style/ButtonView.Blue"
-                android:id="@+id/searchdetail"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@mipmap/searth"
-                android:layout_margin="5dp"/>
-    </LinearLayout>
-    <View
-            android:layout_height="1px"
-            android:layout_width="280dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginLeft="15dp"
-            android:background="@color/black_textview"
-            android:id="@+id/view1"/>
-    <TableLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="50dp"
-            android:layout_height="wrap_content">
-        <TableRow>
-            <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:layout_margin="5dp"
-                    android:text="规格"
-                    android:textAlignment="textStart"
-                    android:textSize="15sp"/>
-            <com.xuexiang.xui.widget.edittext.ClearEditText
-                    style="@style/EditText.Normal"
-                    android:id="@+id/spesc"
-                    android:layout_width="160dp"
-                    android:layout_height="30dp"
-                    android:hint="规格"
-                    android:textAlignment="center"
-                    android:layout_margin="5dp"/>
-            <com.xuexiang.xui.widget.button.ButtonView
-                    style="@style/ButtonView.Blue"
-                    android:id="@+id/getitnbr"
-                    android:layout_width="70dp"
-                    android:layout_height="30dp"
-                    android:text="选择规格"
-                    android:layout_margin="5dp" android:visibility="visible"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:layout_margin="5dp"
-                    android:text="机台号"
-                    android:textAlignment="textStart"
-                    android:textSize="15sp"/>
-            <com.xuexiang.xui.widget.edittext.ClearEditText
-                    style="@style/EditText.Normal"
-                    android:id="@+id/mchid"
-                    android:layout_width="160dp"
-                    android:layout_height="30dp"
-                    android:hint="机台号"
-                    android:textAlignment="center"
-                    android:layout_margin="5dp"/>
-            <com.xuexiang.xui.widget.button.ButtonView
-                    style="@style/ButtonView.Blue"
-                    android:id="@+id/getmchid"
-                    android:layout_width="70dp"
-                    android:layout_height="30dp"
-                    android:text="选择机台"
-                    android:layout_margin="5dp" android:visibility="visible"/>
-        </TableRow>
-<!--        <TableRow android:layout_marginTop="5dp">-->
-<!--            <TextView-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:text="日期"-->
-<!--                    android:textAlignment="textStart"-->
-<!--                    android:textSize="15sp"/>-->
-<!--            <TextView-->
-<!--                    android:background="@drawable/edit_background"-->
-<!--                    android:id="@+id/cdate"-->
-<!--                    android:layout_width="160dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:hint="YYYY-MM-DD"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:layout_margin="5dp"/>-->
-<!--        </TableRow>-->
-<!--        <TableRow android:layout_marginTop="5dp">-->
-<!--            <TextView-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginTop="0dp"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:text="LorR"-->
-<!--                    android:textAlignment="textStart"-->
-<!--                    android:textSize="15sp"/>-->
-<!--            <Spinner-->
-<!--                    android:id="@+id/lorR"-->
-<!--                    android:layout_width="100dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:background="@drawable/edit_background"-->
-<!--                    android:spinnerMode="dialog"-->
-<!--                    android:entries="@array/lr"-->
-<!--            />-->
-<!--        </TableRow>-->
-<!--        <TableRow android:layout_marginTop="10dp">-->
-<!--            <TextView-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginTop="0dp"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:text="班组"-->
-<!--                    android:textAlignment="textStart"-->
-<!--                    android:textSize="15sp"/>-->
-<!--            <Spinner-->
-<!--                    android:id="@+id/team"-->
-<!--                    android:layout_width="100dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:spinnerMode="dialog"-->
-<!--                    android:background="@drawable/edit_background"-->
-<!--                    android:visibility="visible"/>-->
-<!--        </TableRow>-->
-        <TableRow android:layout_marginTop="10dp">
-            <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginLeft="5dp"
-                    android:text="班次"
-                    android:textAlignment="textStart"
-                    android:textSize="15sp"/>
-            <Spinner
-                    android:id="@+id/shift"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:textAlignment="center"
-                    android:background="@drawable/edit_background"
-                    android:spinnerMode="dialog"
-                    android:entries="@array/shift"
-            />
-        </TableRow>
-<!--        <TableRow android:layout_marginTop="5dp"-->
-<!--                android:visibility="visible">-->
-<!--            <TextView-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_margin="5dp"-->
-<!--                    android:text="主手"-->
-<!--                    android:textAlignment="textStart"-->
-<!--                    android:textSize="15sp"/>-->
-<!--            <com.xuexiang.xui.widget.edittext.ClearEditText-->
-<!--                    style="@style/EditText.Normal"-->
-<!--                    android:id="@+id/master"-->
-<!--                    android:layout_width="160dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:hint="主手"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:layout_margin="5dp"/>-->
-<!--        </TableRow>-->
-    </TableLayout>
-    <View
-            android:layout_height="1px"
-            android:layout_width="350dp"
-            android:layout_marginLeft="30dp"
-            android:background="@color/black_textview"
-            android:id="@+id/view2"/>
-    <LinearLayout
-            android:id="@+id/ll_ok"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="320dp"
-            android:orientation="horizontal" android:visibility="visible">
+<!--    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">-->
+<!--        <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="horizontal">-->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+                <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:text="条码"
+                        android:textAlignment="textStart"
+                        android:textSize="15sp"/>
+                <!-- 条码扫描框 -->
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                        style="@style/EditText.Normal"
+                        android:id="@+id/barcode"
+                        android:layout_width="160dp"
+                        android:layout_height="30dp"
+                        android:hint="请扫描成型条码"
+                        android:textAlignment="center"
+                        android:layout_margin="5dp"/>
+                <!-- 搜索按钮 -->
+                <ImageButton
+                        android:id="@+id/searchdetail"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@mipmap/searth"
+                        android:layout_margin="5dp"/>
+            </LinearLayout>
+            <View
+                    android:layout_height="1px"
+                    android:layout_width="280dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/black_textview"
+                    android:id="@+id/view1"/>
+            <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TableRow>
+                    <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"
+                            android:text="规格"
+                            android:textAlignment="textStart"
+                            android:textSize="15sp"/>
+                    <com.xuexiang.xui.widget.edittext.ClearEditText
+                            style="@style/EditText.Normal"
+                            android:id="@+id/spesc"
+                            android:layout_width="160dp"
+                            android:layout_height="30dp"
+                            android:hint="规格"
+                            android:textAlignment="center"
+                            android:layout_margin="5dp"/>
+                    <com.xuexiang.xui.widget.button.ButtonView
+                            style="@style/ButtonView.Blue"
+                            android:id="@+id/getitnbr"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:text="选择规格"
+                            android:layout_margin="5dp" android:visibility="visible"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"
+                            android:text="机台号"
+                            android:textAlignment="textStart"
+                            android:textSize="15sp"/>
+                    <com.xuexiang.xui.widget.edittext.ClearEditText
+                            style="@style/EditText.Normal"
+                            android:id="@+id/mchid"
+                            android:layout_width="160dp"
+                            android:layout_height="30dp"
+                            android:hint="机台号"
+                            android:textAlignment="center"
+                            android:layout_margin="5dp"/>
+                    <com.xuexiang.xui.widget.button.ButtonView
+                            style="@style/ButtonView.Blue"
+                            android:id="@+id/getmchid"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:text="选择机台"
+                            android:layout_margin="5dp" android:visibility="visible"/>
+                </TableRow>
+                <!--        <TableRow android:layout_marginTop="5dp">-->
+                <!--            <TextView-->
+                <!--                    android:layout_width="60dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:text="日期"-->
+                <!--                    android:textAlignment="textStart"-->
+                <!--                    android:textSize="15sp"/>-->
+                <!--            <TextView-->
+                <!--                    android:background="@drawable/edit_background"-->
+                <!--                    android:id="@+id/cdate"-->
+                <!--                    android:layout_width="160dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:hint="YYYY-MM-DD"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:layout_margin="5dp"/>-->
+                <!--        </TableRow>-->
+                <!--        <TableRow android:layout_marginTop="5dp">-->
+                <!--            <TextView-->
+                <!--                    android:layout_width="60dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_marginTop="0dp"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:text="LorR"-->
+                <!--                    android:textAlignment="textStart"-->
+                <!--                    android:textSize="15sp"/>-->
+                <!--            <Spinner-->
+                <!--                    android:id="@+id/lorR"-->
+                <!--                    android:layout_width="100dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:background="@drawable/edit_background"-->
+                <!--                    android:spinnerMode="dialog"-->
+                <!--                    android:entries="@array/lr"-->
+                <!--            />-->
+                <!--        </TableRow>-->
+                <!--        <TableRow android:layout_marginTop="10dp">-->
+                <!--            <TextView-->
+                <!--                    android:layout_width="60dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_marginTop="0dp"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:text="班组"-->
+                <!--                    android:textAlignment="textStart"-->
+                <!--                    android:textSize="15sp"/>-->
+                <!--            <Spinner-->
+                <!--                    android:id="@+id/team"-->
+                <!--                    android:layout_width="100dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:spinnerMode="dialog"-->
+                <!--                    android:background="@drawable/edit_background"-->
+                <!--                    android:visibility="visible"/>-->
+                <!--        </TableRow>-->
+                <TableRow android:layout_marginTop="10dp">
+                    <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginLeft="5dp"
+                            android:text="班次"
+                            android:textAlignment="textStart"
+                            android:textSize="15sp"/>
+                    <Spinner
+                            android:id="@+id/shift"
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="5dp"
+                            android:textAlignment="center"
+                            android:background="@drawable/edit_background"
+                            android:spinnerMode="dialog"
+                            android:entries="@array/shift"
+                    />
+                </TableRow>
+                <!--        <TableRow android:layout_marginTop="5dp"-->
+                <!--                android:visibility="visible">-->
+                <!--            <TextView-->
+                <!--                    android:layout_width="60dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:layout_margin="5dp"-->
+                <!--                    android:text="主手"-->
+                <!--                    android:textAlignment="textStart"-->
+                <!--                    android:textSize="15sp"/>-->
+                <!--            <com.xuexiang.xui.widget.edittext.ClearEditText-->
+                <!--                    style="@style/EditText.Normal"-->
+                <!--                    android:id="@+id/master"-->
+                <!--                    android:layout_width="160dp"-->
+                <!--                    android:layout_height="30dp"-->
+                <!--                    android:hint="主手"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:layout_margin="5dp"/>-->
+                <!--        </TableRow>-->
+            </TableLayout>
 
-        <com.xuexiang.xui.widget.button.ButtonView
-                style="@style/ButtonView.Blue"
-                android:id="@+id/ok"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:text="变更"
-                android:layout_marginLeft="50dp"/>
-        <com.xuexiang.xui.widget.button.ButtonView
-                style="@style/ButtonView.Blue"
-                android:id="@+id/out"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:text="返回"
-                android:layout_marginLeft="10dp"/>
-    </LinearLayout>
-</RelativeLayout>
-        </ScrollView>
+            <LinearLayout
+                    android:id="@+id/ll_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+
+                <Button
+                        android:id="@+id/ok"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/button_change"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:textColor="@color/white"
+                        android:text="变更"/>
+                <Button
+                        android:id="@+id/out"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/button_change"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:textColor="@color/white"
+                        android:text="返回"/>
+            </LinearLayout>
+<!--        </RelativeLayout>-->
+<!--    </ScrollView>-->
 </LinearLayout>

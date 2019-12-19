@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,6 +54,8 @@ public class VulcanizationActivity extends BaseActivity {
     private VPlanAdapter adapter;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
+    //保证每次操作完成后再进行下一次操作
+    public boolean iscomplate = true;
     //绑定条码个数
     private int number = 0;
     //轮胎条码
@@ -89,6 +92,7 @@ public class VulcanizationActivity extends BaseActivity {
         barcode = (TextView) findViewById(R.id.barcode);
         //条码记录
         barcodelog = (TextView) findViewById(R.id.barcode_log);
+        barcodelog.setMovementMethod(ScrollingMovementMethod.getInstance());
         //不可编辑
         barcodelog.setFocusable(false);
         barcodelog.setFocusableInTouchMode(false);
@@ -136,18 +140,11 @@ public class VulcanizationActivity extends BaseActivity {
         String mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+            iscomplate = true;
         } else {
-//            String lr = mchid.substring(mchid.length() - 1);
-//            if (!"LR".contains(lr.toUpperCase())) {//判断有无大写字母LR
-//                Toast.makeText(VulcanizationActivity.this, "机台号格式有误，请重新扫描", Toast.LENGTH_LONG).show();
-//                tvMchid.setText("");
-//            } else {
-//                App.lr = lr.toUpperCase();
             String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
             new MyTask().execute(param);
-//            }
         }
-//        tvMchid.setText("");
     }
 
     //获取轮胎条码
@@ -159,7 +156,9 @@ public class VulcanizationActivity extends BaseActivity {
         } else {
             //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
             if(codelist.contains(tvbarcode)){
+                iscomplate = true;
                 Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+                barcode.setText("");
             }else{
                 //记录硫化生产记录
                 String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name="+ App.username + "&TEAM=" + App.shift + "&doit=0";
@@ -178,6 +177,7 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -205,8 +205,7 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-//                        tvMchid.setText("");
-//                        Toast.makeText(VulcanizationActivity.this, "计划查询成功！", Toast.LENGTH_LONG).show();
+                        tvMchid.setText("");
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
@@ -235,6 +234,7 @@ public class VulcanizationActivity extends BaseActivity {
         //事后执行
         @Override
         protected void onPostExecute(String s) {
+            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -274,6 +274,7 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -284,13 +285,14 @@ public class VulcanizationActivity extends BaseActivity {
                         Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        barcodelog.append(tvbarcode + ";");
+                        barcodelog.append(tvbarcode + "\n");
                         barcode.setText("");
                         codelist.add(tvbarcode);
+                        anum.setText(codelist.size() + "");
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, res.get("msg") + "", Toast.LENGTH_LONG).show();
+                        Toast.makeText(VulcanizationActivity.this, tvbarcode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("400")) {
                         new MaterialDialog.Builder(VulcanizationActivity.this)
                                 .title("提示")
@@ -301,6 +303,7 @@ public class VulcanizationActivity extends BaseActivity {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         //强制记录硫化生产记录
+                                        iscomplate = false;
                                         String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name="+ App.username + "&TEAM=" + App.shift + "&doit=1";
                                         new TypeCodeTask().execute(param1);
                                     }
@@ -330,6 +333,7 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -413,47 +417,13 @@ public class VulcanizationActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //右方向键
-        if (keyCode == 22) {
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                getBarCode();
-            } else if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
-                getPlan();
-            } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (keyCode == 0) {
-            //获取计划
-            //getPlan();
-            tvMchid.setText("");
-            barcode.setText("");
-        }
-        //返回键时间间隔超过两秒 返回功能页面
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                list.clear();
-                codelist.clear();
-                anum.setText("0");
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //右方向键 按下时获取计划
-        if (keyCode == 22) {
-            getPlan();
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            list.clear();
-//            codelist.clear();
-//            anum.setText("0");
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
+        switch (keyCode){
+            case 0:
+                if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+                    barcode.setText("");
+                } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
+                    tvMchid.setText("");
+                }
         }
         return true;
     }
@@ -461,17 +431,48 @@ public class VulcanizationActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //扫描键 弹开时获取计划
-//        if (keyCode == 0) {
-//            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-//                getBarCode();
-//            } else if (tvMchid.getText().toString().trim() != null && !tvMchid.getText().toString().trim().equals("")) {
-//                getPlan();
-//            } else {
-//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-        super.onKeyDown(keyCode, event);
+        //右方向键
+        String msg = "";
+        switch (keyCode){
+            //返回键
+            case 4:
+                //返回上级页面
+                startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
+                this.finish();
+                break;
+            //右方向键
+            case 22:
+                msg = "扫描失败！";
+                operate(msg);
+                break;
+            //扫描键
+            case 0:
+                msg = "扫描失败！";
+                operate(msg);
+                break;
+
+            default:
+
+                break;
+
+        }
         return true;
+    }
+
+    private void operate(String msg) {
+        if(!iscomplate){
+            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        iscomplate = false;
+        if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+            getBarCode();
+        } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
+            getPlan();
+        } else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            iscomplate = true;
+        }
     }
 
 
