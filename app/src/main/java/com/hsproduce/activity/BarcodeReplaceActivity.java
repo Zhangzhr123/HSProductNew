@@ -1,5 +1,6 @@
 package com.hsproduce.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -81,7 +82,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
     public void selCode() {
         String lvcode = barcode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(lvcode)) {
-            Toast.makeText(BarcodeReplaceActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            Toast.makeText(BarcodeReplaceActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
         } else {
             //?TYRE_CODE=111600000375
             String parm = "TYRE_CODE=" + lvcode;
@@ -93,14 +94,21 @@ public class BarcodeReplaceActivity extends BaseActivity {
     //更换条码操作
     public void getNewCode() {
         String replcode = newbarcode.getText().toString().trim();
-        if (StringUtil.isNullOrEmpty(replcode)) {
-            Toast.makeText(BarcodeReplaceActivity.this, "请扫描新轮胎条码", Toast.LENGTH_LONG).show();
-        } else {
-            String parm = "CurrentID=" + currentid + "&SwitchTYRE_CODE=" + replcode + "&USER_NAME=" + App.username;
-            new ReplCodeTask().execute(parm);
+        String s_barcode = barcode.getText().toString().trim();
+        if(StringUtil.isNullOrEmpty(s_barcode)){
+            Toast.makeText(BarcodeReplaceActivity.this, "请扫描原轮胎条码", Toast.LENGTH_SHORT).show();
+            return;
         }
-//        barcode.setText("");
-//        btreplcode.setText("");
+        if (StringUtil.isNullOrEmpty(replcode)) {
+            Toast.makeText(BarcodeReplaceActivity.this, "请扫描新轮胎条码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(s_barcode.equals(replcode)){
+            Toast.makeText(BarcodeReplaceActivity.this, "新条码与原条码一致，请重新扫描条码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String parm = "CurrentID=" + currentid + "&SwitchTYRE_CODE=" + replcode + "&USER_NAME=" + App.username;
+        new ReplCodeTask().execute(parm);
     }
 
     //扫描条码查询轮胎规格
@@ -117,7 +125,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
             newbarcode.requestFocus();
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarcodeReplaceActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(BarcodeReplaceActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -125,9 +133,9 @@ public class BarcodeReplaceActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
-                    if (res.get("code").equals("200")) {
+                    if (res.get("code").equals("200") && datas != null && datas.size() > 0) {
                         //获取原条码ID
                         currentid = String.valueOf(datas.get(0).getId());
                         //展示信息
@@ -135,33 +143,38 @@ public class BarcodeReplaceActivity extends BaseActivity {
                         spescname.setText(datas.get(0).getItdsc());
                         date.setText(datas.get(0).getWdate().substring(0, 10));
                         lorR.setText(datas.get(0).getLr());
-                        if (datas.get(0).getShift().equals("1")) {
-                            shift.setText("早班");
-                        } else if (datas.get(0).getShift().equals("2")) {
-                            shift.setText("中班");
-                        } else {
-                            shift.setText("晚班");
+                        String s_shift = datas.get(0).getShift();
+                        if(!StringUtil.isNullOrEmpty(s_shift)){
+                            if (s_shift.equals("1")) {
+                                shift.setText("早班");
+                            } else if (s_shift.equals("2")) {
+                                shift.setText("中班");
+                            } else {
+                                shift.setText("晚班");
+                            }
                         }
-                        if (datas.get(0).getTeam().equals("1")) {
-                            team.setText("甲班");
-                        } else if (datas.get(0).getTeam().equals("2")) {
-                            team.setText("乙班");
-                        } else if (datas.get(0).getTeam().equals("3")) {
-                            team.setText("丙班");
-                        } else {
-                            team.setText("丁班");
+                        String s_team = datas.get(0).getTeam();
+                        if(!StringUtil.isNullOrEmpty(s_team)){
+                            if (s_team.equals("1")) {
+                                team.setText("甲班");
+                            } else if (s_team.equals("2")) {
+                                team.setText("乙班");
+                            } else if (s_team.equals("3")) {
+                                team.setText("丙班");
+                            } else {
+                                team.setText("丁班");
+                            }
                         }
                         creatuser.setText(datas.get(0).getCreateuser());
-//                        Toast.makeText(BarcodeReplaceActivity.this, "条码查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(BarcodeReplaceActivity.this, "查询成功，没有匹配的条码！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "查询成功，没有匹配的条码！", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BarcodeReplaceActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -178,13 +191,13 @@ public class BarcodeReplaceActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarcodeReplaceActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(BarcodeReplaceActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到信息", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "未获取到信息", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         barcode.setText("");
@@ -196,18 +209,18 @@ public class BarcodeReplaceActivity extends BaseActivity {
                         team.setText("");
                         creatuser.setText("");
                         btreplcode.setText("");
-                        Toast.makeText(BarcodeReplaceActivity.this, "更换成功！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "更换成功！", Toast.LENGTH_SHORT).show();
                     } else if (res.get("code").equals("100")) {
-                        Toast.makeText(BarcodeReplaceActivity.this, "新条码被使用过无法更换！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "新条码被使用过无法更换！", Toast.LENGTH_SHORT).show();
                     } else if (res.get("code").equals("300")) {
-                        Toast.makeText(BarcodeReplaceActivity.this, "更换失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "更换失败！", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BarcodeReplaceActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeReplaceActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BarcodeReplaceActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -221,48 +234,38 @@ public class BarcodeReplaceActivity extends BaseActivity {
         if (keyCode == 0) {
             //barcode.setText("");
             //btreplcode.setText("");
+//            if(barcode.isFocused()){
+//                barcode.setText("");
+//            }
+//            if(newbarcode.isFocused()){
+//                newbarcode.setText("");
+//            }
         }
-        //点击右方向键
-        if (keyCode == 22) {
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                selCode();
-            } else if (btreplcode.getText().toString().trim() != null && !btreplcode.getText().toString().trim().equals("")) {
-                getNewCode();
-            } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
-        }
+
         return true;
     }
 
     //键盘监听
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //扫描键 弹开时获取计划
-//        if(keyCode == 22){
-//            if(barcode.getText().toString().trim()!=null&&!barcode.getText().toString().trim().equals("")){
-//                selCode();
-//            }else if(btreplcode.getText().toString().trim()!=null&&!btreplcode.getText().toString().trim().equals("")){
-//                getNewCode();
-//            }else{
-//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-//            }
-//        }
+        switch (keyCode){
+            //扫描键
+            case 0:
+                if(!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())){
+                    selCode();
+                }
+                break;
+            //右方向键
+            case 22:
+                if(!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())){
+                    selCode();
+                }
+            //返回键
+            case 4:
+                startActivity(new Intent(BarcodeReplaceActivity.this, FunctionActivity.class));
+                this.finish();
+                break;
+        }
         super.onKeyDown(keyCode, event);
         return true;
     }
