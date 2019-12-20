@@ -415,10 +415,10 @@ public class SwitchFormingActivity extends BaseActivity {
                             lvplan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                         } else {
-                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
-                            lvplan.setAdapter(adaprer);
-                            adaprer.notifyDataSetChanged();
-//                            Toast.makeText(SwitchFormingActivity.this, "无可规格交替的计划！", Toast.LENGTH_LONG).show();
+//                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
+//                            lvplan.setAdapter(adaprer);
+//                            adaprer.notifyDataSetChanged();
+                            Toast.makeText(SwitchFormingActivity.this, "无可规格交替的计划！", Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
