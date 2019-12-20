@@ -198,6 +198,7 @@ public class SwitchPlanActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(SwitchPlanActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
         } else {
+            mchid = mchid.toUpperCase();
             String param1 = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift + "&TYPE_N=20";
             new GetPlanTask().execute(param1);
         }

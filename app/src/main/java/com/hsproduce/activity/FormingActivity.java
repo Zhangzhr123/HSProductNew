@@ -57,6 +57,7 @@ public class FormingActivity extends BaseActivity {
     public Integer isNull = 0;//判断开始按钮弹窗显示
     private VPlan vplan = new VPlan();
     private String num = "";
+    private String startCode = "";//开始的开始条码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,6 +329,7 @@ public class FormingActivity extends BaseActivity {
                     Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                startCode = nextCode;
                 //执行开始计划接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -430,31 +432,38 @@ public class FormingActivity extends BaseActivity {
             public void onClick(View v1) {
                 String jt = mchid;
                 jt = jt.substring(jt.length() - 2, jt.length());
-                String code = precode.getText().toString();
+                String endCode = precode.getText().toString();
 
                 //如果为空则进行操作
-                if (code.equals("")) {
+                if (endCode.equals("")) {
                     Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (code.length() != 12) {
+                if (endCode.length() != 12) {
                     Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String nextjt = code.substring(4, 6);
+                String nextjt = endCode.substring(4, 6);
                 if (!jt.equals(nextjt)) {
                     Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String pre = v.getBarcodestart().substring(0, 6);
-                String now = code.substring(0, 6);
-                if (!pre.equals(now)) {
+                //判断开始条码是否为空
+                String start = "";
+                if(v.getBarcodestart() == null){
+                    start = startCode;
+                }else{
+                    start = v.getBarcodestart();
+                }
+                start = start.substring(0, 6);
+                String now = endCode.substring(0, 6);
+                if (!start.equals(now)) {
                     Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //执行操作接口
-                String param = "VPLANID=" + currid + "&EndBarcode=" + code + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                String param = "VPLANID=" + currid + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
                 dialog.dismiss();
             }
@@ -662,6 +671,9 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 //                        returnPager();
+                        //清空数据
+                        startCode = "";
+                        //设置状态
                         state.setText("");
                         state.setText("已完成");
                         //返回按钮可用
