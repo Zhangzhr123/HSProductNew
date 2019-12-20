@@ -414,6 +414,10 @@ public class VulcanizationActivity extends BaseActivity {
                 //返回上级页面
                 //先返回扫描机台，再返回功能页
                 if(isVual){
+                    codelist.clear();
+                    barcodelog.setText("");
+                    barcode.setText("");
+                    anum.setText("0");
                     showMchid();
                 }else{
                     startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));

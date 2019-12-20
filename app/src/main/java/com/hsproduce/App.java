@@ -20,7 +20,7 @@ public class App extends Application {
     public static String lr = "";
     public static String access_token = "";
     public static String Iu = "";
-    public static String ip = "";//10.2.129.132:8001
+    public static String ip = "10.2.129.132:8001";//10.2.129.132:8001
     public static String version = "";
 
     @Override
