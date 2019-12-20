@@ -38,7 +38,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
     private ImageButton btgetcode;
     private Spinner shift;
     //定义变量
-    private String BarCode = "", Spesc = "", CreateUser = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", Date = "";
+    private String BarCode = "", Spesc = "", CreateUser = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", tvDate = "";
     //Dialog显示列表
     private List<String> itnbrlist = new ArrayList<>();
     private DialogItemAdapter itnbradapter;
@@ -135,17 +135,17 @@ public class FormingDetailChangeActivity extends BaseActivity {
         BarCode = barcode.getText().toString().trim();
         //班次
         Shift = shift.getSelectedItem().toString().trim();
-        if (Shift.equals("早")) {
+        if (Shift.equals("早班")) {
             Shift = "1";
-        } else if (Shift.equals("中")) {
+        } else if (Shift.equals("中班")) {
             Shift = "2";
-        } else if (Shift.equals("晚")) {
+        } else if (Shift.equals("晚班")) {
             Shift = "3";
         } else {
-            Team = "";
+            Shift = "";
         }
         String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
-                + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + "&SwitchID=" + codeid;
+                + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + tvDate + "&SwitchID=" + codeid;
         new ChangeDetailedTask().execute(parm);
     }
 
@@ -207,6 +207,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         Team = datas.get(0).getTeam();
                         CreateUser = datas.get(0).getCreateuser();
                         codeid = datas.get(0).getId();
+                        //时间转换
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        tvDate = formatter.format(formatter.parse(datas.get(0).getWdate()));
 //                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
@@ -413,7 +416,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
-        switch (keyCode){
+        switch (keyCode) {
             case 0:
                 barcode.requestFocus();
                 barcode.setText("");
@@ -426,7 +429,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时
-        switch (keyCode){
+        switch (keyCode) {
             case 0://扫描键
                 getCodeDetail();//查询明细
                 break;

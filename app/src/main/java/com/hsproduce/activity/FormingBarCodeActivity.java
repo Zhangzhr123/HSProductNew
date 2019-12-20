@@ -180,8 +180,8 @@ public class FormingBarCodeActivity extends BaseActivity {
                 getBarCode();//获取明细
                 break;
             case 4:
-                num.setText("0");
                 tofunction();
+                num.setText("0");
                 break;
         }
         return true;

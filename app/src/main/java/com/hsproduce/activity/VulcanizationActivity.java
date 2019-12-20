@@ -10,9 +10,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -44,8 +42,7 @@ public class VulcanizationActivity extends BaseActivity {
     private ListView listView;
     //机台号  轮胎条码 条码计数  条码记录
     private TextView barcode, anum, barcodelog;
-    private AutoCompleteTextView tvMchid;
-    private List<String> data1 = new ArrayList<>();
+    private TextView tvMchid;
     //计划按钮   扫描按钮
     private ButtonView btGetplan, barcode_ok;
     //加载
@@ -63,7 +60,7 @@ public class VulcanizationActivity extends BaseActivity {
     private List<String> list = new ArrayList<>();
     //添加条码防止重复扫描
     private List<String> codelist = new ArrayList<>();
-    private Boolean isNew = true;
+    private Boolean isVual = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +82,7 @@ public class VulcanizationActivity extends BaseActivity {
         //list列表
         listView = (ListView) findViewById(R.id.lv_plan);
         //扫描框
-        tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
-        new MCHIDTask().execute("TYPE_ID=10098");
-        eventsViews();
+        tvMchid = (TextView) findViewById(R.id.mchid);
         //条码扫描框
         barcode = (TextView) findViewById(R.id.barcode);
         //条码记录
@@ -108,10 +103,6 @@ public class VulcanizationActivity extends BaseActivity {
         barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
     }
 
-    private void eventsViews() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data1);
-        tvMchid.setAdapter(adapter);
-    }
 
     //初始化事件
     public void initEvent() {
@@ -138,6 +129,9 @@ public class VulcanizationActivity extends BaseActivity {
     public void getPlan() {
         //获取输入机台上barcode
         String mchid = tvMchid.getText().toString().trim();
+        if(!StringUtil.isNullOrEmpty(mchid)){
+            mchid = mchid.toUpperCase();
+        }
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
             iscomplate = true;
@@ -192,15 +186,8 @@ public class VulcanizationActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         //获取计划ID
                         planid = datas.get(0).getId();
-                        //关闭加载
-                        loadingView.setVisibility(View.GONE);
-                        llmchid.setVisibility(View.GONE);
-                        //显示硫化扫描
-                        listView.setVisibility(View.VISIBLE);
-                        llcode.setVisibility(View.VISIBLE);
-                        llcodelog.setVisibility(View.VISIBLE);
-                        //获得焦点
-                        barcode.requestFocus();
+                        //显示生产
+                        showVual();
                         //展示列表
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
@@ -223,47 +210,31 @@ public class VulcanizationActivity extends BaseActivity {
         }
     }
 
-    //根据TYPEID 获取数据字典内容  机台
-    class MCHIDTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strs) {
-            String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
-            return result;
-        }
-
-        //事后执行
-        @Override
-        protected void onPostExecute(String s) {
-            iscomplate = true;
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
-                    }.getType());
-                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        for (int i = 0; i < map.size(); i++) {
-                            data1.add(map.get(i).get("itemid"));
-                        }
-//                        Toast.makeText(BarcodeSupplementActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(VulcanizationActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
+    //显示硫化生产
+    private void showVual() {
+        //关闭加载
+        loadingView.setVisibility(View.GONE);
+        llmchid.setVisibility(View.GONE);
+        //显示硫化扫描
+        listView.setVisibility(View.VISIBLE);
+        llcode.setVisibility(View.VISIBLE);
+        llcodelog.setVisibility(View.VISIBLE);
+        //获得焦点
+        barcode.requestFocus();
+        isVual = true;
     }
 
+    //显示扫描机台
+    private void showMchid(){
+        llmchid.setVisibility(View.VISIBLE);
+        //显示硫化扫描
+        listView.setVisibility(View.GONE);
+        llcode.setVisibility(View.GONE);
+        llcodelog.setVisibility(View.GONE);
+        //获得焦点
+        tvMchid.requestFocus();
+        isVual = false;
+    }
     //新增硫化生产记录
     class TypeCodeTask extends AsyncTask<String, Void, String> {
         @Override
@@ -419,14 +390,18 @@ public class VulcanizationActivity extends BaseActivity {
         Log.e("key", keyCode + "  ");
         switch (keyCode){
             case 0:
-                if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+                if (isVual) {
+                    barcode.requestFocus();
                     barcode.setText("");
-                } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
+                } else{
+                    tvMchid.requestFocus();
                     tvMchid.setText("");
                 }
+                break;
         }
         return true;
     }
+
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -437,8 +412,13 @@ public class VulcanizationActivity extends BaseActivity {
             //返回键
             case 4:
                 //返回上级页面
-                startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
-                this.finish();
+                //先返回扫描机台，再返回功能页
+                if(isVual){
+                    showMchid();
+                }else{
+                    startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
+                    this.finish();
+                }
                 break;
             //右方向键
             case 22:

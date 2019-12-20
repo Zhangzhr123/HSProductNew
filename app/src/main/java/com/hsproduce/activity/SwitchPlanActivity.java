@@ -196,7 +196,7 @@ public class SwitchPlanActivity extends BaseActivity {
         //获取输入机台上barcode
         mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
-            Toast.makeText(SwitchPlanActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+            Toast.makeText(SwitchPlanActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
         } else {
             String param1 = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift + "&TYPE_N=20";
             new GetPlanTask().execute(param1);
@@ -215,7 +215,7 @@ public class SwitchPlanActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -223,7 +223,7 @@ public class SwitchPlanActivity extends BaseActivity {
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchPlanActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -234,7 +234,7 @@ public class SwitchPlanActivity extends BaseActivity {
                             adaprer.notifyDataSetChanged();
                             planList = datas;
                         } else {
-                            Toast.makeText(SwitchPlanActivity.this, "无可规格交替的计划！", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SwitchPlanActivity.this, "无可规格交替的计划！", Toast.LENGTH_SHORT).show();
                             adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
                             lvplan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
@@ -242,23 +242,23 @@ public class SwitchPlanActivity extends BaseActivity {
                         }
 
                     } else if (res.get("code").equals("300")) {
-                        Toast.makeText(SwitchPlanActivity.this, "未到换班时间不可进行倒班！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchPlanActivity.this, "未到换班时间不可进行倒班！", Toast.LENGTH_SHORT).show();
                         return;
                     } else if (res.get("code").equals("500")) {
-                        Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_SHORT).show();
                         adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
                         lvplan.setAdapter(adaprer);
                         adaprer.notifyDataSetChanged();
                         planList = datas;
                         return;
                     } else {
-                        Toast.makeText(SwitchPlanActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SwitchPlanActivity.this, "计划查询错误,请重新操作！", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchPlanActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -348,10 +348,10 @@ public class SwitchPlanActivity extends BaseActivity {
         return true;
     }
     private void operate(String msg) {
-//        if(!iscomplate){
-//            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if(!iscomplate){
+            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         iscomplate = false;
         if (!StringUtil.isNullOrBlank(tvMchid.getText().toString().trim())) {
             getCurrentVPlan();
