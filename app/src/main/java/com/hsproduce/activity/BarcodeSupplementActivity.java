@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +24,13 @@ import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.util.*;
 
+/**
+ * 条码补录页面
+ * 扫描条码
+ * createBy zhangzr @ 2019-12-20
+ * 1.ssssss updateBy zhangzr @201
+ *
+ */
 //条码补录页面
 public class BarcodeSupplementActivity extends BaseActivity {
 

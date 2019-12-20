@@ -312,6 +312,9 @@ public class FunctionActivity extends BaseActivity {
 
                     } else if (map.size() > 1) {
                         for (int i = 0; i < map.size(); i++) {
+                            if(map.get(i).get("m_CNAME") == null){
+                                continue;
+                            }
                             if (map.get(i).get("m_CNAME").equals("硫化生产")) {
                                 lh.setVisibility(View.VISIBLE);
                                 view1.setVisibility(View.VISIBLE);
