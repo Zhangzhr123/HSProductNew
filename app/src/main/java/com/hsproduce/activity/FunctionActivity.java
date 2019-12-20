@@ -1,11 +1,14 @@
 package com.hsproduce.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
@@ -15,7 +18,9 @@ import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,24 +30,30 @@ public class FunctionActivity extends BaseActivity {
     //硫化、装车、检测---控件
     private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13;
     private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail;
-    private RelativeLayout cx,lh,jc,zc;
+    private RelativeLayout cx, lh, jc, zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
+    //修改密码
+    private TextView tv_updatePW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_function);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titel_update);
+        //修改密码控件ID
+        tv_updatePW = (TextView) findViewById(R.id.updatePW);
         //获取控件
         initView();
     }
 
     public void initView() {
         //功能分类控件
-        cx = (RelativeLayout)findViewById(R.id.cx);
-        lh = (RelativeLayout)findViewById(R.id.lh);
-        jc = (RelativeLayout)findViewById(R.id.jc);
-        zc = (RelativeLayout)findViewById(R.id.zc);
+        cx = (RelativeLayout) findViewById(R.id.cx);
+        lh = (RelativeLayout) findViewById(R.id.lh);
+        jc = (RelativeLayout) findViewById(R.id.jc);
+        zc = (RelativeLayout) findViewById(R.id.zc);
         //view功能显示
         view1 = findViewById(R.id.view1);
         view2 = findViewById(R.id.view2);
@@ -75,6 +86,53 @@ public class FunctionActivity extends BaseActivity {
         //菜单权限管理
         String parm = "UserName=" + App.usercode;
         new TeamTask().execute(parm);
+
+        //修改密码
+        tv_updatePW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final MaterialDialog dialog = new MaterialDialog.Builder(FunctionActivity.this)
+                        .customView(R.layout.dialog_update_pw, true)
+                        .show();
+                //控件
+                View customeView = dialog.getCustomView();
+                final EditText ed_OldPW = (EditText) customeView.findViewById(R.id.oldPW);
+                final EditText ed_NewPW = (EditText) customeView.findViewById(R.id.newPW);
+                Button btn_Cancel = (Button)customeView.findViewById(R.id.btn_cancel);
+                Button btn_Ok = (Button)customeView.findViewById(R.id.btn_ok);
+                btn_Cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btn_Ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(ed_OldPW.getText().toString() == null || ed_OldPW.getText().toString().equals("")){
+                            Toast.makeText(FunctionActivity.this, "原密码不能为空", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(ed_NewPW.getText().toString() == null || ed_NewPW.getText().toString().equals("")){
+                            Toast.makeText(FunctionActivity.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(!ed_OldPW.getText().toString().equals(App.password)){
+                            Toast.makeText(FunctionActivity.this, "原密码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String oldPW = ed_OldPW.getText().toString();
+                        String newPW = ed_NewPW.getText().toString();
+                        //修改密码
+                        String parm = "UserName="+App.username+"&oldPwd="+oldPW+"&newPwd="+newPW;
+                        new UpdatePWTask().execute(parm);
+                        dialog.dismiss();
+
+                    }
+                });
+
+            }
+        });
 
         //Button点击事件
         initEvent();
@@ -199,13 +257,13 @@ public class FunctionActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FunctionActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FunctionActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                 }.getType());
                 List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                 if (res == null || res.isEmpty()) {
-                    Toast.makeText(FunctionActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FunctionActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                 }
                 if (res.get("code").equals("200")) {
                     if (map.size() == 1) {
@@ -249,7 +307,7 @@ public class FunctionActivity extends BaseActivity {
                             startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
                         }
 
                     } else if (map.size() > 1) {
@@ -298,18 +356,45 @@ public class FunctionActivity extends BaseActivity {
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
                             }
                         }
-                        for(int u=0;u<map.size();u++){
-                            if(map.get(u).get("moduleid").equals("0")){
+                        for (int u = 0; u < map.size(); u++) {
+                            if (map.get(u).get("moduleid").equals("0")) {
                                 App.username = map.get(u).get("m_CNAME");
                                 break;
                             }
                         }
                     } else {
-                        Toast.makeText(FunctionActivity.this, "您没有操作PDA权限,请退出", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FunctionActivity.this, "您没有操作PDA权限,请退出", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(FunctionActivity.this, "菜单查询失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FunctionActivity.this, "菜单查询失败", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    //修改密码
+    class UpdatePWTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.UPDATEPW, strs[0]);
+            //String result = HttpUtil.sendPost(PathUtil.LOGIN, strs[0], HttpUtil.formContent);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(FunctionActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                Map<String, String> res = App.gson.fromJson(s, new TypeToken<HashMap<String, String>>() {
+                }.getType());
+                if (res.get("code").equals("200")) {
+                    Toast.makeText(FunctionActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(FunctionActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     }

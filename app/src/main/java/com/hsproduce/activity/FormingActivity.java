@@ -202,10 +202,10 @@ public class FormingActivity extends BaseActivity {
             dialogToFinish();
             //返回上一页面，并且上一页面重新查询。
         } else if (isNull == 3) {
-            Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_LONG).show();
+            Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            Toast.makeText(FormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_LONG).show();
+            Toast.makeText(FormingActivity.this, "数据获取异常，请联系管理员。", Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -227,7 +227,7 @@ public class FormingActivity extends BaseActivity {
 
                             Integer sum = Integer.valueOf(v.getBarcodestart().substring(6, 12)) + Integer.valueOf(number);
                             if (Integer.valueOf(number) > 500 || sum > 999999) {
-                                Toast.makeText(FormingActivity.this, "数量不能大于500或流水号不能大于999999", Toast.LENGTH_LONG).show();
+                                Toast.makeText(FormingActivity.this, "数量不能大于500或流水号不能大于999999", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             //修改操作接口
@@ -235,7 +235,7 @@ public class FormingActivity extends BaseActivity {
                             new UPDATETask().execute(param);
 
                         } else {
-                            Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -267,7 +267,7 @@ public class FormingActivity extends BaseActivity {
         //获取输入机台上barcode
         mchid = tvMchid.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(mchid)) {
-            Toast.makeText(FormingActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+            Toast.makeText(FormingActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
         } else {
             //已下达的计划
             String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
@@ -306,12 +306,12 @@ public class FormingActivity extends BaseActivity {
                 num = number.getText().toString();
                 //如果为空则进行操作
                 if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
-                    Toast.makeText(FormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (nextCode.length() != 12) {
-                    Toast.makeText(FormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String nextjt = nextCode.substring(4, 6);
@@ -321,7 +321,7 @@ public class FormingActivity extends BaseActivity {
                 }
                 Integer sum = Integer.valueOf(nextCode.substring(6, 12)) + Integer.valueOf(num);
                 if (Integer.valueOf(num) > 500 || sum > 999999) {
-                    Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //执行开始计划接口
@@ -367,23 +367,23 @@ public class FormingActivity extends BaseActivity {
 
                 //如果为空则进行操作
                 if (code.equals("")) {
-                    Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (code.length() != 12) {
-                    Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String nextjt = code.substring(4, 6);
                 if (!jt.equals(nextjt)) {
-                    Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String pre = vplan.getBarcodeend().substring(0, 6);
                 String now = code.substring(0, 6);
                 if (!pre.equals(now)) {
-                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -430,23 +430,23 @@ public class FormingActivity extends BaseActivity {
 
                 //如果为空则进行操作
                 if (code.equals("")) {
-                    Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (code.length() != 12) {
-                    Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String nextjt = code.substring(4, 6);
                 if (!jt.equals(nextjt)) {
-                    Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String pre = v.getBarcodestart().substring(0, 6);
                 String now = code.substring(0, 6);
                 if (!pre.equals(now)) {
-                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //执行操作接口
@@ -479,7 +479,7 @@ public class FormingActivity extends BaseActivity {
                 List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                 }.getType());
                 if (res == null || res.isEmpty()) {
-                    Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (res != null) {
@@ -515,14 +515,14 @@ public class FormingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -537,13 +537,13 @@ public class FormingActivity extends BaseActivity {
                         finish.setEnabled(true);
                         out.setEnabled(true);
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -562,14 +562,14 @@ public class FormingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "修改失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "修改失败！", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -582,13 +582,13 @@ public class FormingActivity extends BaseActivity {
                         finish.setEnabled(true);
                         out.setEnabled(true);
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "修改失败！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "修改失败！", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -607,27 +607,27 @@ public class FormingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
                         //弹窗执行开始计划
                         dialogToStart();
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -646,14 +646,14 @@ public class FormingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -666,13 +666,13 @@ public class FormingActivity extends BaseActivity {
                         finish.setEnabled(false);
                         out.setEnabled(true);
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -691,7 +691,7 @@ public class FormingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -699,7 +699,7 @@ public class FormingActivity extends BaseActivity {
                     }.getType());
                     List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -707,13 +707,13 @@ public class FormingActivity extends BaseActivity {
                             data1.add(map.get(i).get("itemid"));
                         }
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -732,7 +732,7 @@ public class FormingActivity extends BaseActivity {
         protected void onPostExecute(String s) {
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -741,7 +741,7 @@ public class FormingActivity extends BaseActivity {
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -805,13 +805,13 @@ public class FormingActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
 //                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

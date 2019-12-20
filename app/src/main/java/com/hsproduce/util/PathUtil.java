@@ -14,6 +14,8 @@ public interface PathUtil {
     public static final String GET_SHIFT = SERVER + "api/User/GetTeam";
     //注销
     public static final String LOGOUT = SERVER + "login/logout";
+    //修改密码
+    public static final String UPDATEPW = SERVER + "api/PDA/GetUpdatePassword";
 
     //获取菜单
     public static final String GET_TEAM = SERVER + "api/PDA/GetTeam";

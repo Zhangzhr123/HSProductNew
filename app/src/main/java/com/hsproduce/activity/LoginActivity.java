@@ -62,11 +62,12 @@ public class LoginActivity extends BaseActivity {
         new 版本更新Task().execute();
 
         // 获取设置的IP地址
-        String text = get("myIP");
-        if (!TextUtils.isEmpty(text)) {
-            App.ip = text;
-            new ShiftTask().execute();
-        }
+//        String text = get("myIP");
+//        if (!TextUtils.isEmpty(text)) {
+//            App.ip = text;
+//            new ShiftTask().execute();
+//        }
+        new ShiftTask().execute();
 
         initView();
     }
@@ -97,7 +98,6 @@ public class LoginActivity extends BaseActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //et.setText(App.ip);
                                 //按下确定键后的事件
                                 IP = et.getText().toString();
                                 if (IP.equals("") || IP == null) {
@@ -112,8 +112,8 @@ public class LoginActivity extends BaseActivity {
                                 } else {
                                     save("myIP", IP);
                                 }
-                                new ShiftTask().execute();//查询班组
-                                Toast.makeText(getApplicationContext(), et.getText().toString(), Toast.LENGTH_LONG).show();
+//                                new ShiftTask().execute();//查询班组
+                                Toast.makeText(getApplicationContext(), et.getText().toString(), Toast.LENGTH_SHORT).show();
                             }
                         }).setNegativeButton("取消", null).show();
             }
@@ -168,6 +168,7 @@ public class LoginActivity extends BaseActivity {
         String username = tv_code.getText().toString().trim();
         String password = tv_password.getText().toString().trim();
         App.usercode = username;
+        App.password = password;
         String param = "UserName=" + username + "&PWD=" + password;
         new MyTask().execute(param);
     }
@@ -184,7 +185,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                 }.getType());
@@ -201,7 +202,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     sp_shift.setAdapter(adapter);
                 } else {
-                    Toast.makeText(LoginActivity.this, "获取失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -219,7 +220,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 Map<String, String> res = App.gson.fromJson(s, new TypeToken<HashMap<String, String>>() {
                 }.getType());
@@ -227,7 +228,7 @@ public class LoginActivity extends BaseActivity {
                     Intent intent = new Intent(LoginActivity.this, FunctionActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -342,7 +343,7 @@ public class LoginActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             try {
                 if (StringUtil.isNullOrBlank(s)) {
-                    Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 } else {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<HashMap<Object, Object>>() {
                     }.getType());
@@ -359,7 +360,7 @@ public class LoginActivity extends BaseActivity {
                                 download(PathUtil.文件下载);
 
                             } else {
-                                Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
                             }
 
                         }

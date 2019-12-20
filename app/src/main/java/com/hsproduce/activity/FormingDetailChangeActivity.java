@@ -177,7 +177,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
             shift.setSelection(0, true);
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -186,7 +186,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -209,13 +209,13 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         codeid = datas.get(0).getId();
 //                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -234,7 +234,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -242,7 +242,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     }.getType());
                     List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -268,13 +268,13 @@ public class FormingDetailChangeActivity extends BaseActivity {
                                 }).create();
                         alertDialog.show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -292,7 +292,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -301,7 +301,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -332,13 +332,13 @@ public class FormingDetailChangeActivity extends BaseActivity {
                                 }).create();
                         alertDialog.show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -356,26 +356,26 @@ public class FormingDetailChangeActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FormingDetailChangeActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

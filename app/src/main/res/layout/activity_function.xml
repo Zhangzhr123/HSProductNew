@@ -6,14 +6,14 @@
               android:orientation="vertical"
 >
     <!-- 标题 功能菜单 -->
-    <com.xuexiang.xui.widget.actionbar.TitleBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/xui_btn_blue_normal_color"
-            app:tb_barHeight="40dp"
-            app:tb_dividerColor="@color/xui_config_color_red"
-            app:tb_titleText="@string/Function">
-    </com.xuexiang.xui.widget.actionbar.TitleBar>
+    <include layout="@layout/titel_update"/>
+<!--    <com.xuexiang.xui.widget.actionbar.TitleBar-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@color/xui_btn_blue_normal_color"-->
+<!--            app:tb_dividerColor="@color/xui_config_color_red"-->
+<!--            app:tb_titleText="@string/Function">-->
+<!--    </com.xuexiang.xui.widget.actionbar.TitleBar>-->
 
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout

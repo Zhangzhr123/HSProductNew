@@ -121,7 +121,7 @@ public class BarCodeDetailActivity extends BaseActivity {
             fstate.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -150,7 +150,7 @@ public class BarCodeDetailActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -179,7 +179,7 @@ public class BarCodeDetailActivity extends BaseActivity {
             vstate.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -207,12 +207,12 @@ public class BarCodeDetailActivity extends BaseActivity {
                         return;
                     }
                     if (data1 == null && data2 == null) {
-                        Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

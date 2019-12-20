@@ -118,7 +118,7 @@ public class CheckActivity extends BaseActivity {
     public void check() {
         ERROR = error.getText().toString().trim().replace(".","-");
         if(ERROR == null || ERROR.equals("")){
-            Toast.makeText(CheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_LONG).show();
+            Toast.makeText(CheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -146,7 +146,7 @@ public class CheckActivity extends BaseActivity {
             creatuser.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -155,7 +155,7 @@ public class CheckActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -169,13 +169,13 @@ public class CheckActivity extends BaseActivity {
                         creatuser.setText(datas.get(0).getCreateuser());
 
                     } else {
-                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -193,24 +193,24 @@ public class CheckActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

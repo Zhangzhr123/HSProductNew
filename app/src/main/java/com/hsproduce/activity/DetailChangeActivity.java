@@ -141,7 +141,7 @@ public class DetailChangeActivity extends BaseActivity {
                 CreateUser = createuser.getText().toString().trim();
                 //补录条码
 //                BarCode = barcode.getText().toString().trim();
-                //班次
+                //班组
                 Team = team.getSelectedItem().toString().trim();
                 //左右膜
                 lorR = LorR.getSelectedItem().toString().trim();
