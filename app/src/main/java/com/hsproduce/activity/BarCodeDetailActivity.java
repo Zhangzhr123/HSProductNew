@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 生产追溯页面
+ * 扫描条码显示硫化条码明细和成型条码明细
+ * createBy zahngzr @ 2019-12-20
+ */
 public class BarCodeDetailActivity extends BaseActivity {
 
     //轮胎条码
