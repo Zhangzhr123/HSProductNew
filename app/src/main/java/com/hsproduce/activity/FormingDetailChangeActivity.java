@@ -251,6 +251,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         String search = mchid.getText().toString().trim();
                         for (int i = 0; i < map.size(); i++) {
+                            if(map.get(i).get("itemid") == null){
+                                continue;
+                            }
                             if (search.contains(map.get(i).get("itemid"))) {
                             }
                             mchidlist.add(map.get(i).get("itemid"));
@@ -310,6 +313,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         //填入规格信息
                         for (int i = 0; i < datas.size(); i++) {
+                            if(datas.get(i).getItnbr() == null){
+                                continue;
+                            }
                             itnbrlist.add(datas.get(i).getItnbr());
                             Itndsc.add(datas.get(i));
                         }
@@ -371,6 +377,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;

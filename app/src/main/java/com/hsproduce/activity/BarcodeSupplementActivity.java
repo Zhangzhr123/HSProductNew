@@ -26,12 +26,12 @@ import java.util.*;
 
 /**
  * 条码补录页面
- * 扫描条码
+ * 扫描条码，填写条码明细，将条码添加进硫化生产实绩中
  * createBy zhangzr @ 2019-12-20
- * 1.ssssss updateBy zhangzr @201
- *
+ * 1.规格不用填，由规格名称带出
+ * 2.机台为查询下拉模式选择
+ * 3.时间格式为yyyy-mm-dd，时间控件月份自动加一为正确时间
  */
-//条码补录页面
 public class BarcodeSupplementActivity extends BaseActivity {
 
     //定义控件

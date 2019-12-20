@@ -194,6 +194,7 @@ public class CheckActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -204,8 +205,10 @@ public class CheckActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     } else {
                         Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {

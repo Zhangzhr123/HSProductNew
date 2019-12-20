@@ -351,6 +351,9 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         for (int i = 0; i < map.size(); i++) {
+                            if(map.get(i).get("itemid") == null){
+                               continue;
+                            }
                             data1.add(map.get(i).get("itemid"));
                         }
                     } else {
