@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,7 +20,11 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import java.util.List;
 import java.util.Map;
 
-//条码更换页面
+/**
+ * 条码更换页面
+ * 扫描旧条码，查询条码硫化明细，扫描新条码更换加到硫化生产实绩中
+ * createBy zhangzr @ 2019-12-20
+ */
 public class BarcodeReplaceActivity extends BaseActivity {
 
     //声明控件   获取条码明细按钮   btn_repl
