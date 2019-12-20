@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +13,6 @@ import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.adapter.BarCodeAdapter;
 import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.PlanDialogItemAdapter;
 import com.hsproduce.bean.Team;
@@ -25,17 +23,14 @@ import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //条码补录页面
 public class BarcodeSupplementActivity extends BaseActivity {
 
     //定义控件
     private TextView barcode,spesc,date,master, spescname;
-    private AutoCompleteTextView mchid;
+    private AutoCompleteTextView autoTvMchid;
     private Spinner shift,LorR,team;
     private ButtonView ok,getitnbr;
     //下拉列表
@@ -48,13 +43,13 @@ public class BarcodeSupplementActivity extends BaseActivity {
     //定义变量
     private String BarCode="",Spesc="",SpescName="",lorR="",Pddate="",Shift="",MchId="",Team="",creatuser="",PlanID="";
     //Dialog显示列表
-    private List<String> itnbrlist = new ArrayList<>();
+    private List<String> itdscList = new ArrayList<>();
     private DialogItemAdapter itnbradapter;
     private List<String> mchidlist = new ArrayList<>();
     private DialogItemAdapter mchidadapter;
     private List<VPlan> planlist = new ArrayList<>();
     private PlanDialogItemAdapter planadapter;
-    private List<VreCord> itndsc = new ArrayList<>();
+    private Map<String, VreCord> itdscMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +76,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         date = (TextView)findViewById(R.id.date);
         date.setFocusable(false);//让EditText失去焦点，然后获取点击事件
         //机台号
-        mchid = (AutoCompleteTextView)findViewById(R.id.mchid);
+        autoTvMchid = (AutoCompleteTextView)findViewById(R.id.mchid);
         //左右膜
         LorR = (Spinner)findViewById(R.id.LorR);
         //班组
@@ -199,10 +194,13 @@ public class BarcodeSupplementActivity extends BaseActivity {
     //筛选规格
     public void getItnbr(){
         //清空数据
-        itnbrlist.clear();
-        itndsc.clear();
+        itdscList.clear();
+        itdscMap.clear();
         spesc.setText("");
         String search = spescname.getText().toString().trim();
+        if(!StringUtil.isNullOrEmpty(search) && search.length() > 12){
+            search = search.substring(0, 12);
+        }
         search = search.toUpperCase();//大写转换
         String parm = "ITDSC="+search;
         new GetSpecTask().execute(parm);
@@ -267,7 +265,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         Toast.makeText(BarcodeSupplementActivity.this, "未获取到机台", Toast.LENGTH_LONG).show();
                     }
                     if(res.get("code").equals("200")){
-                        String search = mchid.getText().toString().trim();
+                        String search = autoTvMchid.getText().toString().trim();
                         for(int i=0;i<map.size();i++){
                             if(search.contains(map.get(i).get("itemid"))){}
                             mchidlist.add(map.get(i).get("itemid"));
@@ -276,9 +274,9 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                                 BarcodeSupplementActivity.this, android.R.layout.simple_dropdown_item_1line,mchidlist);
                         //初始化autoCompleteTextView
-                        mchid.setAdapter(adapter);
+                        autoTvMchid.setAdapter(adapter);
                         //设置输入多少字符后提示，默认值为2，在此设为１
-                        mchid.setThreshold(1);
+                        autoTvMchid.setThreshold(1);
                     }else if(res.get("code").equals("500")){
                         Toast.makeText(BarcodeSupplementActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
                     }else{
@@ -315,28 +313,21 @@ public class BarcodeSupplementActivity extends BaseActivity {
                     if(res.get("code").equals("200")){
                         //填入规格信息
                         for(int i=0;i<datas.size();i++){
-                            itnbrlist.add(datas.get(i).getItnbr());
-                            itndsc.add(datas.get(i));
+                            itdscList.add(datas.get(i).getItdsc());
+                            itdscMap.put(datas.get(i).getItdsc(), datas.get(i));
                         }
-                        itnbradapter = new DialogItemAdapter(BarcodeSupplementActivity.this,itnbrlist);
+                        itnbradapter = new DialogItemAdapter(BarcodeSupplementActivity.this, itdscList);
                         //弹窗显示选中消失
                         AlertDialog alertDialog = new AlertDialog
                                 .Builder(BarcodeSupplementActivity.this)
                                 .setSingleChoiceItems(itnbradapter, 0, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Spesc = itnbrlist.get(which);
-                                        spesc.setText("");
-                                        spesc.setText(Spesc);
-                                        //规格名称
-                                        for(int j=0;j<itndsc.size();j++){
-                                            if(itndsc.get(j).getItnbr().equals(Spesc)){
-                                                spescname.setText(itndsc.get(j).getItdsc());
-                                                SpescName = itndsc.get(j).getItdsc().replaceAll(" ","%20");
-                                            }
-                                        }
+                                        SpescName = itdscList.get(which);
+                                        spescname.setText(SpescName);
+                                        spesc.setText(itdscMap.get(SpescName).getItnbr());
                                         dialog.dismiss();
-                                        Toast.makeText(BarcodeSupplementActivity.this,"选择了"+Spesc,Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(BarcodeSupplementActivity.this,"选择了"+Spesc,Toast.LENGTH_SHORT).show();
                                     }
                                 }).create();
                         alertDialog.show();
@@ -379,7 +370,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
                         spesc.setText("");
                         spescname.setText("");
                         date.setText("");
-                        mchid.setText("");
+                        autoTvMchid.setText("");
                         barcode.setText("");
                         barcode.requestFocus();
                         Toast.makeText(BarcodeSupplementActivity.this, "补录成功！", Toast.LENGTH_LONG).show();

@@ -25,20 +25,20 @@
                     android:layout_height="35dp"
                     android:orientation="horizontal">
                 <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:layout_margin="1dp"
-                        android:text="条码："
+                        android:layout_width="@dimen/label_width"
+                        android:layout_height="@dimen/label_height"
+                        android:layout_margin="@dimen/input_margin_xs"
+                        android:text="条码"
                         android:textSize="15sp"/>
                 <!-- 条码扫描框 -->
                 <com.xuexiang.xui.widget.edittext.ClearEditText
                         style="@style/EditText.Normal"
                         android:id="@+id/barcode"
-                        android:layout_width="160dp"
-                        android:layout_height="30dp"
+                        android:layout_width="@dimen/input_width"
+                        android:layout_height="@dimen/input_height"
+                        android:layout_margin="@dimen/input_margin_xs"
                         android:hint="@string/vul_barcode_scan"
-                        android:textAlignment="center"
-                        android:layout_margin="1dp"/>
+                        android:textAlignment="center"/>
             </LinearLayout>
             <View
                     android:layout_height="1px"
@@ -52,93 +52,90 @@
                     android:layout_height="wrap_content">
                 <TableRow android:layout_marginTop="0dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="1dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="规格"
                             android:textSize="15sp"/>
                     <com.xuexiang.xui.widget.edittext.ClearEditText
                             style="@style/EditText.Normal"
                             android:id="@+id/spesc"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:hint="请输入规格"
                             android:textAlignment="center"
-                            android:editable="false"
-                            android:layout_margin="1dp"/>
+                            android:editable="false"/>
                 </TableRow>
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="1dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="规格名称"
                             android:textSize="15sp"/>
                     <com.xuexiang.xui.widget.edittext.ClearEditText
                             style="@style/EditText.Normal"
                             android:id="@+id/spescname"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:hint="请输入规格名称"
-                            android:textAlignment="center"
-                            android:completionThreshold="1"/>
+                            android:textAlignment="center"/>
                     <com.xuexiang.xui.widget.button.ButtonView
                             style="@style/ButtonView.Blue"
                             android:id="@+id/getitnbr"
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/btn_width_xs"
+                            android:layout_height="@dimen/btn_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="选择规格"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginLeft="0dp"
                             android:visibility="visible"/>
 
                 </TableRow>
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="1dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="机台"
                             android:textSize="15sp"/>
                     <AutoCompleteTextView
                             android:id="@+id/mchid"
                             style="@style/EditText.Normal"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:hint="@string/vul_scan_mchid"
-                            android:textAlignment="center"
-                            android:completionThreshold="1"/>
+                            android:textAlignment="center"/>
                 </TableRow>
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="日期"
                             android:textSize="15sp"/>
                     <TextView
                             android:background="@drawable/edit_background"
                             android:id="@+id/date"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:hint="YYYY-MM-DD"
-                            android:textAlignment="center"
-                            android:layout_margin="1dp"/>
+                            android:textAlignment="center"/>
                 </TableRow>
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="LorR"
                             android:textSize="15sp"/>
                     <Spinner
                             android:id="@+id/LorR"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:textAlignment="center"
                             android:background="@drawable/edit_background"
                             android:spinnerMode="dialog"
@@ -148,17 +145,16 @@
 
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="班次"
                             android:textSize="15sp"/>
                     <Spinner
                             android:id="@+id/shift"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:textAlignment="center"
                             android:background="@drawable/edit_background"
                             android:spinnerMode="dialog"
@@ -168,17 +164,16 @@
 
                 <TableRow android:layout_marginTop="2dp">
                     <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/label_width"
+                            android:layout_height="@dimen/label_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:text="班组"
                             android:textSize="15sp"/>
                     <Spinner
                             android:id="@+id/team"
-                            android:layout_width="160dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="@dimen/input_width"
+                            android:layout_height="@dimen/input_height"
+                            android:layout_margin="@dimen/input_margin_xs"
                             android:textAlignment="center"
                             android:background="@drawable/edit_background"
                             android:spinnerMode="dialog"

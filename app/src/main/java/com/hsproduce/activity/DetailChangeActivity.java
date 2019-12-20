@@ -1,6 +1,7 @@
 package com.hsproduce.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,7 @@ import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +30,10 @@ import java.util.Map;
 public class DetailChangeActivity extends BaseActivity {
 
     //定义控件
-    private TextView barcode, spesc, mchid, createuser;
-    private ButtonView btgetcode, ok, getitnbr, getmchid;
-    private Spinner LorR, shift, team;
+    private TextView tvBarcode, tvItnbr, tvItdsc, tvMaster;
+    private AutoCompleteTextView autoTvMchid;
+    private ButtonView btFindCode, btSubmit, btFindItdsc;
+    private Spinner spLR, spShift, spTeam;
     //下拉列表
     private List<String> teamlist = new ArrayList<>();
     private ArrayAdapter<String> adapter;
@@ -39,13 +42,13 @@ public class DetailChangeActivity extends BaseActivity {
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //定义变量
-    private String BarCode = "", Spesc = "", CreateUser = "", lorR = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "d";
+    private String BarCode = "", Spesc = "", CreateUser = "", lorR = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itdsc = "d";
     //Dialog显示列表
-    private List<String> itnbrlist = new ArrayList<>();
+    private List<String> itdscList = new ArrayList<>();
     private DialogItemAdapter itnbradapter;
     private List<String> mchidlist = new ArrayList<>();
     private DialogItemAdapter mchidadapter;
-    private List<VreCord> Itndsc = new ArrayList<>();
+    private Map<String, VreCord> itdscMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,22 +63,24 @@ public class DetailChangeActivity extends BaseActivity {
 
     public void initView() {
         //补录条码
-        barcode = (TextView) findViewById(R.id.barcode);
+        tvBarcode = (TextView) findViewById(R.id.barcode);
         //获得焦点
-        barcode.requestFocus();
+        tvBarcode.requestFocus();
         //规格编码
-        spesc = (TextView) findViewById(R.id.spesc);
+        tvItnbr = (TextView) findViewById(R.id.spesc);
+        //规格描述
+        tvItdsc = (TextView) findViewById(R.id.spescname);
         //主手
-        createuser = (TextView) findViewById(R.id.master);
+        tvMaster = (TextView) findViewById(R.id.master);
         //机台号
-        mchid = (TextView) findViewById(R.id.mchid);
-        //左右膜
-        LorR = (Spinner) findViewById(R.id.lorR);
+        autoTvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
+        //左右模
+        spLR = (Spinner) findViewById(R.id.lorR);
         //班组
-        team = (Spinner) findViewById(R.id.team);
+        spTeam = (Spinner) findViewById(R.id.team);
         new ShiftTask().execute();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, teamlist);
-        team.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Team = parent.getItemAtPosition(position).toString();
@@ -96,16 +101,6 @@ public class DetailChangeActivity extends BaseActivity {
                         break;
                     }
                 }
-//                if (Team.equals("甲班")) {
-//                    Team = "1";
-//                } else if (Team.equals("乙班")) {
-//                    Team = "2";
-//                } else if (Team.equals("丙班")) {
-//                    Team = "3";
-//                } else {
-//                    Team = "15";
-//                }
-//                App.shift = Team;
             }
 
             @Override
@@ -113,77 +108,70 @@ public class DetailChangeActivity extends BaseActivity {
             }
         });
         //班次
-        shift = (Spinner) findViewById(R.id.shift);
+        spShift = (Spinner) findViewById(R.id.shift);
         //查询条码明细
-        btgetcode = (ButtonView) findViewById(R.id.bt_getCode);
+        btFindCode = (ButtonView) findViewById(R.id.bt_getCode);
         //条码补录
-        ok = (ButtonView) findViewById(R.id.ok);
+        btSubmit = (ButtonView) findViewById(R.id.ok);
         //筛选按钮
-        getitnbr = (ButtonView) findViewById(R.id.getitnbr);
-        getmchid = (ButtonView) findViewById(R.id.getmchid);
+        btFindItdsc = (ButtonView) findViewById(R.id.getitnbr);
     }
 
     public void initEvent() {
-        btgetcode.setOnClickListener(new View.OnClickListener() {
+        btFindCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCodeDetail();
             }
         });
-        ok.setOnClickListener(new View.OnClickListener() {
+        btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //机台
-                MchId = mchid.getText().toString().trim();
+                MchId = autoTvMchid.getText().toString().trim();
                 //规格编码
-                Spesc = spesc.getText().toString().trim();
+                Spesc = tvItnbr.getText().toString().trim();
                 //主手
-                CreateUser = createuser.getText().toString().trim();
+                CreateUser = tvMaster.getText().toString().trim();
                 //补录条码
-//                BarCode = barcode.getText().toString().trim();
+//                BarCode = tvBarcode.getText().toString().trim();
                 //班组
-                Team = team.getSelectedItem().toString().trim();
-                //左右膜
-                lorR = LorR.getSelectedItem().toString().trim();
-                //MCHID=07A01 &ITNBR=CBCBS64518C14DH0 &ITDSC=185R14C-8PR(TR645)S%20BLACKSTONE
-                // &LoR=L &SHIFT=1 &USER_NAME=caozuo &DateTime_W=2019-10-16 &SwitchID=17
+                Team = spTeam.getSelectedItem().toString().trim();
+                Team = StringUtil.isNullOrBlank(Team) ? "" : (Team.equals("甲班") ? "1" : (Team.equals("乙班") ? "2" : (Team.equals("丙班") ? "3" : Team.equals("丁班") ? "4" : Team)));
+                //左右模
+                lorR = spLR.getSelectedItem().toString().trim();
                 String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname + "&LoR=" + lorR
-                        + "&SHIFT=" + Team + "&USER_NAME=" + CreateUser + "&DateTime_W=" + "&SwitchID=" + codeid;
+                        + "&TEAM=" + Team + "&USER_NAME=" + CreateUser + "&DateTime_W=" + "&SwitchID=" + codeid;
                 new ChangeDetailedTask().execute(parm);
-//                barcode.setText("");
             }
         });
         //筛选规格
-        getitnbr.setOnClickListener(new View.OnClickListener() {
+        btFindItdsc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //清空数据
-                itnbrlist.clear();
-                Itndsc.clear();
-                String search = spesc.getText().toString().trim();
+                itdscList.clear();
+                itdscMap.clear();
+                String search = tvItdsc.getText().toString().trim();
+                if(!StringUtil.isNullOrEmpty(search) && search.length() > 12){
+                    search = search.substring(0, 12);
+                }
                 search = search.toUpperCase();//大写转换
-                String parm = "ITNBR=" + search;
+                String parm = "ITDSC=" + search;
                 new GetSpecTask().execute(parm);
             }
         });
         //筛选机台
-        getmchid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //清空数据
-                mchidlist.clear();
-                String parm = "TYPE_ID=10098";
-                new MCHIDTask().execute(parm);
-            }
-        });
+        String parm = "TYPE_ID=10098";
+        new MCHIDTask().execute(parm);
     }
 
     public void getCodeDetail() {
         //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
-        BarCode = barcode.getText().toString().trim();
+        BarCode = tvBarcode.getText().toString().trim();
         String parm = "SwitchTYRE_CODE=" + BarCode;
         new SelDetailedTask().execute(parm);
-        //barcode.setText("");
+        //tvBarcode.setText("");
     }
 
     //班组
@@ -213,7 +201,7 @@ public class DetailChangeActivity extends BaseActivity {
                     for (int i = 0; i < map.size(); i++) {
                         teamlist.add(map.get(i).get("name"));
                     }
-                    team.setAdapter(adapter);
+                    spTeam.setAdapter(adapter);
                 }
             }
         }
@@ -240,36 +228,44 @@ public class DetailChangeActivity extends BaseActivity {
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
-                    if (res.get("code").equals("200")) {
+                    if (res.get("code").equals("200") && datas != null && datas.size() > 0) {
+                        VreCord vrecord = datas.get(0);
                         //填入规格信息
-                        spesc.setText(datas.get(0).getItnbr());
-                        mchid.setText(datas.get(0).getMchid());
+                        tvItnbr.setText(vrecord.getItnbr());
+                        tvItdsc.setText(vrecord.getItdsc());
+                        autoTvMchid.setText(vrecord.getMchid());
                         //设置默认值
-                        if (datas.get(0).getLr().equals("L")) {
-                            LorR.setSelection(0, true);
-                        } else {
-                            LorR.setSelection(1, true);
+                        if(!StringUtil.isNullOrEmpty(vrecord.getLr())){
+                            if (vrecord.getLr().equals("L")) {
+                                spLR.setSelection(0, true);
+                            } else {
+                                spLR.setSelection(1, true);
+                            }
                         }
-                        if (datas.get(0).getTeam().equals("1")) {
-                            team.setSelection(0, true);
-                        } else if (datas.get(0).getTeam().equals("2")) {
-                            team.setSelection(1, true);
-                        } else if (datas.get(0).getTeam().equals("3")) {
-                            team.setSelection(2, true);
-                        } else {
-                            team.setSelection(3, true);
+                        if(!StringUtil.isNullOrEmpty(vrecord.getTeam())){
+                            if (vrecord.getTeam().equals("甲班")) {
+                                spTeam.setSelection(0, true);
+                            } else if (vrecord.getTeam().equals("乙班")) {
+                                spTeam.setSelection(1, true);
+                            } else if (vrecord.getTeam().equals("丙班")) {
+                                spTeam.setSelection(2, true);
+                            } else {
+                                spTeam.setSelection(3, true);
+                            }
                         }
-                        if (datas.get(0).getShift().equals("1")) {
-                            shift.setSelection(0, true);
-                        } else if (datas.get(0).getShift().equals("2")) {
-                            shift.setSelection(1, true);
-                        } else {
-                            shift.setSelection(2, true);
+                        if(!StringUtil.isNullOrEmpty(vrecord.getShift())){
+                            if (vrecord.getShift().equals("1")) {
+                                spShift.setSelection(0, true);
+                            } else if (vrecord.getShift().equals("2")) {
+                                spShift.setSelection(1, true);
+                            } else {
+                                spShift.setSelection(2, true);
+                            }
                         }
-                        createuser.setText(datas.get(0).getCreateuser());
+                        tvMaster.setText(vrecord.getCreateuser());
                         //获取信息
-                        spescname = datas.get(0).getItdsc().replaceAll(" ", "%20");
-                        codeid = datas.get(0).getId();
+                        spescname = vrecord.getItdsc().replaceAll(" ", "%20");
+                        codeid = vrecord.getId();
 //                        Toast.makeText(DetailChangeActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(DetailChangeActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
@@ -307,27 +303,18 @@ public class DetailChangeActivity extends BaseActivity {
                         Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        String search = mchid.getText().toString().trim();
-                        for (int i = 0; i < map.size(); i++) {
-                            if (search.contains(map.get(i).get("itemid"))) {
-                            }
+                        String search = autoTvMchid.getText().toString().trim();
+                        for(int i=0;i<map.size();i++){
+                            if(search.contains(map.get(i).get("itemid"))){}
                             mchidlist.add(map.get(i).get("itemid"));
                         }
-                        mchidadapter = new DialogItemAdapter(DetailChangeActivity.this, mchidlist);
-                        //弹窗显示选中消失
-                        AlertDialog alertDialog = new AlertDialog
-                                .Builder(DetailChangeActivity.this)
-                                .setSingleChoiceItems(mchidadapter, 0, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        MchId = mchidlist.get(which);
-                                        mchid.setText("");
-                                        mchid.setText(MchId);
-                                        dialog.dismiss();
-                                        Toast.makeText(DetailChangeActivity.this, "选择了" + MchId, Toast.LENGTH_SHORT).show();
-                                    }
-                                }).create();
-                        alertDialog.show();
+                        //创建 AutoCompleteTextView 适配器 (输入提示)
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                DetailChangeActivity.this, android.R.layout.simple_dropdown_item_1line,mchidlist);
+                        //初始化autoCompleteTextView
+                        autoTvMchid.setAdapter(adapter);
+                        //设置输入多少字符后提示，默认值为2，在此设为１
+                        autoTvMchid.setThreshold(1);
 //                        Toast.makeText(DetailChangeActivity.this, "机台查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(DetailChangeActivity.this, "查询成功，没有匹配的机台！", Toast.LENGTH_LONG).show();
@@ -367,37 +354,25 @@ public class DetailChangeActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         //填入规格信息
                         for (int i = 0; i < datas.size(); i++) {
-                            itnbrlist.add(datas.get(i).getItnbr());
-                            Itndsc.add(datas.get(i));
+                            itdscList.add(datas.get(i).getItdsc());
+                            itdscMap.put(datas.get(i).getItdsc(), datas.get(i));
                         }
-                        itnbradapter = new DialogItemAdapter(DetailChangeActivity.this, itnbrlist);
+                        itnbradapter = new DialogItemAdapter(DetailChangeActivity.this, itdscList);
                         //弹窗显示选中消失
                         AlertDialog alertDialog = new AlertDialog
                                 .Builder(DetailChangeActivity.this)
                                 .setSingleChoiceItems(itnbradapter, 0, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        itnbr = itnbrlist.get(which);
-                                        spesc.setText("");
-                                        spesc.setText(itnbr);
-                                        //规格名称
-                                        for (int j = 0; j < Itndsc.size(); j++) {
-                                            if (Itndsc.get(j).getItnbr().equals(Spesc)) {
-                                                spescname = Itndsc.get(j).getItdsc().replaceAll(" ", "%20");
-                                            }
-                                        }
+                                        itdsc = itdscList.get(which);
+                                        tvItdsc.setText(itdsc);
+                                        itnbr = itdscMap.get(itdsc).getItnbr();
+                                        tvItnbr.setText(itnbr);
                                         dialog.dismiss();
-                                        Toast.makeText(DetailChangeActivity.this, "选择了" + itnbr, Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(DetailChangeActivity.this, "选择了" + itnbr, Toast.LENGTH_SHORT).show();
                                     }
                                 }).create();
                         alertDialog.show();
-                        //规格名称
-//                        for(int j=0;j<datas.size();j++){
-//                            if(datas.get(j).getItnbr().equals(itnbr)){
-//                                spescname = datas.get(j).getItdsc().replaceAll(" ","%20");
-//                            }
-//                        }
-//                        Toast.makeText(DetailChangeActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(DetailChangeActivity.this, "查询成功，没有匹配的规格！", Toast.LENGTH_LONG).show();
                     } else {
@@ -432,12 +407,14 @@ public class DetailChangeActivity extends BaseActivity {
                         Toast.makeText(DetailChangeActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
-                        spesc.setText("");
-                        mchid.setText("");
-                        LorR.setSelection(1, true);
-                        team.setSelection(1, true);
-                        shift.setSelection(1, true);
-                        createuser.setText("");
+                        tvBarcode.setText("");
+                        tvItnbr.setText("");
+                        tvItdsc.setText("");
+                        autoTvMchid.setText("");
+                        spLR.setSelection(1, true);
+                        spTeam.setSelection(1, true);
+                        spShift.setSelection(1, true);
+                        tvMaster.setText("");
                         Toast.makeText(DetailChangeActivity.this, "变更成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(DetailChangeActivity.this, "未找到轮胎信息，变更失败！", Toast.LENGTH_LONG).show();
@@ -459,39 +436,28 @@ public class DetailChangeActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        //右方向键 查询条码
-        if (keyCode == 22) {
-            getCodeDetail();
-        }
-        if (keyCode == 0) {
-            barcode.setText("");
-        }
-
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
-        }
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //扫描键 弹开时获取计划
-//        if(keyCode == 0){
-//            getCodeDetail();
-//        }
-        super.onKeyDown(keyCode, event);
+        switch (keyCode){
+            case 0:
+                if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
+                    getCodeDetail();
+                }
+                break;
+            case 22:
+                if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
+                    getCodeDetail();
+                }
+                break;
+            case 4:
+                startActivity(new Intent(DetailChangeActivity.this, FunctionActivity.class));
+                this.finish();
+                break;
+
+        }
         return true;
     }
 

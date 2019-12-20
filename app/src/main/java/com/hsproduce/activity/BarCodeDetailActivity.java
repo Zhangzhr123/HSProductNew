@@ -34,8 +34,8 @@ public class BarCodeDetailActivity extends BaseActivity {
     private TextView vspesc, vspescname, vmchid, lorR, vdate, vshift, vmaster, vstate;
     //轮胎条码
     public String tvbarCode = "";
-    private VreCord data1 = new VreCord();
-    private VreCord data2 = new VreCord();
+    private List<VreCord> data1 = new ArrayList<>();
+    private List<VreCord> data2 = new ArrayList<>();
 
 
     @Override
@@ -133,8 +133,9 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    data1.addAll(datas);
+
                     if (res.get("code").equals("200")) {
-                        data1 = datas.get(0);
                         //成型明细
                         fspesc.setText(datas.get(0).getItnbr());
                         fspescname.setText(datas.get(0).getItdsc());
@@ -191,8 +192,9 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    data2.addAll(datas);
+
                     if (res.get("code").equals("200")) {
-                        data2 = datas.get(0);
                         //硫化明细
                         vspesc.setText(datas.get(0).getItnbr());
                         vspescname.setText(datas.get(0).getItdsc());
@@ -204,11 +206,14 @@ public class BarCodeDetailActivity extends BaseActivity {
                         vstate.setText(datas.get(0).getiS_H());
                     } else {
 //                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        if ((data1 == null && data2 == null) || (data1.isEmpty() && data2.isEmpty())) {
+                            Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         return;
                     }
-                    if (data1 == null && data2 == null) {
-                        Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
-                    }
+                    data1.clear();
+                    data2.clear();
 
                 } catch (Exception e) {
                     e.printStackTrace();
