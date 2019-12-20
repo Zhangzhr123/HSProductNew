@@ -124,7 +124,7 @@
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
         </TableRow>
-        <TableRow>
+        <TableRow android:visibility="gone">
             <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
         </TableRow>
-        <TableRow>
+        <TableRow android:visibility="gone">
             <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"

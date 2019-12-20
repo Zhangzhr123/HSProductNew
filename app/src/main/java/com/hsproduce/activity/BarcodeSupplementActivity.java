@@ -174,7 +174,12 @@ public class BarcodeSupplementActivity extends BaseActivity {
         //左右膜
         lorR = LorR.getSelectedItem().toString().trim();
         //班次
-        Shift = shift.getSelectedItem().toString().trim();
+        Shift = shift.getSelectedItemPosition() + "";
+        //班组
+        Team = team.getSelectedItemPosition() + "";
+        //机台
+        MchId = autoTvMchid.getText().toString().trim();
+
         //主手
 //        creatuser = master.getText().toString().trim();
         if(StringUtil.isNullOrBlank(Spesc)){
@@ -184,7 +189,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         }else if(StringUtil.isNullOrBlank(BarCode)){
             Toast.makeText(BarcodeSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
         }else{
-            String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Team
+            String parm = "MCHID="+MchId+"&ITNBR="+Spesc+"&ITDSC="+SpescName+"&LoR="+lorR+"&SHIFT="+Shift//+"&TEAM="+Team
                     +"&TIME_A="+Pddate+"&USER_NAME="+App.username+"&SwitchTYRE_CODE="+BarCode;
             System.out.println(parm);
             new SupCodeTask().execute(parm);

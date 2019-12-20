@@ -418,6 +418,11 @@ public class SwitchFormingActivity extends BaseActivity {
 //                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
 //                            lvplan.setAdapter(adaprer);
 //                            adaprer.notifyDataSetChanged();
+                            //清空数据
+                            ddz.clear();
+                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
+                            lvplan.setAdapter(adaprer);
+                            adaprer.notifyDataSetChanged();
                             Toast.makeText(SwitchFormingActivity.this, "无可规格交替的计划！", Toast.LENGTH_SHORT).show();
                         }
 

@@ -224,8 +224,12 @@ public class FormingActivity extends BaseActivity {
                         }
                         number = et.getText().toString();
                         if (number != null && !number.equals("") && Integer.valueOf(number) != 0) {
-
-                            Integer sum = Integer.valueOf(v.getBarcodestart().substring(6, 12)) + Integer.valueOf(number);
+                            Integer sum = 0;
+                            if(v.getBarcodestart() != null){
+                                sum = Integer.valueOf(v.getBarcodestart().substring(6, 12)) + Integer.valueOf(number);
+                            }else{
+                                sum = Integer.valueOf(number);
+                            }
                             if (Integer.valueOf(number) > 500 || sum > 999999) {
                                 Toast.makeText(FormingActivity.this, "数量不能大于500或流水号不能大于999999", Toast.LENGTH_SHORT).show();
                                 return;
