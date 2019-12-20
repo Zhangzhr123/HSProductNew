@@ -206,7 +206,6 @@
                 android:textAlignment="center"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textColor="@color/white"
                 android:text="不合格"
                 android:visibility="visible"/>
         <Button
@@ -220,7 +219,6 @@
                 android:gravity="bottom"
                 android:background="@drawable/button_change"
                 android:text="返回"
-                android:textColor="@color/white"
                 android:visibility="visible"/>
     </LinearLayout>
     <!--        </RelativeLayout>-->

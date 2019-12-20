@@ -218,7 +218,7 @@
                         android:textAlignment="center"
                         android:layout_gravity="bottom"
                         android:gravity="bottom"
-                        android:textColor="@color/white"
+
                         android:text="变更"/>
                 <Button
                         android:id="@+id/out"
@@ -230,7 +230,7 @@
                         android:textAlignment="center"
                         android:layout_gravity="bottom"
                         android:gravity="bottom"
-                        android:textColor="@color/white"
+
                         android:text="返回"/>
             </LinearLayout>
 <!--        </RelativeLayout>-->

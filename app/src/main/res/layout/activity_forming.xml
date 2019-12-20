@@ -161,7 +161,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="开始"/>
         <Button
                 android:id="@+id/update"
@@ -173,7 +172,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="修改"/>
         <Button
                 android:id="@+id/finish"
@@ -185,7 +183,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="完成"/>
         <Button
                 android:id="@+id/out"
@@ -197,7 +194,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="返回"/>
     </LinearLayout>
 

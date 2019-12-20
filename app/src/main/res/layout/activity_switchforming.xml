@@ -177,7 +177,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="规格交替"/>
         <Button
                 android:id="@+id/out"
@@ -189,7 +188,6 @@
                 android:gravity="bottom"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="返回"/>
     </LinearLayout>
 
