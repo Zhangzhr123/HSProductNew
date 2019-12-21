@@ -13,21 +13,20 @@ import static android.support.constraint.Constraints.TAG;
 public class App extends Application {
 
     public static Gson gson = new Gson();
-    public static String username = "";
+    public static String username = "";//用户名
     public static String usercode = "";//工号
-    public static String password = "";
+    public static String password = "";//面
     public static String shift = "";//班组
-    public static String lr = "";
+    public static String lr = "";//左右膜
     public static String access_token = "";
     public static String Iu = "";
     public static String ip = "10.2.129.132:8001";//10.2.129.132:8001
-    public static String version = "";
+    public static String version = "";//版本号
 
     @Override
     public void onCreate() {
         XUI.init(this); //初始化UI框架
         XUI.debug(true);  //开启UI框架调试日志
-        //如果登录有问题，ip初始化设置放到这里来，自动更新不变
         // 获取设置的IP地址
         String text = get("myIP");
         if (!TextUtils.isEmpty(text)) {
@@ -36,6 +35,7 @@ public class App extends Application {
         super.onCreate();
     }
 
+    //从系统文件中的获取版本号
     private String get(String packName) {
 
         BufferedReader reader = null;
