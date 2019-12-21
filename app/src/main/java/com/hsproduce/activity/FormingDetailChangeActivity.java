@@ -131,6 +131,8 @@ public class FormingDetailChangeActivity extends BaseActivity {
         MchId = mchid.getText().toString().trim();
         //规格编码
         Spesc = spesc.getText().toString().trim();
+        //规格名称
+        spescname = toUtf8String(spescname).replace("/", "%2F").replaceAll(" ", "%20");
         //补录条码
         BarCode = barcode.getText().toString().trim();
         //班次
@@ -203,7 +205,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         //获取信息
                         MchId = datas.get(0).getMchid();
                         Spesc = datas.get(0).getItnbr();
-                        spescname = toUtf8String(datas.get(0).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
+                        spescname = datas.get(0).getItdsc();
                         Team = datas.get(0).getTeam();
                         CreateUser = datas.get(0).getCreateuser();
                         codeid = datas.get(0).getId();
@@ -332,7 +334,7 @@ public class FormingDetailChangeActivity extends BaseActivity {
                                         //规格名称
                                         for (int j = 0; j < Itndsc.size(); j++) {
                                             if (Itndsc.get(j).getItnbr().equals(Spesc)) {
-                                                spescname = toUtf8String(Itndsc.get(j).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
+                                                spescname = Itndsc.get(j).getItdsc();//toUtf8String(Itndsc.get(j).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
                                             }
                                         }
                                         dialog.dismiss();

@@ -171,7 +171,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         Spesc = spesc.getText().toString().trim();
         //规格名称
         SpescName = spescname.getText().toString().trim();
-        SpescName = SpescName.replace(" ","%20");
+        SpescName = StringUtil.toUtf8String(SpescName);
 
         //补录条码
         BarCode = barcode.getText().toString().trim();

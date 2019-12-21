@@ -131,6 +131,9 @@ public class DetailChangeActivity extends BaseActivity {
                 MchId = autoTvMchid.getText().toString().trim();
                 //规格编码
                 Spesc = tvItnbr.getText().toString().trim();
+                //规格名称
+                spescname = tvItdsc.getText().toString().trim();
+                spescname = StringUtil.toUtf8String(spescname);
                 //主手
                 CreateUser = tvMaster.getText().toString().trim();
                 //补录条码

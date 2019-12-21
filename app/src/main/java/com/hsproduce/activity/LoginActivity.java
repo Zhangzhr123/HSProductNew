@@ -167,6 +167,10 @@ public class LoginActivity extends BaseActivity {
     public void login() {
         String username = tv_code.getText().toString().trim();
         String password = tv_password.getText().toString().trim();
+        if(StringUtil.isNullOrEmpty(username) || StringUtil.isNullOrEmpty(password)){
+            Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
         App.usercode = username;
         App.password = password;
         String param = "UserName=" + username + "&PWD=" + password;
@@ -224,6 +228,10 @@ public class LoginActivity extends BaseActivity {
             } else {
                 Map<String, String> res = App.gson.fromJson(s, new TypeToken<HashMap<String, String>>() {
                 }.getType());
+                if(res == null || res.isEmpty()){
+                    Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (res.get("code").equals("200")) {
                     Intent intent = new Intent(LoginActivity.this, FunctionActivity.class);
                     startActivity(intent);

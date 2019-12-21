@@ -345,10 +345,10 @@ public class FunctionActivity extends BaseActivity {
                             } else if (map.get(i).get("m_CNAME").equals("成型规格切换")) {
                                 cx.setVisibility(View.VISIBLE);
                                 view10.setVisibility(View.VISIBLE);
-                            } else if (map.get(i).get("m_CNAME").equals("成型生产变更")) {
+                            } else if (map.get(i).get("m_CNAME").equals("成型胎胚报废")) {
                                 cx.setVisibility(View.VISIBLE);
                                 view11.setVisibility(View.VISIBLE);
-                            } else if (map.get(i).get("m_CNAME").equals("成型胎胚报废")) {
+                            } else if (map.get(i).get("m_CNAME").equals("成型生产变更")) {
                                 cx.setVisibility(View.VISIBLE);
                                 view12.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("生产追溯")) {

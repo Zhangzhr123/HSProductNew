@@ -9,8 +9,8 @@ import com.hsproduce.dialog.SingleChoiceDialogFragment;
 public class DialogUtil {
 
     public static void showDialog(Context context, String msg){
-        final android.app.AlertDialog.Builder normalDialog =
-                new android.app.AlertDialog.Builder(context);
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(context);
         normalDialog.setTitle("提醒");
         normalDialog.setMessage(msg);
         normalDialog.setPositiveButton("确定",

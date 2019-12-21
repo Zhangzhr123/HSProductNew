@@ -31,7 +31,7 @@ public class SingleChoiceDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        android.app.AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title).setSingleChoiceItems(items, checkedItem, onClickListener)
                 .setPositiveButton("确定", positiveCallback);
         return builder.create();
