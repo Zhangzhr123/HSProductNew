@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 硫化规格交替页面
+ * 扫描机台号，查询等待中的计划，点击规格交替显示是否交替，传递计划ID切换计划
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class SwitchPlanActivity extends BaseActivity {
 
     private LinearLayout showlist, llmchid;

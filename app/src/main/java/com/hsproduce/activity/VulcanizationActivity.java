@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +33,12 @@ import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 硫化生产页面
+ * 扫描机台号直接进入扫描条码页面，扫描条码，硫化计划更改为生产中，并将扫描的条码添加进生产实绩中
+ * 成功添加进生产实绩后此条码写入扫描纪录框中
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class VulcanizationActivity extends BaseActivity {
 
     //view 输入机台  记录条码  扫描条码

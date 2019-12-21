@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 成型规格交替页面
+ * 输入机台号，查询计划中有生产中或者已完成并且有等待中的计划可以进行规格交替，只有等待中则不可以规格交替
+ * 点击规格交替按钮如果有生产中的计划结束这一计划，成功后开始下一计划
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class SwitchFormingActivity extends BaseActivity {
 
     private LinearLayout showlist, llmchid;

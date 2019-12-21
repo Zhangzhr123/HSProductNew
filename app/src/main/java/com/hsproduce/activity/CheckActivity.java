@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 检测页面
+ * 扫描条码输入不合格原因，标记此条码为不合格品，可以重复标记
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class CheckActivity extends BaseActivity {
 
     //定义控件  条码 机台 规格编码 规格名称 日期 LR 班组 主手

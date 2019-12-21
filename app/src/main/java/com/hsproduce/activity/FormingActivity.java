@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -30,6 +29,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 成型生产页面
+ * 查询此机台所有计划，如果有生产中和等待中或者已完成和等待中的计划则不可以点击开始按钮
+ * 如果只有等待中的计划则是可以点击开始按钮，生产中的计划开始按钮不可用，其他的都只可以用返回按钮
+ * 点击开始按钮如果有生产中的计划结束这一计划再开始，其他直接开始计划
+ * creatBy zhangzhr @ 2019-12-21
+ */
 public class FormingActivity extends BaseActivity {
 
     private LinearLayout showlist, llmchid;

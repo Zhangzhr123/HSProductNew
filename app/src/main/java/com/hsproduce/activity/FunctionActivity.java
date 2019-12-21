@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,7 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//功能显示页面
+/**
+ * 功能显示页面
+ * 权限管理和接收用户名
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件

@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,7 +25,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//明细变更页面
+/**
+ * 硫化明细变更页面
+ * 扫描条码获取此条码的生产明细，修改明细内容，发送至后台
+ * createBy zhangzhr @ 2019-12-21
+ * 1.时间控件以及时间转换格式需要注意，另外月份需要加一显示正常月份
+ * 2.规格名称中文和特殊字符需要转换
+ * 3.班组字段不传递给后台
+ */
 public class DetailChangeActivity extends BaseActivity {
 
     //定义控件

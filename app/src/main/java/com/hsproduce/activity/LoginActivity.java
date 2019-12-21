@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.*;
@@ -29,6 +28,11 @@ import java.util.*;
 
 import static android.support.constraint.Constraints.TAG;
 
+/**
+ * 登录页面
+ * 版本自动更新、设置动态IP地址，接收用户工号和密码
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class LoginActivity extends BaseActivity {
 
     //用户名  密码

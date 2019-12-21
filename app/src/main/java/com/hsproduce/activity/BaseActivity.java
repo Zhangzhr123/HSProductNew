@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +19,10 @@ import com.hsproduce.App;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 
-
+/**
+ * 基础页面
+ * createBy zhangzr @ 2019-12-21
+ */
 public abstract class BaseActivity extends Activity {
 
     @Override

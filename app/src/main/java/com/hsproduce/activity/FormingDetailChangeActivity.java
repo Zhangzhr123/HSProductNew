@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -28,7 +27,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-//明细变更页面
+/**
+ * 成型明细变更页面
+ * 扫描条码查询成型生产明细，修改明细发送到后台
+ * createBy zhangzhr @ 2019-12-21
+ * 1.注意规格名称中文和特殊字符需要转换
+ */
 public class FormingDetailChangeActivity extends BaseActivity {
 
     //定义控件

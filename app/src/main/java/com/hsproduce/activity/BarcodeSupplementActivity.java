@@ -31,6 +31,7 @@ import java.util.*;
  * 1.规格不用填，由规格名称带出
  * 2.机台为查询下拉模式选择
  * 3.时间格式为yyyy-mm-dd，时间控件月份自动加一为正确时间
+ * 4.规格名称有中文和特殊字符需要转换
  */
 public class BarcodeSupplementActivity extends BaseActivity {
 

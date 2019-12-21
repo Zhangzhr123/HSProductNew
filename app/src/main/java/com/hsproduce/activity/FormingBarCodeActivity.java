@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -24,6 +23,11 @@ import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 成型胎胚报废页面
+ * 扫描条码，报废条码成功后写入扫描记录中
+ * createBy zhangzhr @ 2019-12-21
+ */
 public class FormingBarCodeActivity extends BaseActivity {
 
     //轮胎条码 条码计数  条码记录

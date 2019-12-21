@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">华盛条码系统</string>
+    <string name="app_name" translatable="false">华盛条码系统</string>
     <string name="title_home">我的</string>
     <string name="title_dashboard">控制台</string>
 
