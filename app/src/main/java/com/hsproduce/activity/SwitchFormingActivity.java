@@ -259,6 +259,8 @@ public class SwitchFormingActivity extends BaseActivity {
         final TextView itdec = customeView.findViewById(R.id.input4);
         final TextView number = customeView.findViewById(R.id.input2);
         final EditText precode = dialog.findViewById(R.id.input3);
+        //获取焦点
+        precode.requestFocus();
 
         if (vplan != null) {
             itnbr.setText(vplan.getItnbr());
@@ -274,6 +276,9 @@ public class SwitchFormingActivity extends BaseActivity {
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
+        //取消焦点
+        ok.setFocusable(false);
+        finish.setFocusable(false);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

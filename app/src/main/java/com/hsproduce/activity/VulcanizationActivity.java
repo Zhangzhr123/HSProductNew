@@ -1,6 +1,5 @@
 package com.hsproduce.activity;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,8 +27,6 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
-
-import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -197,7 +194,7 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        tvMchid.setText("");
+//                        tvMchid.setText("");
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
@@ -337,7 +334,7 @@ public class VulcanizationActivity extends BaseActivity {
                         anum.setText("");
                         number++;//计算成功次数
                         anum.setText(number + "");
-//                        barcode.setText("");
+                        barcode.setText("");
 //                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
@@ -389,15 +386,17 @@ public class VulcanizationActivity extends BaseActivity {
         normalDialog.show();
     }
 
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
+
         switch (keyCode){
             case 0:
                 if (isVual) {
                     barcode.requestFocus();
-                    barcode.setText("");
+//                    barcode.setText("");
                 } else{
                     tvMchid.requestFocus();
                     tvMchid.setText("");
@@ -434,12 +433,16 @@ public class VulcanizationActivity extends BaseActivity {
                 msg = "扫描失败！";
                 operate(msg);
                 break;
+            //回车键
+            case 66:
+                msg = "扫描失败！";
+                operateCode(msg);
+                break;
             //扫描键
             case 0:
                 msg = "扫描失败！";
-                operate(msg);
+                operateMchid(msg);
                 break;
-
             default:
 
                 break;
@@ -454,9 +457,59 @@ public class VulcanizationActivity extends BaseActivity {
             return;
         }
         iscomplate = false;
+        try {
+            Thread.sleep(100);//休眠3秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
             getBarCode();
         } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
+            getPlan();
+        } else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            iscomplate = true;
+        }
+    }
+
+    private void operateCode(String msg) {
+        if(!iscomplate){
+            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        iscomplate = false;
+        try {
+            Thread.sleep(100);//休眠3秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+            getBarCode();
+        }
+//        else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
+//            getPlan();
+//        }
+        else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            iscomplate = true;
+        }
+    }
+
+    private void operateMchid(String msg) {
+        if(!iscomplate){
+            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        iscomplate = false;
+        try {
+            Thread.sleep(100);//休眠3秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+//            getBarCode();
+//        } else
+            if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
             getPlan();
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

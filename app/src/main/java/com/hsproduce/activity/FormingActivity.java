@@ -373,7 +373,8 @@ public class FormingActivity extends BaseActivity {
         final TextView itdec = customeView.findViewById(R.id.input4);
         final TextView number = customeView.findViewById(R.id.input2);
         final EditText precode = dialog.findViewById(R.id.input3);
-
+        //获取焦点
+        precode.requestFocus();
         if (vplan != null) {
             itnbr.setText(vplan.getItnbr());
             itdec.setText(vplan.getItdsc());
@@ -388,6 +389,9 @@ public class FormingActivity extends BaseActivity {
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
+        //取消焦点
+        ok.setFocusable(false);
+        returnDialog.setFocusable(false);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -436,7 +440,8 @@ public class FormingActivity extends BaseActivity {
         final TextView itdec = customeView.findViewById(R.id.input4);
         final TextView number = customeView.findViewById(R.id.input2);
         final EditText precode = dialog.findViewById(R.id.input3);
-
+        //获取焦点
+        precode.requestFocus();
         if (vplan != null) {
             itnbr.setText(v.getItnbr());
             itdec.setText(v.getItdsc());
@@ -451,6 +456,9 @@ public class FormingActivity extends BaseActivity {
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
+        //取消焦点
+        ok.setFocusable(false);
+        returnDialog.setFocusable(false);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v1) {

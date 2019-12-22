@@ -93,7 +93,7 @@
 
     <Button
             android:layout_width="60dp"
-            android:layout_height="0dp"
+            android:layout_height="30dp"
             android:text="确定"
             android:id="@+id/ok"
             android:textColor="@color/white"
