@@ -244,6 +244,14 @@ public class FormingActivity extends BaseActivity {
                             //修改操作接口
                             String param = "VPLANID=" + currid + "&Num=" + number + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                             new UPDATETask().execute(param);
+                            //显示修改内容
+                            pnum.setText("");
+                            pnum.setText(number);
+                            //开始按钮不可用
+                            start.setEnabled(false);
+                            update.setEnabled(true);
+                            finish.setEnabled(true);
+                            out.setEnabled(true);
 
                         } else {
                             Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_SHORT).show();
@@ -296,8 +304,8 @@ public class FormingActivity extends BaseActivity {
         View customeView = dialog.getCustomView();
         final EditText next = dialog.findViewById(R.id.input);
         final EditText number = dialog.findViewById(R.id.input2);
-        Button finish = customeView.findViewById(R.id.finish);
-        finish.setOnClickListener(new View.OnClickListener() {
+        Button returnDialog = customeView.findViewById(R.id.finish);
+        returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -339,6 +347,16 @@ public class FormingActivity extends BaseActivity {
                 //执行开始计划接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
+                //显示修改
+                state.setText("");
+                state.setText("生产中");
+                pnum.setText("");
+                pnum.setText(num);
+                //开始按钮不可用
+                start.setEnabled(false);
+                update.setEnabled(true);
+                finish.setEnabled(true);
+                out.setEnabled(true);
                 dialog.dismiss();
             }
         });
@@ -362,8 +380,8 @@ public class FormingActivity extends BaseActivity {
             number.setText(vplan.getPnum());
             precode.setText(vplan.getBarcodeend());
         }
-        Button finish = customeView.findViewById(R.id.finish);
-        finish.setOnClickListener(new View.OnClickListener() {
+        Button returnDialog = customeView.findViewById(R.id.finish);
+        returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -425,8 +443,8 @@ public class FormingActivity extends BaseActivity {
             number.setText(pnum.getText().toString());
             precode.setText(v.getBarcodeend());
         }
-        Button finish = customeView.findViewById(R.id.finish);
-        finish.setOnClickListener(new View.OnClickListener() {
+        Button returnDialog = customeView.findViewById(R.id.finish);
+        returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -456,21 +474,31 @@ public class FormingActivity extends BaseActivity {
                     return;
                 }
                 //判断开始条码是否为空
-                String start = "";
+                String startYear = "";
                 if(v.getBarcodestart() == null){
-                    start = startCode;
+                    startYear = startCode;
                 }else{
-                    start = v.getBarcodestart();
+                    startYear = v.getBarcodestart();
                 }
-                start = start.substring(0, 6);
+                startYear = startYear.substring(0, 6);
                 String now = endCode.substring(0, 6);
-                if (!start.equals(now)) {
+                if (!startYear.equals(now)) {
                     Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
+                //清空数据
+                startCode = "";
+                //设置状态
+                state.setText("");
+                state.setText("已完成");
+                //返回按钮可用
+                start.setEnabled(false);
+                update.setEnabled(false);
+                finish.setEnabled(false);
+                out.setEnabled(true);
                 dialog.dismiss();
             }
         });
@@ -546,15 +574,6 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 //                        returnPager();
-                        state.setText("");
-                        state.setText("生产中");
-                        pnum.setText("");
-                        pnum.setText(num);
-                        //开始按钮不可用
-                        start.setEnabled(false);
-                        update.setEnabled(true);
-                        finish.setEnabled(true);
-                        out.setEnabled(true);
                     } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
@@ -593,13 +612,6 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 //                        returnPager();
-                        pnum.setText("");
-                        pnum.setText(number);
-                        //开始按钮不可用
-                        start.setEnabled(false);
-                        update.setEnabled(true);
-                        finish.setEnabled(true);
-                        out.setEnabled(true);
                     } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
@@ -677,16 +689,6 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 //                        returnPager();
-                        //清空数据
-                        startCode = "";
-                        //设置状态
-                        state.setText("");
-                        state.setText("已完成");
-                        //返回按钮可用
-                        start.setEnabled(false);
-                        update.setEnabled(false);
-                        finish.setEnabled(false);
-                        out.setEnabled(true);
                     } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
@@ -830,6 +832,11 @@ public class FormingActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
 //                        Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
+                        //查询为空时清空数据显示提示
+                        datas.clear();
+                        adapter = new FormingItemAdapter(FormingActivity.this, datas);
+                        lvplan.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }

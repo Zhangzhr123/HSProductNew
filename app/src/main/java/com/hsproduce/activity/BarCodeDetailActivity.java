@@ -137,8 +137,8 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    //赋值判断是否提示
                     data1.addAll(datas);
-
                     if (res.get("code").equals("200")) {
                         //成型明细
                         fspesc.setText(datas.get(0).getItnbr());
@@ -196,6 +196,7 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    //赋值判断是否提示
                     data2.addAll(datas);
 
                     if (res.get("code").equals("200")) {
@@ -212,9 +213,7 @@ public class BarCodeDetailActivity extends BaseActivity {
 //                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         if ((data1 == null && data2 == null) || (data1.isEmpty() && data2.isEmpty())) {
                             Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
-                            return;
                         }
-                        return;
                     }
                     data1.clear();
                     data2.clear();

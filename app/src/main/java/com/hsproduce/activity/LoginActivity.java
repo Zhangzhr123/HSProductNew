@@ -130,27 +130,17 @@ public class LoginActivity extends BaseActivity {
         sp_shift.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String shift = parent.getItemAtPosition(position).toString();
+                String teamName = parent.getItemAtPosition(position).toString();
+                String teamId = "";
                 //根据ID获取内容
                 for(int i = 0;i<teamList.size();i++){
-                    if (shift.equals(teamList.get(i).getName())) {
-                        shift = teamList.get(i).getId();
-                        break;
-                    } else if (shift.equals(teamList.get(i).getName())) {
-                        shift = teamList.get(i).getId();
-                        break;
-                    } else if (shift.equals(teamList.get(i).getName())) {
-                        shift = teamList.get(i).getId();
-                        break;
-                    } else if (shift.equals(teamList.get(i).getName())) {
-                        shift = teamList.get(i).getId();
-                        break;
-                    } else {
-//                        Toast.makeText(LoginActivity.this, "班组数据异常", Toast.LENGTH_LONG).show();
+                    if (teamName.equals(teamList.get(i).getName())) {
+                        teamId = teamList.get(i).getId();
                         break;
                     }
+
                 }
-                App.shift = shift;
+                App.shift = teamId;
             }
 
             @Override

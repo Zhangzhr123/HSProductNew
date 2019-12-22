@@ -235,6 +235,14 @@ public class SwitchFormingActivity extends BaseActivity {
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
+                //显示数据
+                state.setText("");
+                state.setText("生产中");
+                pnum.setText("");
+                pnum.setText(num);
+                //开始按钮不可用
+                repl.setEnabled(false);
+                out.setEnabled(true);
                 dialog.dismiss();
             }
         });
@@ -512,13 +520,6 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 //                        returnPager();
-                        state.setText("");
-                        state.setText("生产中");
-                        pnum.setText("");
-                        pnum.setText(num);
-                        //开始按钮不可用
-                        repl.setEnabled(false);
-                        out.setEnabled(true);
 //                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
 //                        return;
                     } else {
