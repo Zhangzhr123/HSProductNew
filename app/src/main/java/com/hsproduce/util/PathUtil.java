@@ -102,5 +102,7 @@ public interface PathUtil {
     public static final String UPDATE = SERVER + "api/PDA/UpdateVplan";
     //成型生产 完成计划
     public static final String FINISH = SERVER + "api/PDA/CompleteVplan";
+    //查询成型计划展示
+    public static final String GetCurrDateFormingVPlan = SERVER + "api/PDA/GetCurrDateFormingVPlan";
 
 }

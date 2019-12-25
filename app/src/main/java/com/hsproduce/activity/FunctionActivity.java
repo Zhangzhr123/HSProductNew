@@ -31,8 +31,8 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13;
-    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail;
+    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14;
+    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan;
     private RelativeLayout cx, lh, jc, zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
@@ -71,6 +71,7 @@ public class FunctionActivity extends BaseActivity {
         view11 = findViewById(R.id.view11);
         view12 = findViewById(R.id.view12);
         view13 = findViewById(R.id.view13);
+        view14 = findViewById(R.id.view14);
         //按钮
         vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
         repl = (ImageButton) findViewById(R.id.repl);//规格交替
@@ -85,6 +86,7 @@ public class FunctionActivity extends BaseActivity {
         formingchange = (ImageButton) findViewById(R.id.formingchange);//成型明细变更
         formingbarcode = (ImageButton) findViewById(R.id.formingbarcode);//成型胚胎报废
         barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
+        selectformingplan = (ImageButton) findViewById(R.id.selectformingplan);//查看成型计划
 
         //菜单权限管理
         String parm = "UserName=" + App.usercode;
@@ -243,6 +245,14 @@ public class FunctionActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
+                finish();
+            }
+        });
+        //查看成型计划
+        selectformingplan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
                 finish();
             }
         });

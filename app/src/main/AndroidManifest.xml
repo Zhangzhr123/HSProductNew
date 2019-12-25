@@ -105,6 +105,11 @@
                 android:launchMode="singleInstance"
                 android:name=".activity.BarCodeDetailActivity">
         </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.SelectFormingPlanActivity">
+        </activity>
     </application>
 
 </manifest>
