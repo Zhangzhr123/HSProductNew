@@ -196,7 +196,14 @@ public class SelectFormingPlanActivity extends BaseActivity {
                         adapter = new FormingItemAdapter(SelectFormingPlanActivity.this, datas);
                         lvPlan.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
+                    }else{
+                        datas.clear();
+                        adapter = new FormingItemAdapter(SelectFormingPlanActivity.this, datas);
+                        lvPlan.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(SelectFormingPlanActivity.this, "没有成型计划", Toast.LENGTH_SHORT).show();
                     }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
