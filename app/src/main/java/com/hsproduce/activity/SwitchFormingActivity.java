@@ -266,7 +266,7 @@ public class SwitchFormingActivity extends BaseActivity {
             itnbr.setText(vplan.getItnbr());
             itdec.setText(vplan.getItdsc());
             number.setText(vplan.getPnum());
-            precode.setText(vplan.getBarcodeend());
+            precode.setText("");
         }
         Button finish = customeView.findViewById(R.id.finish);
         finish.setOnClickListener(new View.OnClickListener() {

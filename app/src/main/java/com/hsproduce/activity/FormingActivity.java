@@ -379,7 +379,7 @@ public class FormingActivity extends BaseActivity {
             itnbr.setText(vplan.getItnbr());
             itdec.setText(vplan.getItdsc());
             number.setText(vplan.getPnum());
-            precode.setText(vplan.getBarcodeend());
+            precode.setText("");
         }
         Button returnDialog = customeView.findViewById(R.id.finish);
         returnDialog.setOnClickListener(new View.OnClickListener() {
