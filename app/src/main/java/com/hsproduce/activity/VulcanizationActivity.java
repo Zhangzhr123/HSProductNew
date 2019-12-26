@@ -459,18 +459,18 @@ public class VulcanizationActivity extends BaseActivity {
     }
 
     private void operate(String msg) {
-        if (!iscomplate) {
-            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        iscomplate = false;
+//        if (!iscomplate) {
+//            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        iscomplate = false;
         if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
             getBarCode();
         } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
             getPlan();
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            iscomplate = true;
+//            iscomplate = true;
         }
     }
 
