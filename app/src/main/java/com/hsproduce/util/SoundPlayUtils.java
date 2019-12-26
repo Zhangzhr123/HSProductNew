@@ -94,7 +94,7 @@ public class SoundPlayUtils {
     //播放默认铃声
     public static void startAlarm(Context mContext) {
 
-        Uri mediaUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri mediaUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);//系统提示音
         mMediaPlayer = MediaPlayer.create(mContext,
                 mediaUri);
         mMediaPlayer.setLooping(false);
