@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingItemAdapter;
+import com.hsproduce.adapter.FormingPlanAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
@@ -40,7 +41,7 @@ public class SelectFormingPlanActivity extends BaseActivity {
     private ImageButton btGetplan;
     //成型计划
     private ListView lvPlan;
-    private FormingItemAdapter adapter;
+    private FormingPlanAdapter adapter;
     private String mchid = "", date = "";
 
     @Override
@@ -193,12 +194,12 @@ public class SelectFormingPlanActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        adapter = new FormingItemAdapter(SelectFormingPlanActivity.this, datas);
+                        adapter = new FormingPlanAdapter(SelectFormingPlanActivity.this, datas);
                         lvPlan.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }else{
                         datas.clear();
-                        adapter = new FormingItemAdapter(SelectFormingPlanActivity.this, datas);
+                        adapter = new FormingPlanAdapter(SelectFormingPlanActivity.this, datas);
                         lvPlan.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         Toast.makeText(SelectFormingPlanActivity.this, "没有成型计划", Toast.LENGTH_SHORT).show();

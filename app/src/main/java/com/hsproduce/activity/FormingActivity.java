@@ -483,10 +483,13 @@ public class FormingActivity extends BaseActivity {
                 }
                 //判断开始条码是否为空
                 String startYear = "";
+                Integer pNum = 0;
                 if(v.getBarcodestart() == null){
                     startYear = startCode;
+                    pNum = Integer.valueOf(endCode.substring(6, 12))-Integer.valueOf(startCode.substring(6, 12))+1;
                 }else{
                     startYear = v.getBarcodestart();
+                    pNum = Integer.valueOf(endCode.substring(6, 12))-Integer.valueOf(v.getBarcodestart().substring(6, 12))+1;
                 }
                 startYear = startYear.substring(0, 6);
                 String now = endCode.substring(0, 6);
@@ -502,6 +505,8 @@ public class FormingActivity extends BaseActivity {
                 //设置状态
                 state.setText("");
                 state.setText("已完成");
+                pnum.setText("");
+                pnum.setText(pNum+"");
                 //返回按钮可用
                 start.setEnabled(false);
                 update.setEnabled(false);

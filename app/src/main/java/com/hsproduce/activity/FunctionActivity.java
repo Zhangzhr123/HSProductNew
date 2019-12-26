@@ -319,6 +319,9 @@ public class FunctionActivity extends BaseActivity {
                         } else if (map.get(0).get("m_CNAME").equals("生产追溯")) {
                             startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
                             finish();
+                        } else if (map.get(0).get("m_CNAME").equals("查看成型计划")) {
+                            startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
                         }
@@ -367,6 +370,9 @@ public class FunctionActivity extends BaseActivity {
                             } else if (map.get(i).get("m_CNAME").equals("生产追溯")) {
                                 jc.setVisibility(View.VISIBLE);
                                 view13.setVisibility(View.VISIBLE);
+                            } else if (map.get(i).get("m_CNAME").equals("查看成型计划")) {
+                                cx.setVisibility(View.VISIBLE);
+                                view14.setVisibility(View.VISIBLE);
                             } else {
 //                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
@@ -429,34 +435,6 @@ public class FunctionActivity extends BaseActivity {
                 System.exit(0);//注销功能
             }
         }
-        //键盘监听 按键跳转功能 1--9
-//        if (keyCode == 8) {
-//            startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
-//            finish();
-//        } else if (keyCode == 9) {
-//            startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
-//            finish();
-//        } else if (keyCode == 10) {
-//            startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
-//            finish();
-//        } else if (keyCode == 11) {
-//            startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
-//            finish();
-//        } else if (keyCode == 12) {
-//            startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
-//            finish();
-//        } else if (keyCode == 13) {
-//            startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
-//            finish();
-//        } else if (keyCode == 14) {
-//            startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
-//            finish();
-//        } else if (keyCode == 15) {
-//            startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
-//            finish();
-//        } else {
-////            Toast.makeText(this, "没有此快捷键功能", Toast.LENGTH_SHORT).show();
-//        }
         return true;
     }
 
