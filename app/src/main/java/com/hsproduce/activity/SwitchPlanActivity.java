@@ -15,6 +15,7 @@ import com.hsproduce.adapter.VPlanReplAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
+import com.hsproduce.util.SoundPlayUtils;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
@@ -166,12 +167,18 @@ public class SwitchPlanActivity extends BaseActivity {
                         //开始计划
                         String param = "SwitchID=" + v.getId() + "&USER_NAME=" + App.username;
                         new ChangePlanTask().execute(param);
+                        //提示音
+                        SoundPlayUtils.startNoti(SwitchPlanActivity.this);
+                        SoundPlayUtils.stopAlarm();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         iscomplate = true;
+                        //提示音
+                        SoundPlayUtils.startAlarm(SwitchPlanActivity.this);
+                        SoundPlayUtils.stopAlarm();
                     }
                 })
                 .cancelable(false)

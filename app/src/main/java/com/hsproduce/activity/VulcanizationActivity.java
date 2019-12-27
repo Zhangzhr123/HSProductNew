@@ -69,6 +69,8 @@ public class VulcanizationActivity extends BaseActivity {
     //添加条码防止重复扫描
     private List<String> codelist = new ArrayList<>();
     private Boolean isVual = false;
+    //判断弹窗是否已经存在
+    private MaterialDialog materialDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +144,6 @@ public class VulcanizationActivity extends BaseActivity {
         }
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
-//            iscomplate = true;
         } else {
             String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
             new MyTask().execute(param);
@@ -158,7 +159,6 @@ public class VulcanizationActivity extends BaseActivity {
         } else {
             //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
             if (codelist.contains(tvbarcode)) {
-//                iscomplate = true;
                 Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
                 barcode.setText("");
             } else {
@@ -179,7 +179,6 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-//            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -254,7 +253,6 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -274,25 +272,41 @@ public class VulcanizationActivity extends BaseActivity {
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, tvbarcode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("400")) {
-                        if(iscomplate){}
-                        new MaterialDialog.Builder(VulcanizationActivity.this)
-                                .title("提示")
-                                .content(res.get("msg") + "")
-                                .positiveText(R.string.vul_confirm)
-                                .negativeText(R.string.vul_cancel)
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        //强制记录硫化生产记录
-                                        iscomplate = false;
-                                        String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=1";
-                                        new TypeCodeTask().execute(param1);
-                                        SoundPlayUtils.playSoundByMedia(VulcanizationActivity.this,R.raw.argon);
-//                                        SoundPlayUtils.stopAlarm();
-                                    }
-                                })
-                                .cancelable(false)
-                                .show();
+                        //提示音
+                        SoundPlayUtils.startNoti(VulcanizationActivity.this);
+                        SoundPlayUtils.stopAlarm();
+
+                        if(materialDialog == null){
+                            materialDialog = new MaterialDialog.Builder(VulcanizationActivity.this)
+                                    .title("提示")
+                                    .content(res.get("msg") + "")
+                                    .positiveText(R.string.vul_confirm)
+                                    .negativeText(R.string.vul_cancel)
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            //强制记录硫化生产记录
+//                                        iscomplate = false;
+                                            String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=1";
+                                            new TypeCodeTask().execute(param1);
+                                            //提示音
+                                            SoundPlayUtils.startNoti(VulcanizationActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    })
+                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(VulcanizationActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    })
+                                    .cancelable(false)
+                                    .show();
+                        }
+                        materialDialog.show();
+
                     } else {
                         Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG).show();
                     }
@@ -381,10 +395,8 @@ public class VulcanizationActivity extends BaseActivity {
             case 0:
                 if (isVual) {
                     barcode.requestFocus();
-//                    barcode.setText("");
                 } else {
                     tvMchid.requestFocus();
-//                    tvMchid.setText("");
                 }
                 break;
         }
@@ -439,17 +451,15 @@ public class VulcanizationActivity extends BaseActivity {
 
     private void operate(String msg) {
 //        if (!iscomplate) {
-//            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
+////            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-//        iscomplate = false;
         if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
             getBarCode();
         } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
             getPlan();
         } else {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-//            iscomplate = true;
+//            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
 

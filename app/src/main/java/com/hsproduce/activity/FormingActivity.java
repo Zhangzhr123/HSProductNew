@@ -20,6 +20,7 @@ import com.hsproduce.adapter.FormingItemAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
+import com.hsproduce.util.SoundPlayUtils;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
@@ -254,13 +255,23 @@ public class FormingActivity extends BaseActivity {
                             update.setEnabled(true);
                             finish.setEnabled(true);
                             out.setEnabled(true);
+                            //提示音
+                            SoundPlayUtils.startNoti(FormingActivity.this);
+                            SoundPlayUtils.stopAlarm();
 
                         } else {
                             Toast.makeText(FormingActivity.this, "请输入数量", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                }).setNegativeButton("取消", null).show();
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //提示音
+                SoundPlayUtils.startAlarm(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
+            }
+        }).show();
     }
 
     //跳转页面
@@ -311,6 +322,9 @@ public class FormingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startAlarm(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
@@ -360,6 +374,9 @@ public class FormingActivity extends BaseActivity {
                 finish.setEnabled(true);
                 out.setEnabled(true);
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startNoti(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
     }
@@ -388,6 +405,9 @@ public class FormingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startAlarm(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
@@ -435,6 +455,9 @@ public class FormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startNoti(FormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
                     normalDialog.setNegativeButton("取消",
@@ -442,6 +465,9 @@ public class FormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startAlarm(FormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
                     // 显示
@@ -454,6 +480,9 @@ public class FormingActivity extends BaseActivity {
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new DIALOGFINISHTask().execute(param);
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startNoti(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
     }
@@ -482,6 +511,9 @@ public class FormingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startAlarm(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
@@ -539,6 +571,9 @@ public class FormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startNoti(FormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
                     normalDialog.setNegativeButton("取消",
@@ -546,6 +581,9 @@ public class FormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startAlarm(FormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
                     // 显示
@@ -569,6 +607,9 @@ public class FormingActivity extends BaseActivity {
                 finish.setEnabled(false);
                 out.setEnabled(true);
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startNoti(FormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
 

@@ -16,6 +16,7 @@ import com.hsproduce.adapter.VPlanReplAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
+import com.hsproduce.util.SoundPlayUtils;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
@@ -202,6 +203,9 @@ public class SwitchFormingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
@@ -248,8 +252,12 @@ public class SwitchFormingActivity extends BaseActivity {
                 repl.setEnabled(false);
                 out.setEnabled(true);
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startNoti(SwitchFormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
+
     }
 
     //开始按钮中的完成上一计划
@@ -277,6 +285,9 @@ public class SwitchFormingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
         Button ok = customeView.findViewById(R.id.ok);
@@ -323,6 +334,9 @@ public class SwitchFormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startNoti(SwitchFormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
                     normalDialog.setNegativeButton("取消",
@@ -330,6 +344,9 @@ public class SwitchFormingActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ed_EndCode.setText("");
+                                    //提示音
+                                    SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
+                                    SoundPlayUtils.stopAlarm();
                                 }
                             });
 
@@ -342,6 +359,9 @@ public class SwitchFormingActivity extends BaseActivity {
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
                 dialog.dismiss();
+                //提示音
+                SoundPlayUtils.startNoti(SwitchFormingActivity.this);
+                SoundPlayUtils.stopAlarm();
             }
         });
 
@@ -455,12 +475,10 @@ public class SwitchFormingActivity extends BaseActivity {
                             }
                             if (datas.get(j).getState().equals("20")) {
                                 ddz.add(datas.get(j));
-                                ;
                                 continue;
                             }
                             if (datas.get(j).getState().equals("40")) {
                                 ywc.add(datas.get(j));
-                                ;
                                 continue;
                             }
                         }
@@ -470,9 +488,6 @@ public class SwitchFormingActivity extends BaseActivity {
                             lvplan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                         } else {
-//                            adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
-//                            lvplan.setAdapter(adaprer);
-//                            adaprer.notifyDataSetChanged();
                             //清空数据
                             ddz.clear();
                             adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
@@ -558,9 +573,7 @@ public class SwitchFormingActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-//                        returnPager();
-//                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
-//                        return;
+
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;

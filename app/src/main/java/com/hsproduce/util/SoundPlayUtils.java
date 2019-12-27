@@ -89,12 +89,12 @@ public class SoundPlayUtils {
         //soundPool.release();
     }
 
-    //播放默认铃声
+    //播放默认铃声和提示音
     private static MediaPlayer mMediaPlayer;
     //播放默认铃声
     public static void startAlarm(Context mContext) {
 
-        Uri mediaUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);//系统提示音
+        Uri mediaUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);//系统提示音TYPE_NOTIFICATION
         mMediaPlayer = MediaPlayer.create(mContext,
                 mediaUri);
         mMediaPlayer.setLooping(false);
@@ -102,11 +102,22 @@ public class SoundPlayUtils {
 
     }
 
-    //停止默认铃声
+    //播放默认提示音
+    public static void startNoti(Context mContext) {
+
+        Uri mediaUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);//系统提示音TYPE_NOTIFICATION
+        mMediaPlayer = MediaPlayer.create(mContext,
+                mediaUri);
+        mMediaPlayer.setLooping(false);
+        mMediaPlayer.start();
+
+    }
+
+    //停止提示音
     public static void stopAlarm() {
         if (mMediaPlayer != null)
             try {
-                Thread.sleep(1000);//休眠1秒
+                Thread.sleep(500);//休眠1秒
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
