@@ -65,6 +65,8 @@ public class FormingActivity extends BaseActivity {
     private VPlan vplan = new VPlan();
     private String num = "";
     private String startCode = "";//开始的开始条码
+    //是否提示错误
+    private Boolean isShow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -425,32 +427,35 @@ public class FormingActivity extends BaseActivity {
                 //判断是否超过500
                 Integer startNum = Integer.valueOf(vplan.getBarcodestart().substring(6, 12));
                 Integer endNum = Integer.valueOf(endCode.substring(6, 12));
-                if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
-                    final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
-                    normalDialog.setTitle("提示");
-                    normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
-                    normalDialog.setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            });
-                    normalDialog.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ed_EndCode.setText("");
-                                }
-                            });
-                    // 显示
-                    normalDialog.show();
-                    return;
+                if(isShow){
+                    if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
+                        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                        normalDialog.setTitle("提示");
+                        normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        isShow = false;
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ed_EndCode.setText("");
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                        return;
+                    }
                 }
 
                 //执行操作接口
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new DIALOGFINISHTask().execute(param);
+                isShow = true;//还原初始值以便其他方法使用
                 dialog.dismiss();
             }
         });
@@ -528,27 +533,29 @@ public class FormingActivity extends BaseActivity {
                 //判断是否超过500
                 Integer startNum = Integer.valueOf(sStartCode.substring(6, 12));
                 Integer endNum = Integer.valueOf(endCode.substring(6, 12));
-                if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
-                    final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
-                    normalDialog.setTitle("提示");
-                    normalDialog.setMessage("开始条码为：" + sStartCode + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
-                    normalDialog.setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            });
-                    normalDialog.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ed_EndCode.setText("");
-                                }
-                            });
-                    // 显示
-                    normalDialog.show();
-                    return;
+                if(isShow){
+                    if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
+                        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                        normalDialog.setTitle("提示");
+                        normalDialog.setMessage("开始条码为：" + sStartCode + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        isShow = false;
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ed_EndCode.setText("");
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                        return;
+                    }
                 }
 
                 //执行操作接口
@@ -566,6 +573,8 @@ public class FormingActivity extends BaseActivity {
                 update.setEnabled(false);
                 finish.setEnabled(false);
                 out.setEnabled(true);
+                //返回初始值以便其他方法是用
+                isShow = true;
                 dialog.dismiss();
             }
         });
