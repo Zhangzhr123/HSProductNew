@@ -106,7 +106,7 @@ public class SoundPlayUtils {
     public static void stopAlarm() {
         if (mMediaPlayer != null)
             try {
-                Thread.sleep(1000);//休眠0.1秒
+                Thread.sleep(1000);//休眠1秒
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

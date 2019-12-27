@@ -1,4 +1,6 @@
 package com.hsproduce.activity;
+
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,7 +111,7 @@ public class SwitchFormingActivity extends BaseActivity {
         lvplan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(currid != null || !currid.equals("")){
+                if (currid != null || !currid.equals("")) {
                     currid = "";
                 }
                 //初始化一下控件属性
@@ -163,7 +165,7 @@ public class SwitchFormingActivity extends BaseActivity {
 
     }
 
-    public void replace(){
+    public void replace() {
         if (isNull == 1) {
             //开始计划
             dialogToStart();
@@ -204,7 +206,7 @@ public class SwitchFormingActivity extends BaseActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(num != null || !num.equals("")){
+                if (num != null || !num.equals("")) {
                     num = "";
                 }
                 //条码位数为12为   05（工厂代码）19（年份）25（机台编码最后两位）123456（流水码）
@@ -227,8 +229,8 @@ public class SwitchFormingActivity extends BaseActivity {
                     Toast.makeText(SwitchFormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Integer sum = Integer.valueOf(nextCode.substring(6,12))+Integer.valueOf(num);
-                if(Integer.valueOf(num)>500 || sum>999999){
+                Integer sum = Integer.valueOf(nextCode.substring(6, 12)) + Integer.valueOf(num);
+                if (Integer.valueOf(num) > 500 || sum > 999999) {
                     Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -258,15 +260,15 @@ public class SwitchFormingActivity extends BaseActivity {
         final TextView itnbr = customeView.findViewById(R.id.input);
         final TextView itdec = customeView.findViewById(R.id.input4);
         final TextView number = customeView.findViewById(R.id.input2);
-        final EditText precode = dialog.findViewById(R.id.input3);
+        final EditText ed_EndCode = dialog.findViewById(R.id.input3);
         //获取焦点
-        precode.requestFocus();
+        ed_EndCode.requestFocus();
 
         if (vplan != null) {
             itnbr.setText(vplan.getItnbr());
             itdec.setText(vplan.getItdsc());
             number.setText(vplan.getPnum());
-            precode.setText("");
+            ed_EndCode.setText("");
         }
         Button finish = customeView.findViewById(R.id.finish);
         finish.setOnClickListener(new View.OnClickListener() {
@@ -284,35 +286,62 @@ public class SwitchFormingActivity extends BaseActivity {
             public void onClick(View v) {
                 String jt = mchid;
                 jt = jt.substring(jt.length() - 2, jt.length());
-                String code = precode.getText().toString();
+                String endCode = ed_EndCode.getText().toString();
 
                 //如果为空则进行操作
-                if (code.equals("")) {
+                if (endCode.equals("")) {
                     Toast.makeText(SwitchFormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (code.length() != 12) {
+                if (endCode.length() != 12) {
                     Toast.makeText(SwitchFormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String nextjt = code.substring(4, 6);
-                if (!jt.equals(nextjt)) {
+                String endjt = endCode.substring(4, 6);
+                if (!jt.equals(endjt)) {
                     Toast.makeText(SwitchFormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String pre = vplan.getBarcodeend().substring(0,6);
-                String now = code.substring(0,6);
-                if(!pre.equals(now)){
+                String start = vplan.getBarcodestart().substring(0, 6);
+                String end = endCode.substring(0, 6);
+                if (!start.equals(end)) {
                     Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //判断数量是否正确
+                Integer startNum = Integer.valueOf(vplan.getBarcodestart().substring(6, 12));
+                Integer endNum = Integer.valueOf(endCode.substring(6, 12));
+                if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
+                    final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
+                    normalDialog.setTitle("提示");
+                    normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    normalDialog.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ed_EndCode.setText("");
+                                }
+                            });
+
+                    // 显示
+                    normalDialog.show();
+                    return;
+                }
                 //执行操作接口
-                String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + code + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
                 dialog.dismiss();
             }
         });
+
     }
 
     //跳转页面
@@ -369,8 +398,8 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         for (int i = 0; i < map.size(); i++) {
-                            if(map.get(i).get("itemid") == null){
-                               continue;
+                            if (map.get(i).get("itemid") == null) {
+                                continue;
                             }
                             data1.add(map.get(i).get("itemid"));
                         }
@@ -422,15 +451,17 @@ public class SwitchFormingActivity extends BaseActivity {
                                 continue;
                             }
                             if (datas.get(j).getState().equals("20")) {
-                                ddz.add(datas.get(j));;
+                                ddz.add(datas.get(j));
+                                ;
                                 continue;
                             }
                             if (datas.get(j).getState().equals("40")) {
-                                ywc.add(datas.get(j));;
+                                ywc.add(datas.get(j));
+                                ;
                                 continue;
                             }
                         }
-                        if ((zxz.size()>0 && ddz.size()>0) || (ywc.size()>0 && ddz.size()>0)) {//有正在执行，并且有等待中的计划 或者有已完成和等待中的计划
+                        if ((zxz.size() > 0 && ddz.size() > 0) || (ywc.size() > 0 && ddz.size() > 0)) {//有正在执行，并且有等待中的计划 或者有已完成和等待中的计划
                             //显示等待中的计划；
                             adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
                             lvplan.setAdapter(adaprer);
@@ -462,7 +493,7 @@ public class SwitchFormingActivity extends BaseActivity {
         }
     }
 
-    //查询有没有已完成的计划
+    //查询有没有正在执行的计划
     class STARTTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strs) {
@@ -591,7 +622,7 @@ public class SwitchFormingActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开
-        switch (keyCode){
+        switch (keyCode) {
             case 22://右方向键
                 getCurrentVPlan();//查询计划
                 break;

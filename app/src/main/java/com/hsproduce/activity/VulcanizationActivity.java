@@ -142,7 +142,7 @@ public class VulcanizationActivity extends BaseActivity {
         }
         if (StringUtil.isNullOrEmpty(mchid)) {
             Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
-            iscomplate = true;
+//            iscomplate = true;
         } else {
             String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
             new MyTask().execute(param);
@@ -158,7 +158,7 @@ public class VulcanizationActivity extends BaseActivity {
         } else {
             //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
             if (codelist.contains(tvbarcode)) {
-                iscomplate = true;
+//                iscomplate = true;
                 Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
                 barcode.setText("");
             } else {
@@ -179,7 +179,7 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            iscomplate = true;
+//            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
@@ -274,6 +274,7 @@ public class VulcanizationActivity extends BaseActivity {
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, tvbarcode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("400")) {
+                        if(iscomplate){}
                         new MaterialDialog.Builder(VulcanizationActivity.this)
                                 .title("提示")
                                 .content(res.get("msg") + "")
@@ -286,6 +287,8 @@ public class VulcanizationActivity extends BaseActivity {
                                         iscomplate = false;
                                         String param1 = "PLAN_ID=" + planid + "&barcode=" + tvbarcode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=1";
                                         new TypeCodeTask().execute(param1);
+                                        SoundPlayUtils.playSoundByMedia(VulcanizationActivity.this,R.raw.argon);
+//                                        SoundPlayUtils.stopAlarm();
                                     }
                                 })
                                 .cancelable(false)
@@ -312,7 +315,7 @@ public class VulcanizationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            iscomplate = true;
+//            iscomplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
             } else {
