@@ -314,36 +314,33 @@ public class SwitchFormingActivity extends BaseActivity {
                 //判断数量是否正确
                 Integer startNum = Integer.valueOf(vplan.getBarcodestart().substring(6, 12));
                 Integer endNum = Integer.valueOf(endCode.substring(6, 12));
-                if(isShow){
-                    if ((endNum - startNum) >= 500 || (endNum - startNum) <= 0) {
-                        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
-                        normalDialog.setTitle("提示");
-                        normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
-                        normalDialog.setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        isShow = false;
-                                    }
-                                });
-                        normalDialog.setNegativeButton("取消",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ed_EndCode.setText("");
-                                    }
-                                });
+                if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
+                    final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
+                    normalDialog.setTitle("提示");
+                    normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ed_EndCode.setText("");
+                                }
+                            });
+                    normalDialog.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ed_EndCode.setText("");
+                                }
+                            });
 
-                        // 显示
-                        normalDialog.show();
-                        return;
-                    }
+                    // 显示
+                    normalDialog.show();
+                    return;
                 }
 
                 //执行操作接口
                 String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new FINISHTask().execute(param);
-                isShow = true;
                 dialog.dismiss();
             }
         });

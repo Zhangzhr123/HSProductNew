@@ -371,30 +371,6 @@ public class VulcanizationActivity extends BaseActivity {
         return logstr;
     }
 
-    //用户提示信息
-    public void error(String v) {
-        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
-        normalDialog.setTitle("提示");
-        normalDialog.setMessage(v);
-        normalDialog.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        normalDialog.setNegativeButton("取消",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
-                        finish();
-                    }
-                });
-        // 显示
-        normalDialog.show();
-    }
-
 
     //键盘监听
     @Override
