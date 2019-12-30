@@ -32,9 +32,10 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
 import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
 /**
- * 查看成型计划
- * 输入机台号和时间查询成型计划
- * createBy zahngzr @ 2019-12-25
+ * 成型取消扫描页面
+ * 输入机台号和时间查询已完成成型计划，点击计划展示信息扫描条码删除生产实绩
+ * 广播监听回调触发响应事件
+ * createBy zahngzr @ 2019-12-30
  */
 public class DeleteFormingVreCordActivity extends BaseActivity {
 

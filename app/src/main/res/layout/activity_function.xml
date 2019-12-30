@@ -157,7 +157,7 @@
                     android:layout_height="90dp"
                     android:layout_marginLeft="240dp"
                     android:layout_marginTop="150dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
                 <ImageButton
                         android:id="@+id/delectformingcode"
                         android:layout_width="70dp"
@@ -304,6 +304,29 @@
                         android:layout_height="wrap_content"
                         android:text="硫化明细变更"
                         android:textSize="11sp"
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/view16"
+                    android:orientation="vertical"
+                    android:layout_width="70dp"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="240dp"
+                    android:layout_marginTop="150dp"
+                    android:visibility="gone">
+                <ImageButton
+                        android:id="@+id/ProductNum"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/tomato"
+                        android:src="@drawable/btn_detial"
+                        android:visibility="visible"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当班产量"
+                        android:textSize="13sp"
                 />
             </LinearLayout>
 

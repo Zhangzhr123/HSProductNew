@@ -115,6 +115,11 @@
                 android:launchMode="singleInstance"
                 android:name=".activity.DeleteFormingVreCordActivity">
         </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.ProductNumActivity">
+        </activity>
     </application>
 
 </manifest>

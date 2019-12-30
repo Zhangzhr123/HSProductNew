@@ -1,29 +1,27 @@
 package com.hsproduce.activity;
 
-import android.content.*;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.VPlanAdapter;
-import com.hsproduce.adapter.VPlanItemAdapter;
-import com.hsproduce.adapter.VPlanItnbrAdapter;
-import com.hsproduce.bean.Result2;
 import com.hsproduce.bean.VPlan;
-import com.hsproduce.fragment.VulcanizationFragment;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.SoundPlayUtils;
@@ -36,20 +34,23 @@ import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
- * 硫化生产页面
- * 扫描机台号直接进入扫描条码页面，扫描条码，硫化计划更改为生产中，并将扫描的条码添加进生产实绩中
- * 成功添加进生产实绩后此条码写入扫描纪录框中
- * createBy zhangzhr @ 2019-12-21
+ * 硫化取消扫描页面
+ * 扫描机台号直接进入扫描条码页面，扫描条码，删除此条码的生产实绩
+ * 广播监听回调触发事件，成功后此条码写入扫描纪录框中
+ * createBy zhangzhr @ 2019-12-30
  */
-public class VulcanizationActivity extends BaseActivity {
+public class DeleteVulcanizationActivity extends BaseActivity {
 
     //view 输入机台  记录条码  扫描条码
     private View ll_Mchid, ll_CodeLog, ll_Code;
     //计划展示list
     private ListView listView;
     //机台号  轮胎条码 条码计数  条码记录
-    private TextView tvBarCode, tvAnum, tvBarCodeLog, tvSum;
+    private TextView tvBarCode, tvAnum, tvBarCodeLog;
     private TextView tvMchid;
     //计划按钮   扫描按钮
     private ButtonView btGetplan, btBarCode_Ok;
@@ -83,6 +84,15 @@ public class VulcanizationActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     //初始化控件
     public void initView() {
         //layout
@@ -103,8 +113,6 @@ public class VulcanizationActivity extends BaseActivity {
         tvBarCodeLog.setFocusableInTouchMode(false);
         //扫描条码计数
         tvAnum = (TextView) findViewById(R.id.anum);
-        //机台本班次累计数量
-        tvSum = (TextView) findViewById(R.id.sum);
         //获取计划按钮
         btGetplan = (ButtonView) findViewById(R.id.bt_getPlan);
         //条码按钮
@@ -137,7 +145,7 @@ public class VulcanizationActivity extends BaseActivity {
         });
     }
 
-    //获取计划
+    //获取计划  按键调用
     public void getPlan() {
         //获取输入机台上barcode
         String mchid = tvMchid.getText().toString().trim();
@@ -145,30 +153,104 @@ public class VulcanizationActivity extends BaseActivity {
             mchid = mchid.toUpperCase();
         }
         if (StringUtil.isNullOrEmpty(mchid)) {
-            Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG).show();
+            Toast.makeText(DeleteVulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
         } else {
             String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
             new MyTask().execute(param);
         }
     }
 
-    //获取轮胎条码
+    //获取轮胎条码  按键调用
     public void getBarCode() {
         //获取轮胎上barcode
         barCode = tvBarCode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(barCode)) {
-            Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            Toast.makeText(DeleteVulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
         } else {
             //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
             if (codeList.contains(barCode)) {
-                Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+                Toast.makeText(DeleteVulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
                 tvBarCode.setText("");
             } else {
                 //记录硫化生产记录
-                String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=0";
-                new TypeCodeTask().execute(param1);
+//                String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=0";
+//                new TypeCodeTask().execute(param1);
             }
         }
+    }
+
+    //获取计划  广播监听调用
+    public void getPlan(String mchid) {
+        //获取输入机台上barcode
+        if (!StringUtil.isNullOrEmpty(mchid)) {
+            mchid = mchid.toUpperCase();
+        }
+        if (StringUtil.isNullOrEmpty(mchid)) {
+            Toast.makeText(DeleteVulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
+        } else {
+            String param = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift;
+            new MyTask().execute(param);
+            Toast.makeText(DeleteVulcanizationActivity.this, mchid, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //获取轮胎条码  广播监听调用
+    public void getBarCode(String barCode) {
+        //获取轮胎上barcode
+        if (StringUtil.isNullOrEmpty(barCode)) {
+            Toast.makeText(DeleteVulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+        } else {
+            //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
+            if (codeList.contains(barCode)) {
+                Toast.makeText(DeleteVulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+                tvBarCode.setText("");
+            } else {
+                //记录硫化生产记录
+//                String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=0";
+//                new TypeCodeTask().execute(param1);
+                Toast.makeText(DeleteVulcanizationActivity.this, barCode, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String massage = "";
+                    massage = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(massage)) {
+                        massage = massage.toUpperCase();
+                        if (massage.length() == 4 && (massage.endsWith("L") || massage.endsWith("R"))) {
+                            getPlan(massage);
+                        } else if (massage.length() == 12 && isNum(massage) == true) {
+                            barCode = massage;
+                            getBarCode(massage);
+                        }
+                    } else {
+                        Toast.makeText(DeleteVulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
+
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c > '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //查询任务
@@ -182,7 +264,7 @@ public class VulcanizationActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(DeleteVulcanizationActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -190,7 +272,7 @@ public class VulcanizationActivity extends BaseActivity {
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DeleteVulcanizationActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         //获取计划ID
@@ -198,22 +280,17 @@ public class VulcanizationActivity extends BaseActivity {
                         //显示生产
                         showVual();
                         //展示列表
-                        adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
+                        adapter = new VPlanAdapter(DeleteVulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        tvSum.setText("累计数量"+datas.get(0).getDnum());
                         tvMchid.setText("");
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(VulcanizationActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(VulcanizationActivity.this, "计划查询错误，请重新操作！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg") + "", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DeleteVulcanizationActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -257,122 +334,26 @@ public class VulcanizationActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(DeleteVulcanizationActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DeleteVulcanizationActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         tvBarCodeLog.append(barCode + "\n");
                         tvBarCode.setText("");
                         codeList.add(barCode);
                         tvAnum.setText(codeList.size() + "");
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, barCode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("400")) {
-                        //提示音
-                        SoundPlayUtils.startNoti(VulcanizationActivity.this);
-                        SoundPlayUtils.stopAlarm();
-
-                        if (materialDialog == null) {
-                            materialDialog = new MaterialDialog.Builder(VulcanizationActivity.this)
-                                    .title("提示")
-                                    .content(res.get("msg") + "")
-                                    .positiveText(R.string.vul_confirm)
-                                    .negativeText(R.string.vul_cancel)
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            //强制记录硫化生产记录
-//                                        iscomplate = false;
-                                            String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=1";
-                                            new TypeCodeTask().execute(param1);
-                                            //提示音
-//                                            SoundPlayUtils.startNoti(VulcanizationActivity.this);
-//                                            SoundPlayUtils.stopAlarm();
-                                        }
-                                    })
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            //提示音
-//                                            SoundPlayUtils.startAlarm(VulcanizationActivity.this);
-//                                            SoundPlayUtils.stopAlarm();
-                                        }
-                                    })
-                                    .cancelable(false)
-                                    .show();
-                        }
-                        materialDialog.show();
-
                     } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg") + "", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    //扫描条码绑定计划
-    class CodeInPlanTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-//            iscomplate = true;
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
-                    }.getType());
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        codeList.add(barCode);
-                        //显示绑定条码数量
-                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        list.add("[" + date + "]" + barCode);
-                        //list.add(tvbarcode);
-                        tvBarCodeLog.setText("");
-                        System.out.println(list.size());
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == 0) {
-                                tvBarCodeLog.setText(list.get(i));
-                            } else {
-                                tvBarCodeLog.setText(getlog(list));
-                            }
-                        }
-                        tvAnum.setText("");
-                        number++;//计算成功次数
-                        tvAnum.setText(number + "");
-                        tvBarCode.setText("");
-//                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描插入数据库失败！", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DeleteVulcanizationActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -425,25 +406,24 @@ public class VulcanizationActivity extends BaseActivity {
                     tvAnum.setText("0");
                     showMchid();
                 } else {
-                    startActivity(new Intent(VulcanizationActivity.this, FunctionActivity.class));
+                    startActivity(new Intent(DeleteVulcanizationActivity.this, FunctionActivity.class));
                     this.finish();
                 }
                 break;
             //右方向键
             case 22:
-                msg = "扫描失败！";
-                operate(msg);
+                operate();
                 break;
-            //回车键
-            case 66:
-                msg = "扫描失败！";
-                operate(msg);
-                break;
-            //扫描键
-            case 0:
-                msg = "扫描失败！";
-                operate(msg);
-                break;
+//            //回车键
+//            case 66:
+//                msg = "扫描失败！";
+//                operate(msg);
+//                break;
+//            //扫描键
+//            case 0:
+//                msg = "扫描失败！";
+//                operate(msg);
+//                break;
             default:
 
                 break;
@@ -452,11 +432,7 @@ public class VulcanizationActivity extends BaseActivity {
         return true;
     }
 
-    private void operate(String msg) {
-//        if (!iscomplate) {
-////            Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+    private void operate() {
         if (!StringUtil.isNullOrEmpty(tvBarCode.getText().toString().trim())) {
             getBarCode();
         } else if (!StringUtil.isNullOrEmpty(tvMchid.getText().toString().trim())) {
@@ -464,6 +440,13 @@ public class VulcanizationActivity extends BaseActivity {
         } else {
 //            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
     }
 
 

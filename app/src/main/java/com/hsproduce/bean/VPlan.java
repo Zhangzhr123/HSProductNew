@@ -23,6 +23,8 @@ public class VPlan {
     private String pnum;
     //实绩数量
     private String anum;
+    //扫描累计数量
+    private String dnum;
     //班次
     private String shift;
     //班组
@@ -55,6 +57,14 @@ public class VPlan {
     private int deletflag;
     //控制按键标识  1:显示开始和返回 2:只显示修改和完成  3:只显示返回
     private String btnflag;
+
+    public String getDnum() {
+        return dnum;
+    }
+
+    public void setDnum(String dnum) {
+        this.dnum = dnum;
+    }
 
     public String getBtnflag() {
         return btnflag;
