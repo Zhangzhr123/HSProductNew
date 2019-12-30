@@ -104,5 +104,7 @@ public interface PathUtil {
     public static final String FINISH = SERVER + "api/PDA/CompleteVplan";
     //查询成型计划展示
     public static final String GetCurrDateFormingVPlan = SERVER + "api/PDA/GetCurrDateFormingVPlan";
+    //成型取消扫描
+    public static final String OUTFORMINGBARCODE = SERVER + "";
 
 }

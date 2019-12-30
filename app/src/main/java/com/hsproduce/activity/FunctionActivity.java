@@ -1,4 +1,5 @@
 package com.hsproduce.activity;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -31,8 +32,8 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14;
-    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan;
+    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15;
+    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan, delectformingcode;
     private RelativeLayout cx, lh, jc, zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
@@ -87,6 +88,7 @@ public class FunctionActivity extends BaseActivity {
         formingbarcode = (ImageButton) findViewById(R.id.formingbarcode);//成型胚胎报废
         barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
         selectformingplan = (ImageButton) findViewById(R.id.selectformingplan);//查看成型计划
+        delectformingcode = (ImageButton) findViewById(R.id.delectformingcode);//成型取消扫描
 
         //菜单权限管理
         String parm = "UserName=" + App.usercode;
@@ -103,8 +105,8 @@ public class FunctionActivity extends BaseActivity {
                 View customeView = dialog.getCustomView();
                 final EditText ed_OldPW = (EditText) customeView.findViewById(R.id.oldPW);
                 final EditText ed_NewPW = (EditText) customeView.findViewById(R.id.newPW);
-                Button btn_Cancel = (Button)customeView.findViewById(R.id.btn_cancel);
-                Button btn_Ok = (Button)customeView.findViewById(R.id.btn_ok);
+                Button btn_Cancel = (Button) customeView.findViewById(R.id.btn_cancel);
+                Button btn_Ok = (Button) customeView.findViewById(R.id.btn_ok);
                 btn_Cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -114,22 +116,22 @@ public class FunctionActivity extends BaseActivity {
                 btn_Ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(ed_OldPW.getText().toString() == null || ed_OldPW.getText().toString().equals("")){
+                        if (ed_OldPW.getText().toString() == null || ed_OldPW.getText().toString().equals("")) {
                             Toast.makeText(FunctionActivity.this, "原密码不能为空", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if(ed_NewPW.getText().toString() == null || ed_NewPW.getText().toString().equals("")){
+                        if (ed_NewPW.getText().toString() == null || ed_NewPW.getText().toString().equals("")) {
                             Toast.makeText(FunctionActivity.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if(!ed_OldPW.getText().toString().equals(App.password)){
+                        if (!ed_OldPW.getText().toString().equals(App.password)) {
                             Toast.makeText(FunctionActivity.this, "原密码错误，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String oldPW = ed_OldPW.getText().toString();
                         String newPW = ed_NewPW.getText().toString();
                         //修改密码
-                        String parm = "UserName="+App.username+"&oldPwd="+oldPW+"&newPwd="+newPW;
+                        String parm = "UserName=" + App.username + "&oldPwd=" + oldPW + "&newPwd=" + newPW;
                         new UpdatePWTask().execute(parm);
                         dialog.dismiss();
 
@@ -256,6 +258,15 @@ public class FunctionActivity extends BaseActivity {
                 finish();
             }
         });
+        //成型取消扫描
+        delectformingcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, DeleteFormingVreCordActivity.class));
+                finish();
+            }
+        });
+
     }
 
     //菜单权限管理
@@ -322,13 +333,16 @@ public class FunctionActivity extends BaseActivity {
                         } else if (map.get(0).get("m_CNAME").equals("查看成型计划")) {
                             startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
                             finish();
+                        } else if (map.get(0).get("m_CNAME").equals("成型取消扫描")) {
+                            startActivity(new Intent(FunctionActivity.this, DeleteFormingVreCordActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
                         }
 
                     } else if (map.size() > 1) {
                         for (int i = 0; i < map.size(); i++) {
-                            if(map.get(i).get("m_CNAME") == null){
+                            if (map.get(i).get("m_CNAME") == null) {
                                 continue;
                             }
                             if (map.get(i).get("m_CNAME").equals("硫化生产")) {
@@ -373,6 +387,9 @@ public class FunctionActivity extends BaseActivity {
                             } else if (map.get(i).get("m_CNAME").equals("查看成型计划")) {
                                 cx.setVisibility(View.VISIBLE);
                                 view14.setVisibility(View.VISIBLE);
+                            } else if (map.get(i).get("m_CNAME").equals("成型取消扫描")) {
+                                cx.setVisibility(View.VISIBLE);
+                                view15.setVisibility(View.VISIBLE);
                             } else {
 //                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
@@ -412,7 +429,6 @@ public class FunctionActivity extends BaseActivity {
                 }.getType());
                 if (res.get("code").equals("200")) {
                     Toast.makeText(FunctionActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
-
                 } else {
                     Toast.makeText(FunctionActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                 }

@@ -110,6 +110,11 @@
                 android:launchMode="singleInstance"
                 android:name=".activity.SelectFormingPlanActivity">
         </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.DeleteFormingVreCordActivity">
+        </activity>
     </application>
 
 </manifest>
