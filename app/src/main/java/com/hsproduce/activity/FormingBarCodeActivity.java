@@ -1,6 +1,7 @@
 package com.hsproduce.activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -23,6 +24,9 @@ import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 成型胎胚报废页面
  * 扫描条码，报废条码成功后写入扫描记录中
@@ -31,14 +35,14 @@ import java.util.*;
 public class FormingBarCodeActivity extends BaseActivity {
 
     //轮胎条码 条码计数  条码记录
-    private TextView barCode, num, barcodelog;
+    private TextView tvBarCode, tvNum, tvBarCodeLog;
     private ButtonView btGetplan;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //绑定条码个数
     private int number = 0;
     //轮胎条码
-    private String tvbarcode = "", planid = "";
+    private String barCode = "", planid = "";
     private List<String> list = new ArrayList<>();
 
     @Override
@@ -52,19 +56,28 @@ public class FormingBarCodeActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     //初始化控件
     public void initView() {
         //扫描框
-        barCode = (TextView) findViewById(R.id.barCode);
+        tvBarCode = (TextView) findViewById(R.id.barCode);
         //获得焦点
-        barCode.requestFocus();
+        tvBarCode.requestFocus();
         //条码记录
-        barcodelog = (TextView) findViewById(R.id.barcode_log);
+        tvBarCodeLog = (TextView) findViewById(R.id.barcode_log);
         //不可编辑
-        barcodelog.setFocusable(false);
-        barcodelog.setFocusableInTouchMode(false);
+        tvBarCodeLog.setFocusable(false);
+        tvBarCodeLog.setFocusableInTouchMode(false);
         //扫描条码计数
-        num = (TextView) findViewById(R.id.num);
+        tvNum = (TextView) findViewById(R.id.num);
         //获取计划按钮
         btGetplan = (ButtonView) findViewById(R.id.getplan);
     }
@@ -76,25 +89,63 @@ public class FormingBarCodeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //获取计划
-                getBarCode();
+                barCode = tvBarCode.getText().toString().trim();
+                getBarCode(barCode);
             }
         });
     }
 
 
-    //获取轮胎条码
-    public void getBarCode() {
+    //获取轮胎条码  广播监听响应时间
+    public void getBarCode(String barCode) {
         //获取轮胎上barcode
-        tvbarcode = barCode.getText().toString().trim();
-        if (StringUtil.isNullOrEmpty(tvbarcode)) {
-//            Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+        if (StringUtil.isNullOrEmpty(barCode)) {
             return;
         } else {
-            String param1 = "ScrapCode=" + tvbarcode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
+            String param1 = "ScrapCode=" + barCode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
             new TypeCodeTask().execute(param1);
-            barCode.requestFocus();
+            tvBarCode.requestFocus();
         }
     }
+
+    //获取轮胎条码  按键监听响应时间
+    public void getBarCode() {
+        //获取轮胎上barcode
+        barCode = tvBarCode.getText().toString().trim();
+        if (StringUtil.isNullOrEmpty(barCode)) {
+            return;
+        } else {
+            String param1 = "ScrapCode=" + barCode + "&FormingID=" + "&User_Name=" + App.username + "&TEAM=" + App.shift;
+            new TypeCodeTask().execute(param1);
+            tvBarCode.requestFocus();
+        }
+    }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        barCode = "";
+                    }
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        getBarCode(barCode);
+                    } else {
+                        Toast.makeText(FormingBarCodeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //成型胚胎报废
     class TypeCodeTask extends AsyncTask<String, Void, String> {
@@ -120,19 +171,19 @@ public class FormingBarCodeActivity extends BaseActivity {
                     if (res.get("code").equals("200")) {
                         //判断用户是否重复输入
                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                        list.add("[" + date + "]" + tvbarcode + "报废成功");
-                        barcodelog.setText("");
+                        list.add("[" + date + "]" + barCode + "报废成功");
+                        tvBarCodeLog.setText("");
                         System.out.println(list.size());
                         for (int i = 0; i < list.size(); i++) {
                             if (i == 0) {
-                                barcodelog.setText(list.get(i));
+                                tvBarCodeLog.setText(list.get(i));
                             } else {
-                                barcodelog.setText(getlog(list));
+                                tvBarCodeLog.setText(getlog(list));
                             }
                         }
-                        num.setText("");
+                        tvNum.setText("");
                         number++;//计算成功次数
-                        num.setText(number + "");
+                        tvNum.setText(number + "");
 //                        Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
@@ -158,6 +209,13 @@ public class FormingBarCodeActivity extends BaseActivity {
         return logstr;
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -165,8 +223,8 @@ public class FormingBarCodeActivity extends BaseActivity {
         //按键按下
         switch (keyCode) {
             case 0:
-                barCode.requestFocus();
-                barCode.setText("");
+                tvBarCode.requestFocus();
+                tvBarCode.setText("");
                 break;
         }
 
@@ -177,15 +235,15 @@ public class FormingBarCodeActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 0://回车键
-                getBarCode();//获取明细
-                break;
+//            case 0://扫描键
+//                getBarCode();//获取明细
+//                break;
             case 22://右方向键
                 getBarCode();//获取明细
                 break;
             case 4:
                 tofunction();
-                num.setText("0");
+                tvNum.setText("0");
                 break;
         }
         return true;
