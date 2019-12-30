@@ -1,4 +1,9 @@
 package com.hsproduce.activity;
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 生产追溯页面
  * 扫描条码显示硫化条码明细和成型条码明细
@@ -29,7 +37,7 @@ import java.util.Map;
 public class BarCodeDetailActivity extends BaseActivity {
 
     //轮胎条码
-    private TextView barCode;
+    private TextView tvBarCode;
     //获取计划按钮
     private ImageButton btGetplan;
     //成型明细
@@ -37,7 +45,6 @@ public class BarCodeDetailActivity extends BaseActivity {
     //硫化明细
     private TextView vspesc, vspescname, vmchid, lorR, vdate, vshift, vmaster, vstate;
     //轮胎条码
-    public String tvbarCode = "";
     private List<VreCord> data1 = new ArrayList<>();
     private List<VreCord> data2 = new ArrayList<>();
 
@@ -53,11 +60,20 @@ public class BarCodeDetailActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //扫描框
-        barCode = (TextView) findViewById(R.id.BarCode);
+        tvBarCode = (TextView) findViewById(R.id.BarCode);
         //获得焦点
-        barCode.requestFocus();
+        tvBarCode.requestFocus();
         //获取计划按钮
         btGetplan = (ImageButton) findViewById(R.id.getBarCode);
         //成型
@@ -85,24 +101,62 @@ public class BarCodeDetailActivity extends BaseActivity {
         btGetplan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCurrentVPlan();
+                String barCode = tvBarCode.getText().toString().trim();
+                getBarCode(barCode);
             }
         });
     }
 
-    //生产追溯
-    public void getCurrentVPlan() {
+    //生产追溯 广播监听
+    public void getBarCode(String barCode) {
         //获取输入机台上barcode
-        tvbarCode = barCode.getText().toString().trim();
-        if (StringUtil.isNullOrEmpty(tvbarCode)) {
+        if (StringUtil.isNullOrEmpty(barCode)) {
 //            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
-            String parm = "SwitchTYRE_CODE=" + tvbarCode;
+            String parm = "SwitchTYRE_CODE=" + barCode;
             new GetFormingDetail().execute(parm);
             new GetVulcanizaDetail().execute(parm);
         }
     }
+
+    //生产追溯 按键监听
+    public void getBarCode() {
+        //获取输入机台上barcode
+        String barCode = tvBarCode.getText().toString().trim();
+        if (StringUtil.isNullOrEmpty(barCode)) {
+//            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            String parm = "SwitchTYRE_CODE=" + barCode;
+            new GetFormingDetail().execute(parm);
+            new GetVulcanizaDetail().execute(parm);
+        }
+    }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        getBarCode(barCode);
+                    } else {
+                        Toast.makeText(BarCodeDetailActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
 
     //获取成型明细
@@ -228,14 +282,21 @@ public class BarCodeDetailActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
         switch (keyCode) {
-            case 0://右方向键
-                barCode.setText("");
+            case 0://扫描键
+                tvBarCode.setText("");
                 break;
         }
 
@@ -246,11 +307,11 @@ public class BarCodeDetailActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 66://回车键
-                getCurrentVPlan();
-                break;
+//            case 66://回车键
+//                getBarCode();
+//                break;
             case 22://右方向键
-                getCurrentVPlan();
+                getBarCode();
                 break;
             case 4://返回键
                 tofunction();//返回功能菜单页面
