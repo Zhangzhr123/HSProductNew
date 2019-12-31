@@ -1,10 +1,12 @@
 package com.hsproduce.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.*;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import com.hsproduce.R;
 import com.xuexiang.xui.utils.Utils;
 

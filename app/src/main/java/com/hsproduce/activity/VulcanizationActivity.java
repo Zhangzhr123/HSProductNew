@@ -279,8 +279,7 @@ public class VulcanizationActivity extends BaseActivity {
                         Toast.makeText(VulcanizationActivity.this, barCode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("400")) {
                         //提示音
-                        SoundPlayUtils.startNoti(VulcanizationActivity.this);
-                        SoundPlayUtils.stopAlarm();
+                        SoundPlayUtils.playSoundByMedia(VulcanizationActivity.this,R.raw.raw3);
 
                         if (materialDialog == null) {
                             materialDialog = new MaterialDialog.Builder(VulcanizationActivity.this)
@@ -296,16 +295,16 @@ public class VulcanizationActivity extends BaseActivity {
                                             String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=1";
                                             new TypeCodeTask().execute(param1);
                                             //提示音
-//                                            SoundPlayUtils.startNoti(VulcanizationActivity.this);
-//                                            SoundPlayUtils.stopAlarm();
+                                            SoundPlayUtils.startNoti(VulcanizationActivity.this);
+                                            SoundPlayUtils.stopAlarm();
                                         }
                                     })
                                     .onNegative(new MaterialDialog.SingleButtonCallback() {
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                             //提示音
-//                                            SoundPlayUtils.startAlarm(VulcanizationActivity.this);
-//                                            SoundPlayUtils.stopAlarm();
+                                            SoundPlayUtils.startAlarm(VulcanizationActivity.this);
+                                            SoundPlayUtils.stopAlarm();
                                         }
                                     })
                                     .cancelable(false)
