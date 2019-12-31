@@ -58,14 +58,14 @@ public class VulcanizationActivity extends BaseActivity {
     //计划展示适配器
     private VPlanAdapter adapter;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
+//    private long mExitTime = 0;
     //保证每次操作完成后再进行下一次操作
-    public boolean iscomplate = true;
+//    public boolean iscomplate = true;
     //绑定条码个数
     private int number = 0;
     //轮胎条码
     private String barCode = "", planId = "";
-    private List<String> list = new ArrayList<>();
+//    private List<String> list = new ArrayList<>();
     //添加条码防止重复扫描
     private List<String> codeList = new ArrayList<>();
     private Boolean isVual = false;
@@ -111,8 +111,9 @@ public class VulcanizationActivity extends BaseActivity {
         btBarCode_Ok = (ButtonView) findViewById(R.id.barcode_ok);
         //加载条
         loadingView = (MiniLoadingView) findViewById(R.id.loading);
-        //设置条码扫描框输入字符数
+        //设置扫描框输入字符数
         tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        tvMchid.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
     }
 
 
@@ -201,7 +202,8 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        tvSum.setText("累计数量"+datas.get(0).getDnum());
+                        number = Integer.valueOf(datas.get(0).getDnum());
+                        tvSum.setText(datas.get(0).getDnum());
                         tvMchid.setText("");
                     } else if (res.get("code").equals("300")) {
                         Toast.makeText(VulcanizationActivity.this, "机台号不正确！", Toast.LENGTH_LONG).show();
@@ -270,6 +272,7 @@ public class VulcanizationActivity extends BaseActivity {
                         tvBarCode.setText("");
                         codeList.add(barCode);
                         tvAnum.setText(codeList.size() + "");
+                        tvSum.setText((number+codeList.size())+"");
                     } else if (res.get("code").equals("100")) {
                         Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("300")) {
@@ -322,71 +325,71 @@ public class VulcanizationActivity extends BaseActivity {
         }
     }
 
-    //扫描条码绑定计划
-    class CodeInPlanTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-//            iscomplate = true;
-            if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
-                    }.getType());
-                    if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
-                    }
-                    if (res.get("code").equals("200")) {
-                        codeList.add(barCode);
-                        //显示绑定条码数量
-                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        list.add("[" + date + "]" + barCode);
-                        //list.add(tvbarcode);
-                        tvBarCodeLog.setText("");
-                        System.out.println(list.size());
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == 0) {
-                                tvBarCodeLog.setText(list.get(i));
-                            } else {
-                                tvBarCodeLog.setText(getlog(list));
-                            }
-                        }
-                        tvAnum.setText("");
-                        number++;//计算成功次数
-                        tvAnum.setText(number + "");
-                        tvBarCode.setText("");
-//                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描插入数据库失败！", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
+//    //扫描条码绑定计划
+//    class CodeInPlanTask extends AsyncTask<String, Void, String> {
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+////            iscomplate = true;
+//            if (StringUtil.isNullOrBlank(s)) {
+//                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+//            } else {
+//                try {
+//                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+//                    }.getType());
+//                    if (res == null || res.isEmpty()) {
+//                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+//                    }
+//                    if (res.get("code").equals("200")) {
+//                        codeList.add(barCode);
+//                        //显示绑定条码数量
+//                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//                        list.add("[" + date + "]" + barCode);
+//                        //list.add(tvbarcode);
+//                        tvBarCodeLog.setText("");
+//                        System.out.println(list.size());
+//                        for (int i = 0; i < list.size(); i++) {
+//                            if (i == 0) {
+//                                tvBarCodeLog.setText(list.get(i));
+//                            } else {
+//                                tvBarCodeLog.setText(getlog(list));
+//                            }
+//                        }
+//                        tvAnum.setText("");
+//                        number++;//计算成功次数
+//                        tvAnum.setText(number + "");
+//                        tvBarCode.setText("");
+////                        Toast.makeText(VulcanizationActivity.this, "扫描成功！", Toast.LENGTH_LONG).show();
+//                    } else if (res.get("code").equals("100")) {
+//                        Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_LONG).show();
+//                    } else if (res.get("code").equals("300")) {
+//                        Toast.makeText(VulcanizationActivity.this, "扫描插入数据库失败！", Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(VulcanizationActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }
+//    }
 
     //递归显示
-    public String getlog(List<String> list) {
-        String logstr = "";
-        Collections.reverse(list);//倒序
-        for (int i = 0; i < list.size(); i++) {
-            logstr += list.get(i) + "\n";
-        }
-        return logstr;
-    }
+//    public String getlog(List<String> list) {
+//        String logstr = "";
+//        Collections.reverse(list);//倒序
+//        for (int i = 0; i < list.size(); i++) {
+//            logstr += list.get(i) + "\n";
+//        }
+//        return logstr;
+//    }
 
 
     //键盘监听

@@ -13,7 +13,7 @@
             android:background="@color/xui_btn_blue_normal_color"
             app:tb_barHeight="40dp"
             app:tb_dividerColor="@color/xui_config_color_red"
-            app:tb_titleText="@string/vul_product"/>
+            app:tb_titleText="硫化取消扫描"/>
 
     <LinearLayout
             android:id="@+id/ll_mchid"
@@ -38,13 +38,6 @@
                 android:textSize="21sp"
                 android:layout_marginLeft="-200dp"
                 android:layout_marginTop="180dp"/>
-        <com.xuexiang.xui.widget.button.ButtonView
-                style="@style/ButtonView.Blue"
-                android:id="@+id/bt_getPlan"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:text="搜索"
-                android:layout_marginTop="180dp" android:visibility="visible"/>
     </LinearLayout>
 
 
@@ -54,16 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="40dp"/>
-
-    <ListView
-            android:id="@+id/lv_plan"
-            android:divider="@color/btn_gray_normal"
-            android:dividerHeight="2dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:visibility="gone">
-
-    </ListView>
-
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -92,13 +75,6 @@
                     android:hint="@string/vul_barcode_scan"
                     android:textAlignment="center"
                     android:layout_marginLeft="5dp"/>
-            <com.xuexiang.xui.widget.button.ButtonView
-                    style="@style/ButtonView.Blue"
-                    android:id="@+id/barcode_ok"
-                    android:layout_width="60dp"
-                    android:layout_height="30dp"
-                    android:text="测试"
-                    android:layout_marginLeft="5dp" android:visibility="gone"/>
         </LinearLayout>
 
         <View
@@ -110,7 +86,7 @@
         <LinearLayout
                 android:id="@+id/ll_codelog"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="300dp"
                 android:layout_marginTop="45dp"
                 android:orientation="horizontal" android:visibility="gone">
             <!-- 条码扫描框 -->
@@ -127,7 +103,7 @@
                     android:id="@+id/barcode_log"
                     android:layout_width="270dp"
                     android:layout_marginTop="30dp"
-                    android:layout_height="120dp"
+                    android:layout_height="240dp"
                     android:inputType="textMultiLine"
                     android:scrollbars="vertical"
                     android:textSize="15sp"
