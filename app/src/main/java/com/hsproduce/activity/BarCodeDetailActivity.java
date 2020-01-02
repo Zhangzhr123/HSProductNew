@@ -39,11 +39,11 @@ public class BarCodeDetailActivity extends BaseActivity {
     //轮胎条码
     private TextView tvBarCode;
     //获取计划按钮
-    private ImageButton btGetplan;
+    private ImageButton btGetPlan;
     //成型明细
-    private TextView fspesc, fspescname, fmchid, fdate, fshift, fmaster, fstate;
+    private TextView fSpesc, fSpescName, fMchId, fDate, fShift, fMaster, fState;
     //硫化明细
-    private TextView vspesc, vspescname, vmchid, lorR, vdate, vshift, vmaster, vstate;
+    private TextView vSpesc, vSpescName, vMchId, vLorR, vDate, vShift, vMaster, vState;
     //轮胎条码
     private List<VreCord> data1 = new ArrayList<>();
     private List<VreCord> data2 = new ArrayList<>();
@@ -75,30 +75,30 @@ public class BarCodeDetailActivity extends BaseActivity {
         //获得焦点
         tvBarCode.requestFocus();
         //获取计划按钮
-        btGetplan = (ImageButton) findViewById(R.id.getBarCode);
+        btGetPlan = (ImageButton) findViewById(R.id.getBarCode);
         //成型
-        fspesc = (TextView) findViewById(R.id.fspesc);
-        fspescname = (TextView) findViewById(R.id.fspescname);
-        fmchid = (TextView) findViewById(R.id.fmchid);
-        fdate = (TextView) findViewById(R.id.fdate);
-        fshift = (TextView) findViewById(R.id.fshift);
-        fmaster = (TextView) findViewById(R.id.fmaster);
-        fstate = (TextView) findViewById(R.id.fstate);
+        fSpesc = (TextView) findViewById(R.id.fspesc);
+        fSpescName = (TextView) findViewById(R.id.fspescname);
+        fMchId = (TextView) findViewById(R.id.fmchid);
+        fDate = (TextView) findViewById(R.id.fdate);
+        fShift = (TextView) findViewById(R.id.fshift);
+        fMaster = (TextView) findViewById(R.id.fmaster);
+        fState = (TextView) findViewById(R.id.fstate);
         //硫化
-        vspesc = (TextView) findViewById(R.id.vspesc);
-        vspescname = (TextView) findViewById(R.id.vspescname);
-        vmchid = (TextView) findViewById(R.id.vmchid);
-        lorR = (TextView) findViewById(R.id.LorR);
-        vdate = (TextView) findViewById(R.id.vdate);
-        vshift = (TextView) findViewById(R.id.vshift);
-        vmaster = (TextView) findViewById(R.id.vmaster);
-        vstate = (TextView) findViewById(R.id.vstate);
+        vSpesc = (TextView) findViewById(R.id.vspesc);
+        vSpescName = (TextView) findViewById(R.id.vspescname);
+        vMchId = (TextView) findViewById(R.id.vmchid);
+        vLorR = (TextView) findViewById(R.id.LorR);
+        vDate = (TextView) findViewById(R.id.vdate);
+        vShift = (TextView) findViewById(R.id.vshift);
+        vMaster = (TextView) findViewById(R.id.vmaster);
+        vState = (TextView) findViewById(R.id.vstate);
 
     }
 
     public void initEvent() {
         //点击查询成型和硫化条码信息
-        btGetplan.setOnClickListener(new View.OnClickListener() {
+        btGetPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String barCode = tvBarCode.getText().toString().trim();
@@ -170,13 +170,13 @@ public class BarCodeDetailActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             //清空
-            fspesc.setText("");
-            fspescname.setText("");
-            fmchid.setText("");
-            fdate.setText("");
-            fshift.setText("");
-            fmaster.setText("");
-            fstate.setText("");
+            fSpesc.setText("");
+            fSpescName.setText("");
+            fMchId.setText("");
+            fDate.setText("");
+            fShift.setText("");
+            fMaster.setText("");
+            fState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
@@ -195,13 +195,13 @@ public class BarCodeDetailActivity extends BaseActivity {
                     data1.addAll(datas);
                     if (res.get("code").equals("200")) {
                         //成型明细
-                        fspesc.setText(datas.get(0).getItnbr());
-                        fspescname.setText(datas.get(0).getItdsc());
-                        fmchid.setText(datas.get(0).getMchid());
-                        fdate.setText(datas.get(0).getWdate().substring(0, 10));
-                        fshift.setText(datas.get(0).getShift());
-                        fmaster.setText(datas.get(0).getCreateuser());
-                        fstate.setText(datas.get(0).getiS_H());
+                        fSpesc.setText(datas.get(0).getItnbr());
+                        fSpescName.setText(datas.get(0).getItdsc());
+                        fMchId.setText(datas.get(0).getMchid());
+                        fDate.setText(datas.get(0).getWdate().substring(0, 10));
+                        fShift.setText(datas.get(0).getShift());
+                        fMaster.setText(datas.get(0).getCreateuser());
+                        fState.setText(datas.get(0).getiS_H());
                     } else {
 //                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
@@ -228,14 +228,14 @@ public class BarCodeDetailActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             //清空
-            vspesc.setText("");
-            vspescname.setText("");
-            vmchid.setText("");
-            lorR.setText("");
-            vdate.setText("");
-            vshift.setText("");
-            vmaster.setText("");
-            vstate.setText("");
+            vSpesc.setText("");
+            vSpescName.setText("");
+            vMchId.setText("");
+            vLorR.setText("");
+            vDate.setText("");
+            vShift.setText("");
+            vMaster.setText("");
+            vState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
@@ -255,14 +255,14 @@ public class BarCodeDetailActivity extends BaseActivity {
 
                     if (res.get("code").equals("200")) {
                         //硫化明细
-                        vspesc.setText(datas.get(0).getItnbr());
-                        vspescname.setText(datas.get(0).getItdsc());
-                        vmchid.setText(datas.get(0).getMchid());
-                        lorR.setText(datas.get(0).getLr());
-                        vdate.setText(datas.get(0).getWdate().substring(0, 10).replaceAll("/", "-"));
-                        vshift.setText(datas.get(0).getShift());
-                        vmaster.setText(datas.get(0).getCreateuser());
-                        vstate.setText(datas.get(0).getiS_H());
+                        vSpesc.setText(datas.get(0).getItnbr());
+                        vSpescName.setText(datas.get(0).getItdsc());
+                        vMchId.setText(datas.get(0).getMchid());
+                        vLorR.setText(datas.get(0).getLr());
+                        vDate.setText(datas.get(0).getWdate().substring(0, 10).replaceAll("/", "-"));
+                        vShift.setText(datas.get(0).getShift());
+                        vMaster.setText(datas.get(0).getCreateuser());
+                        vState.setText(datas.get(0).getiS_H());
                     } else {
 //                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         if ((data1 == null && data2 == null) || (data1.isEmpty() && data2.isEmpty())) {

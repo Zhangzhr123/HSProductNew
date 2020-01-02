@@ -30,15 +30,15 @@ import java.util.Map;
 public class CheckActivity extends BaseActivity {
 
     //定义控件  条码 机台 规格编码 规格名称 日期 LR 班组 主手
-    private TextView barcode, mchid, spesc, spescname, productdate, lorR, shift, creatuser;
+    private TextView tvBarCode, tvMchid, tvSpesc, tvSpescName, tvProductDate, tvLorR, tvShift, tvCreatUser;
     //质检测试按钮  不合格按钮
-    private ImageButton btgetcode;
-    private Button not, out;
+    private ImageButton btGetCode;
+    private Button btNot, btOut;
     //不合格原因下拉列表
-    private TextView error;
-    private String ERROR = "";
+    private TextView tvError;
+    private String error = "";
     //定义变量  质检条码
-    private String BarCode = "";
+    private String barCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,45 +53,45 @@ public class CheckActivity extends BaseActivity {
 
     public void initView() {
         //检测条码
-        barcode = (TextView) findViewById(R.id.barcode);
+        tvBarCode = (TextView) findViewById(R.id.barcode);
         //显示控件
-        mchid = (TextView) findViewById(R.id.mchid);//机台
-        spesc = (TextView) findViewById(R.id.spesc);//规格编码
-        spescname = (TextView) findViewById(R.id.spescname);//规格名称
-        productdate = (TextView) findViewById(R.id.product_date);//日期
-        lorR = (TextView) findViewById(R.id.LorR);//LR
-        shift = (TextView) findViewById(R.id.shift);//班组
-        creatuser = (TextView) findViewById(R.id.creatuser);//主手 创建人
+        tvMchid = (TextView) findViewById(R.id.mchid);//机台
+        tvSpesc = (TextView) findViewById(R.id.spesc);//规格编码
+        tvSpescName = (TextView) findViewById(R.id.spescname);//规格名称
+        tvProductDate = (TextView) findViewById(R.id.product_date);//日期
+        tvLorR = (TextView) findViewById(R.id.LorR);//LR
+        tvShift = (TextView) findViewById(R.id.shift);//班组
+        tvCreatUser = (TextView) findViewById(R.id.creatuser);//主手 创建人
         //获得焦点
-        barcode.requestFocus();
+        tvBarCode.requestFocus();
         //检测
-        btgetcode = (ImageButton) findViewById(R.id.bt_getCode);
+        btGetCode = (ImageButton) findViewById(R.id.bt_getCode);
         //合格或不合格
-        not = (Button) findViewById(R.id.not);
+        btNot = (Button) findViewById(R.id.not);
         //不合格原因
-        error = (TextView) findViewById(R.id.error);
+        tvError = (TextView) findViewById(R.id.error);
         //返回
-        out = (Button) findViewById(R.id.out);
+        btOut = (Button) findViewById(R.id.out);
 
     }
 
     public void initEvent() {
         //测试按钮
-        btgetcode.setOnClickListener(new View.OnClickListener() {
+        btGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCodeCheck();
             }
         });
         //不合格按钮
-        not.setOnClickListener(new View.OnClickListener() {
+        btNot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 check();
             }
         });
 
-        out.setOnClickListener(new View.OnClickListener() {
+        btOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 outfinish();
@@ -106,13 +106,13 @@ public class CheckActivity extends BaseActivity {
     //检测操作
     public void getCodeCheck() {
         //质检条码
-        BarCode = barcode.getText().toString().trim();
+        barCode = tvBarCode.getText().toString().trim();
         //判断是否是空
-        if (StringUtil.isNullOrEmpty(BarCode)) {
+        if (StringUtil.isNullOrEmpty(barCode)) {
 //            Toast.makeText(CheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
-            String parm = "SwitchTYRE_CODE=" + BarCode;
+            String parm = "SwitchTYRE_CODE=" + barCode;
             new SelDetailedTask().execute(parm);
         }
 
@@ -120,13 +120,13 @@ public class CheckActivity extends BaseActivity {
 
     //修改轮胎合格与否
     public void check() {
-        ERROR = error.getText().toString().trim().replace(".","-");
-        if(ERROR == null || ERROR.equals("")){
+        error = tvError.getText().toString().trim().replace(".","-");
+        if(error == null || error.equals("")){
             Toast.makeText(CheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String parm = "TYRE_CODE=" + BarCode + "&IS_H=1" + "&USER_NAME=" + App.username + "&H_REASON=" + ERROR;
+        String parm = "TYRE_CODE=" + barCode + "&IS_H=1" + "&USER_NAME=" + App.username + "&H_REASON=" + error;
         new QualityTestingTask().execute(parm);
     }
 
@@ -141,13 +141,13 @@ public class CheckActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             //清空
-            mchid.setText("");
-            spesc.setText("");
-            spescname.setText("");
-            productdate.setText("");
-            lorR.setText("");
-            shift.setText("");
-            creatuser.setText("");
+            tvMchid.setText("");
+            tvSpesc.setText("");
+            tvSpescName.setText("");
+            tvProductDate.setText("");
+            tvLorR.setText("");
+            tvShift.setText("");
+            tvCreatUser.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(CheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
@@ -164,13 +164,13 @@ public class CheckActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //展示信息
-                        mchid.setText(datas.get(0).getMchid());
-                        spesc.setText(datas.get(0).getItnbr());
-                        spescname.setText(datas.get(0).getItdsc());
-                        productdate.setText(datas.get(0).getWdate().substring(0, 10));
-                        lorR.setText(datas.get(0).getLr());
-                        shift.setText(datas.get(0).getShift());
-                        creatuser.setText(datas.get(0).getCreateuser());
+                        tvMchid.setText(datas.get(0).getMchid());
+                        tvSpesc.setText(datas.get(0).getItnbr());
+                        tvSpescName.setText(datas.get(0).getItdsc());
+                        tvProductDate.setText(datas.get(0).getWdate().substring(0, 10));
+                        tvLorR.setText(datas.get(0).getLr());
+                        tvShift.setText(datas.get(0).getShift());
+                        tvCreatUser.setText(datas.get(0).getCreateuser());
 
                     } else {
                         Toast.makeText(CheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
@@ -230,8 +230,8 @@ public class CheckActivity extends BaseActivity {
         //按键按下
         switch (keyCode){
             case 0://扫描键
-                barcode.requestFocus();
-                barcode.setText("");//成功后清空输入框
+                tvBarCode.requestFocus();
+                tvBarCode.setText("");//成功后清空输入框
                 break;
         }
 
