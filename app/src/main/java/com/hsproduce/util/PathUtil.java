@@ -94,9 +94,9 @@ public interface PathUtil {
     //查询成型计划展示
     public static final String GetCurrDateFormingVPlan = SERVER + "api/PDA/GetCurrDateFormingVPlan";
     //成型取消扫描
-    public static final String OUTFORMINGBARCODE = SERVER + "";
+    public static final String OUTFORMINGBARCODE = SERVER + "/api/PDA/DelForming";
     //硫化增加查看本班次扫描数量
     public static final String GetDnumSum = SERVER + "api/PDA/GetDnumSum";
     //硫化取消扫描
-    public static final String OUTVULBARCODE = SERVER + "";
+    public static final String OUTVULBARCODE = SERVER + "/api/PDA/DelVrecord";
 }

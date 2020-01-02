@@ -202,16 +202,18 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
 
     //删除此条码生产实绩
     public void getBarCode(String barCode) {
+
         if (list.contains(barCode)) {
             Toast.makeText(DeleteFormingVreCordActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
             etBarCode.setText("");
             return;
         } else {
-//            String param = "ScrapCode=" + barCode + "&FormingID=";
-            new OutCodeTask().execute();
-            Toast.makeText(DeleteFormingVreCordActivity.this, "进入取消扫描", Toast.LENGTH_LONG).show();
+            String param = "BARCODE=" + barCode + "&PLANID=" + planID;
+            new OutCodeTask().execute(param);
+//            Toast.makeText(DeleteFormingVreCordActivity.this, "扫描条码："+ barCode + "计划号：" + planID, Toast.LENGTH_LONG).show();
         }
         etBarCode.requestFocus();
+
     }
 
     //广播监听
@@ -371,7 +373,7 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
                         etBarCode.setText("");
                         list.add(barCode);
                         tvNum.setText(list.size() + "");
-
+//                        Toast.makeText(DeleteFormingVreCordActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(DeleteFormingVreCordActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;

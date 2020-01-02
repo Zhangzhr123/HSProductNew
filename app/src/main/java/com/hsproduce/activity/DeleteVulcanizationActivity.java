@@ -110,6 +110,7 @@ public class DeleteVulcanizationActivity extends BaseActivity {
 
     //获取轮胎条码  广播监听调用
     public void getBarCode(String barCode) {
+
         if (StringUtil.isNullOrEmpty(barCode)) {
             Toast.makeText(DeleteVulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
         } else {
@@ -121,11 +122,12 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                 //获取机台号
                 mchId = tvMchid.getText().toString().trim();
                 //删除硫化生产记录
-                String param = "BarCode=" + barCode + "&MCHID=" + mchId;
-//                new TypeCodeTask().execute(param1);
-                Toast.makeText(DeleteVulcanizationActivity.this, "扫描机台为" + mchId + "扫描条码为：" + barCode, Toast.LENGTH_SHORT).show();
+                String param = "BARCODE=" + barCode;// + "&MCHID=" + mchId;
+                new TypeCodeTask().execute(param);
+//                Toast.makeText(DeleteVulcanizationActivity.this, "扫描机台为" + mchId + "扫描条码为：" + barCode, Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     //广播监听
@@ -205,7 +207,7 @@ public class DeleteVulcanizationActivity extends BaseActivity {
     class TypeCodeTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.VUL_AddActualAchievement, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.OUTVULBARCODE, strings[0]);
             return result;
         }
 
@@ -225,8 +227,9 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                         tvBarCode.setText("");
                         codeList.add(barCode);
                         tvAnum.setText(codeList.size() + "");
+//                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg") + "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
