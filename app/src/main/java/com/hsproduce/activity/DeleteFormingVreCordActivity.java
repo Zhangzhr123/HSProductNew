@@ -175,7 +175,12 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
                     barCode = "";
                 }
                 barCode = etBarCode.getText().toString().trim();
-                getBarCode(barCode);
+                if (barCode.length() == 12 && isNum(barCode) == true) {
+                    getBarCode(barCode);
+                }else{
+                    Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 
@@ -228,7 +233,12 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
                     barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
                     //判断条码是否为空
                     if (!StringUtil.isNullOrEmpty(barCode)) {
-                        getBarCode(barCode);
+                        if (barCode.length() == 12 && isNum(barCode) == true) {
+                            getBarCode(barCode);
+                        }else{
+                            Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     } else {
                         Toast.makeText(DeleteFormingVreCordActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
                         return;
@@ -241,6 +251,16 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
             }
         }
     };
+
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     //根据TYPEID 获取数据字典内容  成型机台
     class MCHIDTask extends AsyncTask<String, Void, String> {

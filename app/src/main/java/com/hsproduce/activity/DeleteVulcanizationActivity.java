@@ -153,6 +153,9 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                         if (massage.length() == 12 && isNum(massage) == true) {
                             barCode = massage;
                             getBarCode(massage);
+                        }else{
+                            Toast.makeText(DeleteVulcanizationActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     } else {
                         Toast.makeText(DeleteVulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
@@ -280,6 +283,15 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         //右方向键
         String msg = "";
         switch (keyCode) {
+            case 22://右方向键
+                String sBarCode = tvBarCode.getText().toString().trim();
+                if (sBarCode.length() == 12 && isNum(sBarCode) == true) {
+                    barCode = sBarCode;
+                    getBarCode(barCode);
+                }else{
+                    Toast.makeText(DeleteVulcanizationActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                }
+                break;
             //返回键
             case 4:
                 tofunction();
