@@ -32,18 +32,18 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 public class LoadScanningActivity extends BaseActivity {
 
     //声明控件  扫描条码  记录条码  条码计数
-    private TextView barcode, barcodelog, anum;
+    private TextView tvBarCode, tvBarCodeLog, tvAnum;
     //退厂扫描按钮测试
-    private ButtonView getcode;
+    private ButtonView btGetCode;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //定义变量   退厂条码
-    private String scanbarcode = "";
+    private String scanBarCode = "";
     private List<String> list = new ArrayList<>();
     //条码计数初始值
     private int number = 0;
     //添加条码防止重复扫描
-    private List<String> codelist = new ArrayList<>();
+    private List<String> codeList = new ArrayList<>();
     private Boolean isNew = true;
 
     @Override
@@ -68,31 +68,31 @@ public class LoadScanningActivity extends BaseActivity {
 
     public void initView() {
         //条码扫描框
-        barcode = (TextView) findViewById(R.id.scan_barcode);
+        tvBarCode = (TextView) findViewById(R.id.scan_barcode);
         //焦点扫描框
-        barcode.requestFocus();
+        tvBarCode.requestFocus();
         //条码记录
-        barcodelog = (TextView) findViewById(R.id.barcode_log);
+        tvBarCodeLog = (TextView) findViewById(R.id.barcode_log);
         //不可编辑
-        barcodelog.setFocusable(false);
-        barcodelog.setFocusableInTouchMode(false);
+        tvBarCodeLog.setFocusable(false);
+        tvBarCodeLog.setFocusableInTouchMode(false);
         //扫描个数
-        anum = (TextView) findViewById(R.id.anum);
+        tvAnum = (TextView) findViewById(R.id.anum);
         //按钮测试用
-        getcode = (ButtonView) findViewById(R.id.bt_getCode);
-        barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        btGetCode = (ButtonView) findViewById(R.id.bt_getCode);
+        tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
     }
 
     public void initEvent() {
         //测试按钮
-        getcode.setOnClickListener(new View.OnClickListener() {
+        btGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!StringUtil.isNullOrEmpty(scanbarcode)){
-                    scanbarcode = "";
+                if (!StringUtil.isNullOrEmpty(scanBarCode)) {
+                    scanBarCode = "";
                 }
-                scanbarcode = barcode.getText().toString().trim();
-                outVLoad(scanbarcode);
+                scanBarCode = tvBarCode.getText().toString().trim();
+                outVLoad(scanBarCode);
             }
         });
     }
@@ -104,16 +104,16 @@ public class LoadScanningActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(barCode)) {
             Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            if (codelist.contains(barCode)) {
+            if (codeList.contains(barCode)) {
                 isNew = false;
             }
 
             if (isNew) {
                 if (barCode.length() == 12 && isNum(barCode) == true) {
-                    scanbarcode = barCode;
+                    scanBarCode = barCode;
                     String parm = "TYRE_CODE=" + barCode + "&USER_NAME=" + App.username;
                     new OutsVLoadTask().execute(parm);
-                }else{
+                } else {
                     Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -138,7 +138,7 @@ public class LoadScanningActivity extends BaseActivity {
                     if (!StringUtil.isNullOrEmpty(barCode)) {
                         if (barCode.length() == 12 && isNum(barCode) == true) {
                             outVLoad(barCode);
-                        }else{
+                        } else {
                             Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -187,22 +187,22 @@ public class LoadScanningActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        codelist.add(scanbarcode);
+                        codeList.add(scanBarCode);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        list.add("[" + date + "]" + scanbarcode);
+                        list.add("[" + date + "]" + scanBarCode);
                         //list.add(scanbarcode);
-                        barcodelog.setText("");
+                        tvBarCodeLog.setText("");
                         for (int i = 0; i < list.size(); i++) {
                             if (i == 0) {
-                                barcodelog.setText(list.get(i));
+                                tvBarCodeLog.setText(list.get(i));
                             } else {
-                                barcodelog.setText(getlog(list));
+                                tvBarCodeLog.setText(getlog(list));
                             }
                         }
-                        anum.setText("");
+                        tvAnum.setText("");
                         number++;
-                        anum.setText(number + "");
+                        tvAnum.setText(number + "");
 //                        Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
@@ -241,7 +241,8 @@ public class LoadScanningActivity extends BaseActivity {
         Log.e("key", keyCode + "  ");
         //扫描键 按下时清除
         if (keyCode == 0) {
-            barcode.setText("");
+            tvBarCode.setText("");
+            tvBarCode.requestFocus();
         }
         return true;
     }
@@ -251,19 +252,20 @@ public class LoadScanningActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时执行操作
         if (keyCode == 22) {
-            if(!StringUtil.isNullOrEmpty(scanbarcode)){
-                scanbarcode = "";
+            if (!StringUtil.isNullOrEmpty(scanBarCode)) {
+                scanBarCode = "";
             }
-            scanbarcode = barcode.getText().toString().trim();
-            outVLoad(scanbarcode);
+            scanBarCode = tvBarCode.getText().toString().trim();
+            outVLoad(scanBarCode);
         }
         //返回键时间间隔超过两秒 返回功能页面
         if (keyCode == 4) {
-            anum.setText("0");
+            tvAnum.setText("0");
             number = 0;
-            barcodelog.setText("");
+            tvBarCodeLog.setText("");
             list.clear();
-            codelist.clear();
+            codeList.clear();
+            scanBarCode = "";
             tofunction();
         }
         return true;
