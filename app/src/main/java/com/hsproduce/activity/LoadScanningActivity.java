@@ -110,6 +110,7 @@ public class LoadScanningActivity extends BaseActivity {
 
             if (isNew) {
                 if (barCode.length() == 12 && isNum(barCode) == true) {
+                    scanbarcode = barCode;
                     String parm = "TYRE_CODE=" + barCode + "&USER_NAME=" + App.username;
                     new OutsVLoadTask().execute(parm);
                 }else{
