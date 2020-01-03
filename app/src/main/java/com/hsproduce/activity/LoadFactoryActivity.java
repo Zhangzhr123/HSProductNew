@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.xuexiang.xui.widget.picker.widget.WheelTime.dateFormat;
+import static java.lang.Thread.sleep;
 
 //装车出厂页面
 public class LoadFactoryActivity extends BaseActivity {
@@ -56,7 +57,7 @@ public class LoadFactoryActivity extends BaseActivity {
     private long mExitTime = 0;
     //定义变量  主表ID  条码  装车单ID 规格
     private String Id = "", code = "", loadid = "", codeitnbr = "", outCode = "";
-    private List<VLoadHxm> loaditnbr = new ArrayList<>();
+    private List<String> loaditnbr = new ArrayList<>();
     private int number = 0;
     private int outnumber = 0;
     //显示条码记录
@@ -67,6 +68,8 @@ public class LoadFactoryActivity extends BaseActivity {
     private List<String> outcodelist = new ArrayList<>();
     private Boolean isNew = true;
     private Boolean outIsNew = true;
+    //页面跳转初始值
+    private Integer sizePager = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,16 +145,7 @@ public class LoadFactoryActivity extends BaseActivity {
         getsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchstr = search.getText().toString().trim();
-                //展示装车单
-                if (isNumeric(searchstr)) {
-                    String parm = "SUB_CODE=" + searchstr + "&CAR_CODE=";
-                    new SelVLoadTask().execute(parm);
-                } else {
-                    String parm = "SUB_CODE=" + "&CAR_CODE=" + searchstr;
-                    new SelVLoadTask().execute(parm);
-                }
-                search.setText("");
+                getSearch();
             }
         });
         //点击列表
@@ -160,127 +154,52 @@ public class LoadFactoryActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //查询装车单明细
                 Id = loadAdapter.getItem(position).getId();
+                //获取装车单号
+                loadid = loadAdapter.getItem(position).getLoadno();
                 //查询当前单据的装车单明细
                 loadVS();
             }
         });
-        //出厂扫描
+        //进入出厂扫描
         inscan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //隐藏
-                load.setVisibility(View.GONE);//标题
-                llfacok.setVisibility(View.GONE);
-                hs_spesc.setVisibility(View.GONE);
-                table.setVisibility(View.GONE);
-                ll_load.setVisibility(View.GONE);
-                lvloadfac.setVisibility(View.GONE);
-                //显示
-                inload.setVisibility(View.VISIBLE);//标题
-                llcode.setVisibility(View.VISIBLE);
-                lltable.setVisibility(View.VISIBLE);
-                view6.setVisibility(View.VISIBLE);
-                llcodelog.setVisibility(View.VISIBLE);
-                llscanok.setVisibility(View.VISIBLE);
-                //焦点扫描框
-                barcode.setText("");
-                barcodelog.setText("");
-                barcode.requestFocus();
+                getInScan();
             }
         });
-        //取消扫描
+        //进入取消扫描
         outscan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //隐藏
-                load.setVisibility(View.GONE);//标题
-                llfacok.setVisibility(View.GONE);
-                hs_spesc.setVisibility(View.GONE);
-                table.setVisibility(View.GONE);
-                ll_load.setVisibility(View.GONE);
-                lvloadfac.setVisibility(View.GONE);
-                //显示
-                outload.setVisibility(View.VISIBLE);//标题
-                lloutcode.setVisibility(View.VISIBLE);
-                lloutcodelog.setVisibility(View.VISIBLE);
-                lloutok.setVisibility(View.VISIBLE);
-                //锁定扫描框
-                outbarcode.setText("");
-                outbarcodelog.setText("");
-                outbarcode.requestFocus();
+                getOutScan();
             }
         });
-        //取消扫描功能按钮
+        //点击测试
         outcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 outcode();
             }
         });
-        //取消扫描确定
+        //取消扫描返回
         outok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //隐藏
-                lloutok.setVisibility(View.GONE);
-                lloutcodelog.setVisibility(View.GONE);
-                lloutcode.setVisibility(View.GONE);
-                outload.setVisibility(View.GONE);//标题
-                //显示
-                load.setVisibility(View.VISIBLE);//标题
-                lvloadfac.setVisibility(View.VISIBLE);
-                ll_load.setVisibility(View.VISIBLE);
-                table.setVisibility(View.VISIBLE);
-                hs_spesc.setVisibility(View.VISIBLE);
-                llfacok.setVisibility(View.VISIBLE);
-                //刷新规格列表
-                outanum.setText("0");
-                outlog.clear();
-                outnumber = 0;
-                new SelVLoadListMXTask().execute("ID=" + Id);
+                getOutOk();
             }
         });
-        //取消返回初始页面
+        //返回初始页面
         out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //隐藏
-                llfacok.setVisibility(View.GONE);
-                hs_spesc.setVisibility(View.GONE);
-                table.setVisibility(View.GONE);
-                ll_load.setVisibility(View.GONE);
-                lvloadfac.setVisibility(View.GONE);
-                //显示
-                ll_search.setVisibility(View.VISIBLE);
-                hs_load.setVisibility(View.VISIBLE);
-                //刷新装车单列表
-                String parm = "SUB_CODE=" + "&CAR_CODE=";
-                new SelVLoadTask().execute(parm);
+                getOut();
             }
         });
-        //出厂扫描确定
+        //出厂扫描返回
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //隐藏
-                inload.setVisibility(View.GONE);//标题
-                llscanok.setVisibility(View.GONE);
-                llcodelog.setVisibility(View.GONE);
-                view6.setVisibility(View.GONE);
-                lltable.setVisibility(View.GONE);
-                llcode.setVisibility(View.GONE);
-                //显示
-                load.setVisibility(View.VISIBLE);//标题
-                lvloadfac.setVisibility(View.VISIBLE);
-                ll_load.setVisibility(View.VISIBLE);
-                table.setVisibility(View.VISIBLE);
-                hs_spesc.setVisibility(View.VISIBLE);
-                llfacok.setVisibility(View.VISIBLE);
-                //刷新规格列表
-                anum.setText("0");
-                number = 0;
-                log.clear();
-                new SelVLoadListMXTask().execute("ID=" + Id);
+                getOk();
             }
         });
         //点击测试
@@ -300,8 +219,140 @@ public class LoadFactoryActivity extends BaseActivity {
         });
     }
 
+    //搜索按钮
+    public void getSearch() {
+        String searchstr = search.getText().toString().trim();
+        //展示装车单
+        if (isNumeric(searchstr)) {
+            String parm = "SUB_CODE=" + searchstr + "&CAR_CODE=";
+            new SelVLoadTask().execute(parm);
+        } else {
+            String parm = "SUB_CODE=" + "&CAR_CODE=" + searchstr;
+            new SelVLoadTask().execute(parm);
+        }
+        search.setText("");
+    }
+
+    //进入出厂扫描
+    public void getInScan() {
+        //隐藏
+        load.setVisibility(View.GONE);//标题
+        llfacok.setVisibility(View.GONE);
+        hs_spesc.setVisibility(View.GONE);
+        table.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
+        lvloadfac.setVisibility(View.GONE);
+        //显示
+        inload.setVisibility(View.VISIBLE);//标题
+        llcode.setVisibility(View.VISIBLE);
+        lltable.setVisibility(View.VISIBLE);
+        view6.setVisibility(View.VISIBLE);
+        llcodelog.setVisibility(View.VISIBLE);
+        llscanok.setVisibility(View.VISIBLE);
+        //焦点扫描框
+        barcode.setText("");
+        barcodelog.setText("");
+        barcode.requestFocus();
+        //第二页
+        sizePager = 2;
+    }
+
+    //进入取消扫描
+    public void getOutScan() {
+        //隐藏
+        load.setVisibility(View.GONE);//标题
+        llfacok.setVisibility(View.GONE);
+        hs_spesc.setVisibility(View.GONE);
+        table.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
+        lvloadfac.setVisibility(View.GONE);
+        //显示
+        outload.setVisibility(View.VISIBLE);//标题
+        lloutcode.setVisibility(View.VISIBLE);
+        lloutcodelog.setVisibility(View.VISIBLE);
+        lloutok.setVisibility(View.VISIBLE);
+        //锁定扫描框
+        outbarcode.setText("");
+        outbarcodelog.setText("");
+        outbarcode.requestFocus();
+        //第三页
+        sizePager = 3;
+    }
+
+    //取消扫描返回
+    public void getOutOk() {
+        //隐藏
+        lloutok.setVisibility(View.GONE);
+        lloutcodelog.setVisibility(View.GONE);
+        lloutcode.setVisibility(View.GONE);
+        outload.setVisibility(View.GONE);//标题
+        //显示
+        load.setVisibility(View.VISIBLE);//标题
+        lvloadfac.setVisibility(View.VISIBLE);
+        ll_load.setVisibility(View.VISIBLE);
+        table.setVisibility(View.VISIBLE);
+        hs_spesc.setVisibility(View.VISIBLE);
+        llfacok.setVisibility(View.VISIBLE);
+        //刷新规格列表
+        outanum.setText("0");
+        outlog.clear();
+        outnumber = 0;
+        outcodelist.clear();
+        new SelVLoadListMXTask().execute("ID=" + Id);
+        //第1页
+        sizePager = 1;
+    }
+
+    //返回初始页面
+    public void getOut() {
+        //隐藏
+        llfacok.setVisibility(View.GONE);
+        hs_spesc.setVisibility(View.GONE);
+        table.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
+        lvloadfac.setVisibility(View.GONE);
+        //显示
+        ll_search.setVisibility(View.VISIBLE);
+        hs_load.setVisibility(View.VISIBLE);
+        //刷新装车单列表
+        String parm = "SUB_CODE=" + "&CAR_CODE=";
+        new SelVLoadTask().execute(parm);
+        //初始页
+        sizePager = 0;
+    }
+
+    //出厂扫描返回
+    public void getOk() {
+        //隐藏
+        inload.setVisibility(View.GONE);//标题
+        llscanok.setVisibility(View.GONE);
+        llcodelog.setVisibility(View.GONE);
+        view6.setVisibility(View.GONE);
+        lltable.setVisibility(View.GONE);
+        llcode.setVisibility(View.GONE);
+        //显示
+        load.setVisibility(View.VISIBLE);//标题
+        lvloadfac.setVisibility(View.VISIBLE);
+        ll_load.setVisibility(View.VISIBLE);
+        table.setVisibility(View.VISIBLE);
+        hs_spesc.setVisibility(View.VISIBLE);
+        llfacok.setVisibility(View.VISIBLE);
+        //刷新规格列表
+        //清空数据
+        itnbr.setText("");
+        itndsc.setText("");
+        anum.setText("0");
+        number = 0;
+        log.clear();
+        codelist.clear();
+        new SelVLoadListMXTask().execute("ID=" + Id);
+        //第1页
+        sizePager = 1;
+    }
+
     //查询当前单据的装车单明细
     public void loadVS() {
+        list.clear();
         for (int i = 0; i < lists.size(); i++) {
             if (lists.get(i).getId().equals(Id)) {
                 list.add(lists.get(i));
@@ -319,17 +370,9 @@ public class LoadFactoryActivity extends BaseActivity {
     public void loadcode() {
         //获取轮胎条码
         code = barcode.getText().toString().trim();
-        if (codelist.size() == 0 || codelist == null) {
-            isNew = true;
-            return;
+        if (codelist.contains(code)) {
+            isNew = false;
         }
-        for (int i = 0; i < codelist.size(); i++) {
-            if (code.equals(codelist.get(i))) {
-                isNew = false;
-                break;
-            }
-        }
-
 
         if (isNew) {
             //查询轮胎条码规格
@@ -337,35 +380,28 @@ public class LoadFactoryActivity extends BaseActivity {
             new SelCodeTask().execute(parm1);
         } else {
             isNew = true;
-            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        //barcode.setText("");
     }
 
     //取消扫描
     public void outcode() {
         outCode = outbarcode.getText().toString().trim();
-        if (outcodelist.size() == 0 || outcodelist == null) {
-            outIsNew = true;
-            return;
+        if (outcodelist.contains(outCode)) {
+            outIsNew = false;
         }
-        for (int j = 0; j < outcodelist.size(); j++) {
-            if (outCode.equals(outcodelist.get(j))) {
-                outIsNew = false;
-                break;
-            }
-        }
-
 
         if (outIsNew) {
             String parm = "TYRE_CODE=" + outCode + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
             new DelVLoadTask().execute(parm);
         } else {
             outIsNew = true;
-            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+            return;
         }
-        //outbarcode.setText("");
+
     }
 
     //展示装车单信息
@@ -387,10 +423,10 @@ public class LoadFactoryActivity extends BaseActivity {
                     lists = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoad>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (lists == null || lists.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         //展示装车单
@@ -398,15 +434,17 @@ public class LoadFactoryActivity extends BaseActivity {
                         lvload.setAdapter(loadAdapter);
                         loadAdapter.notifyDataSetChanged();
 //                        Toast.makeText(LoadFactoryActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "查询成功，没有匹配的信息！", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "查询错误", Toast.LENGTH_LONG).show();
+                        lists.clear();
+                        loadAdapter = new LoadAdapter(LoadFactoryActivity.this, lists);
+                        lvload.setAdapter(loadAdapter);
+                        loadAdapter.notifyDataSetChanged();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -422,17 +460,9 @@ public class LoadFactoryActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            //隐藏
-            ll_search.setVisibility(View.GONE);
-            hs_load.setVisibility(View.GONE);
-            //显示
-            lvloadfac.setVisibility(View.VISIBLE);
-            ll_load.setVisibility(View.VISIBLE);
-            table.setVisibility(View.VISIBLE);
-            hs_spesc.setVisibility(View.VISIBLE);
-            llfacok.setVisibility(View.VISIBLE);
+
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -440,27 +470,38 @@ public class LoadFactoryActivity extends BaseActivity {
                     List<VLoadHxm> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoadHxm>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         //获取装车单轮胎规格  获取装车单ID
                         for (int i = 0; i < datas.size(); i++) {
-                            loaditnbr.add(datas.get(i));
+                            loaditnbr.add(datas.get(i).getItnbr());
                         }
                         //展示装车单明细
                         loadSpescAdapter = new LoadSpescAdapter(LoadFactoryActivity.this, datas);
                         lvloadspesc.setAdapter(loadSpescAdapter);
                         loadSpescAdapter.notifyDataSetChanged();
+                        //隐藏
+                        ll_search.setVisibility(View.GONE);
+                        hs_load.setVisibility(View.GONE);
+                        //显示
+                        lvloadfac.setVisibility(View.VISIBLE);
+                        ll_load.setVisibility(View.VISIBLE);
+                        table.setVisibility(View.VISIBLE);
+                        hs_spesc.setVisibility(View.VISIBLE);
+                        llfacok.setVisibility(View.VISIBLE);
+                        //第一页
+                        sizePager = 1;
 //                        Toast.makeText(LoadFactoryActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "查询成功，没有匹配的信息！", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "查询错误", Toast.LENGTH_LONG).show();
+                        datas.clear();
+                        list.clear();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -477,7 +518,7 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -485,41 +526,34 @@ public class LoadFactoryActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         //获取条码规格
                         codeitnbr = datas.get(0).getItnbr();
                         //判断条码规格是否在装车单中
-                        System.out.println(loaditnbr.size());
-                        for (int i = 0; i < loaditnbr.size(); i++) {
-                            if (codeitnbr.equals(loaditnbr.get(i).getItnbr())) {
-                                //loadid = loaditnbr.get(i).getId();
-                                //展示装车单明细
-                                itnbr.setText("");
-                                itndsc.setText("");
-                                itnbr.setText(loaditnbr.get(i).getItnbr());
-                                itndsc.setText(loaditnbr.get(i).getItdsc());
-                                //出厂扫描
-                                String parm2 = "TYRE_CODE=" + code + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
-                                new InsVLoadTask().execute(parm2);
-                                return;
-                            } else {
-                                //Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG).show();
-                            }
+                        if (loaditnbr.contains(codeitnbr)) {
+                            //展示装车单明细
+                            itnbr.setText("");
+                            itndsc.setText("");
+                            itnbr.setText(datas.get(0).getItnbr());
+                            itndsc.setText(datas.get(0).getItdsc());
+                            //出厂扫描
+                            String parm2 = "TYRE_CODE=" + code + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
+                            new InsVLoadTask().execute(parm2);
+                        } else {
+                            itnbr.setText("");
+                            itndsc.setText("");
+                            Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG).show();
+                            return;
                         }
-//                        itnbr.setText("装车单没有此条码规格");
-//                        itndsc.setText("装车单没有此条码规格");
-                        //Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "查询成功，没有匹配的条码！", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "错误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -536,13 +570,13 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         codelist.add(code);
@@ -561,22 +595,14 @@ public class LoadFactoryActivity extends BaseActivity {
                         anum.setText("");
                         number++;
                         anum.setText(number + "");
-                        Toast.makeText(LoadFactoryActivity.this, "操作成功，条码出厂！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(LoadFactoryActivity.this, "未找到轮胎信息，操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(LoadFactoryActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "装车单中，并无该规格，无法出库！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("600")) {
-                        Toast.makeText(LoadFactoryActivity.this, "该条码已出库，无法重复出库！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "错误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -593,13 +619,13 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         outcodelist.add(outCode);
@@ -617,20 +643,14 @@ public class LoadFactoryActivity extends BaseActivity {
                         outanum.setText("");
                         outnumber++;
                         outanum.setText(outnumber + "");
-                        Toast.makeText(LoadFactoryActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(LoadFactoryActivity.this, "未找到轮胎信息，操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(LoadFactoryActivity.this, "操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "该轮胎并未出库，无法取消！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "错误，请重新操作", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -647,29 +667,23 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
-                        Toast.makeText(LoadFactoryActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(LoadFactoryActivity.this, "该出库单已经发送，操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(LoadFactoryActivity.this, "操作失败，请重新上传！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadFactoryActivity.this, "未找到该出库单，操作失败！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, "错误！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -708,6 +722,44 @@ public class LoadFactoryActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
+        if (keyCode == 0) {
+            barcode.setText("");
+            outbarcode.setText("");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        //弹开时
+        if (keyCode == 66) {
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
+                loadcode();
+            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
+                outcode();
+            } else {
+//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        if (keyCode == 4) {
+            if (sizePager == 0) {
+                clear();
+                tofunction();
+            } else if (sizePager == 1) {
+                getOut();
+            } else if (sizePager == 2) {
+                getOk();
+            } else if (sizePager == 3) {
+                getOutOk();
+            }
+
+        }
         //右方向键
         if (keyCode == 22) {
             if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
@@ -715,47 +767,31 @@ public class LoadFactoryActivity extends BaseActivity {
             } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
                 outcode();
             } else {
-                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+                getSearch();
             }
-
-        }
-        if (keyCode == 0) {
-            barcode.setText("");
-            outbarcode.setText("");
-        }
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //扫描键 弹开时获取计划
-//        if (keyCode == 66) {
-//            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-//                loadcode();
-//            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
-//                outcode();
-//            } else {
-//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        }
-        super.onKeyDown(keyCode, event);
-        return true;
+    //清空数据
+    public void clear() {
+        anum.setText("0");
+        outanum.setText("0");
+        number = 0;
+        outnumber = 0;
+        log.clear();
+        outlog.clear();
+        list.clear();
+        lists.clear();
+        loaditnbr.clear();
+        codelist.clear();
+        outcodelist.clear();
+        Id = "";
+        code = "";
+        loadid = "";
+        codeitnbr = "";
+        outCode = "";
+        sizePager = 0;
     }
 
 }

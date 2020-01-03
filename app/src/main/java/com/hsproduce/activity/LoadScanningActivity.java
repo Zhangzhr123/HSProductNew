@@ -1,7 +1,13 @@
 package com.hsproduce.activity;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,6 +24,9 @@ import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
 //退厂扫描页面
 public class LoadScanningActivity extends BaseActivity {
@@ -48,6 +57,15 @@ public class LoadScanningActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //条码扫描框
         barcode = (TextView) findViewById(R.id.scan_barcode);
@@ -62,6 +80,7 @@ public class LoadScanningActivity extends BaseActivity {
         anum = (TextView) findViewById(R.id.anum);
         //按钮测试用
         getcode = (ButtonView) findViewById(R.id.bt_getCode);
+        barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
     }
 
     public void initEvent() {
@@ -69,41 +88,80 @@ public class LoadScanningActivity extends BaseActivity {
         getcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outVLoad();
+                if(!StringUtil.isNullOrEmpty(scanbarcode)){
+                    scanbarcode = "";
+                }
+                scanbarcode = barcode.getText().toString().trim();
+                outVLoad(scanbarcode);
             }
         });
     }
 
     //退厂扫描
-    public void outVLoad() {
+    public void outVLoad(String barCode) {
         //退厂扫描条码
-        scanbarcode = barcode.getText().toString().trim();
         //判断是否为空
-        if (StringUtil.isNullOrEmpty(scanbarcode)) {
+        if (StringUtil.isNullOrEmpty(barCode)) {
             Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
         } else {
-            if (codelist.size() == 0 || codelist == null) {
-                isNew = true;
-                return;
+            if (codelist.contains(barCode)) {
+                isNew = false;
             }
-            for (int i = 0; i < codelist.size(); i++) {
-                if (scanbarcode.equals(codelist.get(i))) {
-                    isNew = false;
-                    break;
-                }
-            }
-
 
             if (isNew) {
-                String parm = "TYRE_CODE=" + scanbarcode + "&USER_NAME=" + App.username;
-                new OutsVLoadTask().execute(parm);
+                if (barCode.length() == 12 && isNum(barCode) == true) {
+                    String parm = "TYRE_CODE=" + barCode + "&USER_NAME=" + App.username;
+                    new OutsVLoadTask().execute(parm);
+                }else{
+                    Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             } else {
                 isNew = true;
                 Toast.makeText(LoadScanningActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+                return;
             }
 
         }
-        //barcode.setText("");
+    }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        if (barCode.length() == 12 && isNum(barCode) == true) {
+                            outVLoad(barCode);
+                        }else{
+                            Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+//                        Toast.makeText(LoadScanningActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
+
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //退厂扫描
@@ -117,13 +175,15 @@ public class LoadScanningActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadScanningActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoadScanningActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadScanningActivity.this, "未获取到数据，数据返回异常", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadScanningActivity.this, "未获取到数据，数据返回异常", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         codelist.add(scanbarcode);
@@ -142,22 +202,16 @@ public class LoadScanningActivity extends BaseActivity {
                         anum.setText("");
                         number++;
                         anum.setText(number + "");
-                        //成功后清空扫描框
-//                        barcode.setText("");
-                        Toast.makeText(LoadScanningActivity.this, "操作成功！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("100")) {
-                        Toast.makeText(LoadScanningActivity.this, "未找到轮胎信息，操作失败！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("300")) {
-                        Toast.makeText(LoadScanningActivity.this, "操作失败，请重新扫描！", Toast.LENGTH_LONG).show();
-                    } else if (res.get("code").equals("500")) {
-                        Toast.makeText(LoadScanningActivity.this, "该轮胎并未出库，无法取消！", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoadScanningActivity.this, "错误：" + res.get("ex"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadScanningActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
         }
@@ -173,35 +227,20 @@ public class LoadScanningActivity extends BaseActivity {
         return logstr;
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //扫描键 按下时清除
-        if (keyCode == 22) {
-            outVLoad();
-//            barcode.setText("");
-        }
         if (keyCode == 0) {
             barcode.setText("");
-        }
-        //返回键时间间隔超过两秒 返回功能页面
-        if (keyCode == 4) {
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                codelist.clear();
-                tofunction();
-//                Toast.makeText(this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
-                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-                mExitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);//注销功能
-            }
-        }
-        //左方向键
-        if (keyCode == 21) {
-//            codelist.clear();
-//            tofunction(); //BaseActivity  返回功能页面函数
-//            Toast.makeText(this, "返回菜单栏", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -209,11 +248,23 @@ public class LoadScanningActivity extends BaseActivity {
     //按键弹开
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //扫描键 弹开时执行操作
-//        if(keyCode == 66){
-//            outVLoad();
-//        }
-        super.onKeyDown(keyCode, event);
+        //弹开时执行操作
+        if (keyCode == 22) {
+            if(!StringUtil.isNullOrEmpty(scanbarcode)){
+                scanbarcode = "";
+            }
+            scanbarcode = barcode.getText().toString().trim();
+            outVLoad(scanbarcode);
+        }
+        //返回键时间间隔超过两秒 返回功能页面
+        if (keyCode == 4) {
+            anum.setText("0");
+            number = 0;
+            barcodelog.setText("");
+            list.clear();
+            codelist.clear();
+            tofunction();
+        }
         return true;
     }
 

@@ -18,7 +18,7 @@
                 android:layout_margin="0dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="15sp"/>
+                android:textSize="20sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -33,7 +33,7 @@
                     android:layout_margin="0dp"
                     android:text=""
                     android:textAlignment="center"
-                    android:textSize="15sp"/>
+                    android:textSize="20sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -48,7 +48,7 @@
                     android:layout_margin="0dp"
                     android:text=""
                     android:textAlignment="center"
-                    android:textSize="15sp"/>
+                    android:textSize="20sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                     android:layout_margin="0dp"
                     android:text=""
                     android:textAlignment="center"
-                    android:textSize="15sp"/>
+                    android:textSize="20sp"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>
