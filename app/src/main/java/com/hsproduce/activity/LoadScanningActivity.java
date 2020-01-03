@@ -258,7 +258,7 @@ public class LoadScanningActivity extends BaseActivity {
             scanBarCode = tvBarCode.getText().toString().trim();
             outVLoad(scanBarCode);
         }
-        //返回键时间间隔超过两秒 返回功能页面
+        //返回键返回功能页面
         if (keyCode == 4) {
             tvAnum.setText("0");
             number = 0;

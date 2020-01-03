@@ -775,7 +775,7 @@ public class LoadFactoryActivity extends BaseActivity {
                 getSearch();
             }
         }
-
+        //增加快捷键
         switch (keyCode) {
             case 131://F1键
                 getInScan();//出场扫描
