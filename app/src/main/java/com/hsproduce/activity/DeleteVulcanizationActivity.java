@@ -284,6 +284,9 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         String msg = "";
         switch (keyCode) {
             case 22://右方向键
+                if (!StringUtil.isNullOrEmpty(barCode)) {
+                    barCode = "";
+                }
                 String sBarCode = tvBarCode.getText().toString().trim();
                 if (sBarCode.length() == 12 && isNum(sBarCode) == true) {
                     barCode = sBarCode;

@@ -445,7 +445,19 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
         //按键弹开
         switch (keyCode) {
             case 22://右方向键
-                getCurrentVPlan();
+                if (isShow) {
+                    getCurrentVPlan();
+                } else {
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        barCode = "";
+                    }
+                    barCode = etBarCode.getText().toString().trim();
+                    if (barCode.length() == 12 && isNum(barCode) == true) {
+                        getBarCode(barCode);
+                    }else{
+                        Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case 4://返回键
                 if (!isShow) {
