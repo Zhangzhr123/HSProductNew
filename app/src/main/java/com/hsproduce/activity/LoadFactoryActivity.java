@@ -213,10 +213,15 @@ public class LoadFactoryActivity extends BaseActivity {
         loadfacok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parm = "LOADNO=" + loadid + "&USER_NAME=" + App.username;
-                new ToWMSTask().execute(parm);
+                setWMS();
             }
         });
+    }
+
+    //发送装车单到WMS
+    public void setWMS(){
+        String parm = "LOADNO=" + loadid + "&USER_NAME=" + App.username;
+        new ToWMSTask().execute(parm);
     }
 
     //搜索按钮
@@ -769,6 +774,23 @@ public class LoadFactoryActivity extends BaseActivity {
             } else {
                 getSearch();
             }
+        }
+
+        switch (keyCode) {
+            case 131://F1键
+                getInScan();//出场扫描
+                break;
+            case 132://F2键
+                getOutScan();//取消扫描
+                break;
+            case 133://F3键
+                getOut();//返回
+                break;
+            case 134://F4键
+                setWMS();//装车完成
+                break;
+            default:
+                break;
         }
         return true;
     }
