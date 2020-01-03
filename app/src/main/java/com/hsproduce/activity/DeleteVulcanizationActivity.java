@@ -1,10 +1,7 @@
 package com.hsproduce.activity;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,12 +43,12 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 public class DeleteVulcanizationActivity extends BaseActivity {
 
     //view 输入机台  记录条码  扫描条码
-    private View ll_Mchid, ll_CodeLog, ll_Code;
+    private View ll_CodeLog, ll_Code;
     //机台号  轮胎条码 条码计数  条码记录
     private TextView tvBarCode, tvAnum, tvBarCodeLog;
-    private TextView tvMchid;
+    //    private TextView tvMchid;
     //加载
-    private MiniLoadingView loadingView;
+//    private MiniLoadingView loadingView;
     //轮胎条码
     private String barCode = "", mchId = "";
     //添加条码防止重复扫描
@@ -82,10 +79,10 @@ public class DeleteVulcanizationActivity extends BaseActivity {
     public void initView() {
         //layout
         ll_Code = findViewById(R.id.ll_code);
-        ll_Mchid = findViewById(R.id.ll_mchid);
+//        ll_Mchid = findViewById(R.id.ll_mchid);
         ll_CodeLog = findViewById(R.id.ll_codelog);
         //扫描框
-        tvMchid = (TextView) findViewById(R.id.mchid);
+//        tvMchid = (TextView) findViewById(R.id.mchid);
         //条码扫描框
         tvBarCode = (TextView) findViewById(R.id.barcode);
         //条码记录
@@ -97,10 +94,10 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         //扫描条码计数
         tvAnum = (TextView) findViewById(R.id.anum);
         //加载条
-        loadingView = (MiniLoadingView) findViewById(R.id.loading);
+//        loadingView = (MiniLoadingView) findViewById(R.id.loading);
         //设置扫描框输入字符数
         tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
-        tvMchid.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+//        tvMchid.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
     }
 
     //初始化事件
@@ -120,7 +117,7 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                 tvBarCode.setText("");
             } else {
                 //获取机台号
-                mchId = tvMchid.getText().toString().trim();
+//                mchId = tvMchid.getText().toString().trim();
                 //删除硫化生产记录
                 String param = "BARCODE=" + barCode;// + "&MCHID=" + mchId;
                 new TypeCodeTask().execute(param);
@@ -146,13 +143,14 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                     massage = intent.getStringExtra(SCN_CUST_EX_SCODE);
                     //判断条码是否为空
                     if (!StringUtil.isNullOrEmpty(massage)) {
-                        massage = massage.toUpperCase();
-                        if (massage.length() == 4 && (massage.endsWith("L") || massage.endsWith("R"))) {
-                            mchId = massage;
-                            tvMchid.setText(mchId);
-                            showVual();
-//                            getPlan(massage);
-                        } else if (massage.length() == 12 && isNum(massage) == true) {
+//                        massage = massage.toUpperCase();
+//                        if (massage.length() == 4 && (massage.endsWith("L") || massage.endsWith("R"))) {
+//                            mchId = massage;
+////                            tvMchid.setText(mchId);
+//                            showVual();
+////                            getPlan(massage);
+//                        } else
+                        if (massage.length() == 12 && isNum(massage) == true) {
                             barCode = massage;
                             getBarCode(massage);
                         }
@@ -180,28 +178,28 @@ public class DeleteVulcanizationActivity extends BaseActivity {
     }
 
     //显示硫化生产
-    private void showVual() {
-        //关闭加载
-        loadingView.setVisibility(View.GONE);
-        ll_Mchid.setVisibility(View.GONE);
-        //显示硫化扫描
-        ll_Code.setVisibility(View.VISIBLE);
-        ll_CodeLog.setVisibility(View.VISIBLE);
-        //获得焦点
-        tvBarCode.requestFocus();
-        isVual = true;
-    }
+//    private void showVual() {
+//        //关闭加载
+//        loadingView.setVisibility(View.GONE);
+//        ll_Mchid.setVisibility(View.GONE);
+//        //显示硫化扫描
+//        ll_Code.setVisibility(View.VISIBLE);
+//        ll_CodeLog.setVisibility(View.VISIBLE);
+//        //获得焦点
+//        tvBarCode.requestFocus();
+//        isVual = true;
+//    }
 
     //显示扫描机台
-    private void showMchid() {
-        ll_Mchid.setVisibility(View.VISIBLE);
-        //显示硫化扫描
-        ll_Code.setVisibility(View.GONE);
-        ll_CodeLog.setVisibility(View.GONE);
-        //获得焦点
-        tvMchid.requestFocus();
-        isVual = false;
-    }
+//    private void showMchid() {
+//        ll_Mchid.setVisibility(View.VISIBLE);
+//        //显示硫化扫描
+//        ll_Code.setVisibility(View.GONE);
+//        ll_CodeLog.setVisibility(View.GONE);
+//        //获得焦点
+//        tvMchid.requestFocus();
+//        isVual = false;
+//    }
 
     //新增硫化生产记录
     class TypeCodeTask extends AsyncTask<String, Void, String> {
@@ -228,6 +226,20 @@ public class DeleteVulcanizationActivity extends BaseActivity {
                         codeList.add(barCode);
                         tvAnum.setText(codeList.size() + "");
 //                        Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                    }else if(res.get("code").equals("500")){
+                        final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(DeleteVulcanizationActivity.this);
+                        normalDialog.setTitle("提示");
+                        normalDialog.setMessage(res.get("msg").toString());
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        tvBarCode.requestFocus();
+                                        tvBarCode.setText("");
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
                     } else {
                         Toast.makeText(DeleteVulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     }
@@ -248,13 +260,14 @@ public class DeleteVulcanizationActivity extends BaseActivity {
 
         switch (keyCode) {
             case 0:
-                if (isVual) {
-                    tvBarCode.requestFocus();
-                    tvBarCode.setText("");
-                } else {
-                    tvMchid.requestFocus();
-                    tvMchid.setText("");
-                }
+                tvBarCode.requestFocus();
+                tvBarCode.setText("");
+//                if (isVual) {
+//
+//                } else {
+//                    tvMchid.requestFocus();
+//                    tvMchid.setText("");
+//                }
                 break;
         }
         return true;
@@ -269,18 +282,19 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         switch (keyCode) {
             //返回键
             case 4:
+                tofunction();
                 //返回上级页面
                 //先返回扫描机台，再返回功能页
-                if (isVual) {
-                    codeList.clear();
-                    tvBarCodeLog.setText("");
-                    tvBarCode.setText("");
-                    tvMchid.setText("");
-                    tvAnum.setText("0");
-                    showMchid();
-                } else {
-                    tofunction();
-                }
+//                if (isVual) {
+//                    codeList.clear();
+//                    tvBarCodeLog.setText("");
+//                    tvBarCode.setText("");
+//                    tvMchid.setText("");
+//                    tvAnum.setText("0");
+//                    showMchid();
+//                } else {
+//                    tofunction();
+//                }
                 break;
         }
 

@@ -48,12 +48,12 @@ public class DetailChangeActivity extends BaseActivity {
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //定义变量
-    private String BarCode = "", Spesc = "", CreateUser = "", lorR = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itdsc = "d";
+    private String barCode = "", spesc = "", createUser = "", lorR = "", shift = "", mchId = "", spescName = "", codeId = "", team = "", itnbr = "", itdsc = "d";
     //Dialog显示列表
     private List<String> itdscList = new ArrayList<>();
-    private DialogItemAdapter itnbradapter;
-    private List<String> mchidlist = new ArrayList<>();
-    private DialogItemAdapter mchidadapter;
+    private DialogItemAdapter itnbrAdapter;
+    private List<String> mchidList = new ArrayList<>();
+    private DialogItemAdapter mchidAdapter;
     private Map<String, VreCord> itdscMap = new HashMap<>();
 
     @Override
@@ -89,19 +89,19 @@ public class DetailChangeActivity extends BaseActivity {
         spTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Team = parent.getItemAtPosition(position).toString();
+                team = parent.getItemAtPosition(position).toString();
                 for(int i = 0;i<teamList.size();i++){
-                    if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
+                    if (team.equals(teamList.get(i).getName())) {
+                        team = teamList.get(i).getId();
                         break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
+                    } else if (team.equals(teamList.get(i).getName())) {
+                        team = teamList.get(i).getId();
                         break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
+                    } else if (team.equals(teamList.get(i).getName())) {
+                        team = teamList.get(i).getId();
                         break;
-                    } else if (Team.equals(teamList.get(i).getName())) {
-                        Team = teamList.get(i).getId();
+                    } else if (team.equals(teamList.get(i).getName())) {
+                        team = teamList.get(i).getId();
                         break;
                     } else {
                         break;
@@ -134,23 +134,23 @@ public class DetailChangeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //机台
-                MchId = autoTvMchid.getText().toString().trim();
+                mchId = autoTvMchid.getText().toString().trim();
                 //规格编码
-                Spesc = tvItnbr.getText().toString().trim();
+                spesc = tvItnbr.getText().toString().trim();
                 //规格名称
-                spescname = tvItdsc.getText().toString().trim();
-                spescname = StringUtil.toUtf8String(spescname);
+                spescName = tvItdsc.getText().toString().trim();
+                spescName = StringUtil.toUtf8String(spescName);
                 //主手
-                CreateUser = tvMaster.getText().toString().trim();
+                createUser = tvMaster.getText().toString().trim();
                 //补录条码
-//                BarCode = tvBarcode.getText().toString().trim();
+//                barCode = tvBarcode.getText().toString().trim();
                 //班组
-                Team = spTeam.getSelectedItem().toString().trim();
-                Team = StringUtil.isNullOrBlank(Team) ? "" : (Team.equals("甲班") ? "1" : (Team.equals("乙班") ? "2" : (Team.equals("丙班") ? "3" : Team.equals("丁班") ? "4" : Team)));
+                team = spTeam.getSelectedItem().toString().trim();
+                team = StringUtil.isNullOrBlank(team) ? "" : (team.equals("甲班") ? "1" : (team.equals("乙班") ? "2" : (team.equals("丙班") ? "3" : team.equals("丁班") ? "4" : team)));
                 //左右模
                 lorR = spLR.getSelectedItem().toString().trim();
-                String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname + "&LoR=" + lorR
-                        + "&TEAM=" + Team + "&USER_NAME=" + CreateUser + "&DateTime_W=" + "&SwitchID=" + codeid;
+                String parm = "MCHID=" + mchId + "&ITNBR=" + spesc + "&ITDSC=" + spescName + "&LoR=" + lorR
+                        + "&TEAM=" + team + "&USER_NAME=" + createUser + "&DateTime_W=" + "&SwitchID=" + codeId;
                 new ChangeDetailedTask().execute(parm);
             }
         });
@@ -177,8 +177,8 @@ public class DetailChangeActivity extends BaseActivity {
 
     public void getCodeDetail() {
         //api/PDA/SelDetailed?SwitchTYRE_CODE=111600000447
-        BarCode = tvBarcode.getText().toString().trim();
-        String parm = "SwitchTYRE_CODE=" + BarCode;
+        barCode = tvBarcode.getText().toString().trim();
+        String parm = "SwitchTYRE_CODE=" + barCode;
         new SelDetailedTask().execute(parm);
         //tvBarcode.setText("");
     }
@@ -273,8 +273,8 @@ public class DetailChangeActivity extends BaseActivity {
                         }
                         tvMaster.setText(vrecord.getCreateuser());
                         //获取信息
-                        spescname = vrecord.getItdsc().replaceAll(" ", "%20");
-                        codeid = vrecord.getId();
+                        spescName = vrecord.getItdsc().replaceAll(" ", "%20");
+                        codeId = vrecord.getId();
 //                        Toast.makeText(DetailChangeActivity.this, "轮胎查询成功！", Toast.LENGTH_LONG).show();
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(DetailChangeActivity.this, "查询成功，没有匹配的轮胎信息！", Toast.LENGTH_LONG).show();
@@ -315,11 +315,11 @@ public class DetailChangeActivity extends BaseActivity {
                         String search = autoTvMchid.getText().toString().trim();
                         for(int i=0;i<map.size();i++){
                             if(search.contains(map.get(i).get("itemid"))){}
-                            mchidlist.add(map.get(i).get("itemid"));
+                            mchidList.add(map.get(i).get("itemid"));
                         }
                         //创建 AutoCompleteTextView 适配器 (输入提示)
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                DetailChangeActivity.this, android.R.layout.simple_dropdown_item_1line,mchidlist);
+                                DetailChangeActivity.this, android.R.layout.simple_dropdown_item_1line,mchidList);
                         //初始化autoCompleteTextView
                         autoTvMchid.setAdapter(adapter);
                         //设置输入多少字符后提示，默认值为2，在此设为１
@@ -366,11 +366,11 @@ public class DetailChangeActivity extends BaseActivity {
                             itdscList.add(datas.get(i).getItdsc());
                             itdscMap.put(datas.get(i).getItdsc(), datas.get(i));
                         }
-                        itnbradapter = new DialogItemAdapter(DetailChangeActivity.this, itdscList);
+                        itnbrAdapter = new DialogItemAdapter(DetailChangeActivity.this, itdscList);
                         //弹窗显示选中消失
                         AlertDialog alertDialog = new AlertDialog
                                 .Builder(DetailChangeActivity.this)
-                                .setSingleChoiceItems(itnbradapter, 0, new DialogInterface.OnClickListener() {
+                                .setSingleChoiceItems(itnbrAdapter, 0, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         itdsc = itdscList.get(which);
