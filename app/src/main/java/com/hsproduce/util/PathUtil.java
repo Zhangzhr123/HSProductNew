@@ -48,7 +48,7 @@ public interface PathUtil {
     //质检标记接口
     public static final String QualityTesting = SERVER + "api/PDA/QualityTesting";
     //根据数据字典获取不合格原因
-//    public static final String ERRORGetDictionaries = SERVER + "api/PDA/GetDictionaries";
+    public static final String ERRORGetDictionaries = SERVER + "api/PDA/GetDictionaries";
     //获取装车单信息
     public static final String SelVLOADList = SERVER + "api/PDA/SelVLOADList";
     //根据ID获取装车单明细
@@ -68,11 +68,11 @@ public interface PathUtil {
     //成型生产                  获取生产计划
     public static final String FORMINGPLAN = SERVER + "api/PDA/GetFormingVPlan";
     //开始生产计划
-//    public static final String StartProduction = SERVER + "api/PDA/StartProduction";
+    public static final String StartProduction = SERVER + "api/PDA/StartProduction";
     //成型查询正在生产或者等待中的计划
-//    public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
+    public static final String SWITCHFORMINGPLAN = SERVER + "api/PDA/GetCurrentVPlan_Forming";
     //成型规格交替
-//    public static final String SWITCHFORMING = SERVER + "api/PDA/SwitchVplan_Forming";
+    public static final String SWITCHFORMING = SERVER + "api/PDA/SwitchVplan_Forming";
     //成型胚胎报废
     public static final String FORMINGBARCODE = SERVER + "api/PDA/FormingScrap";
     //成型生产根据条码查询明细   生产追溯成型信息
