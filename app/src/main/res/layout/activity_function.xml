@@ -180,7 +180,7 @@
                     android:layout_height="90dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="150dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
                 <ImageButton
                         android:id="@+id/formingsupplement"
                         android:layout_width="70dp"
