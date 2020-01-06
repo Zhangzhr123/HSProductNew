@@ -227,6 +227,7 @@ public class LoadFactoryActivity extends BaseActivity {
     //搜索按钮
     public void getSearch() {
         String searchstr = search.getText().toString().trim();
+        searchstr = searchstr.toUpperCase();
         //展示装车单
         if (isNumeric(searchstr)) {
             String parm = "SUB_CODE=" + searchstr + "&CAR_CODE=";
@@ -429,9 +430,6 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
-                    }
-                    if (lists == null || lists.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到规格", Toast.LENGTH_SHORT).show();
                     }
                     if (res.get("code").equals("200")) {
                         //展示装车单
