@@ -100,5 +100,5 @@ public interface PathUtil {
     //硫化取消扫描
     public static final String OUTVULBARCODE = SERVER + "/api/PDA/DelVrecord";
     //成型条码补录
-    public static final String FORMINGSUPPLEMENT = SERVER + "";
+    public static final String FORMINGSUPPLEMENT = SERVER + "/api/PDA/SupplementForming_BarCode";
 }

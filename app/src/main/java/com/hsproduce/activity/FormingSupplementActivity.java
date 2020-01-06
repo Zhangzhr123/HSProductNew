@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,12 +17,14 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.adapter.PlanDialogItemAdapter;
+import com.hsproduce.bean.Result;
 import com.hsproduce.bean.Team;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
+import com.hsproduce.util.TaskUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.util.*;
@@ -46,8 +50,6 @@ public class FormingSupplementActivity extends BaseActivity {
     private ArrayAdapter<String> shiftAdapter;
     //存放班组数据
     private List<Team> teamList = new ArrayList<>();
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
     //定义变量
     private String barCode = "", spesc = "", spescName = "", pDate = "", shift = "", mchId = "", team = "", creatUser = "", planID = "";
     //Dialog显示列表
@@ -73,6 +75,7 @@ public class FormingSupplementActivity extends BaseActivity {
         tvBarCode = (TextView) findViewById(R.id.barcode);
         //获得焦点
         tvBarCode.requestFocus();
+        tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //规格编码
         tvSpesc = (TextView) findViewById(R.id.spesc);
         //规格名称
@@ -87,9 +90,6 @@ public class FormingSupplementActivity extends BaseActivity {
         spTeam = (Spinner) findViewById(R.id.team);
         //班次
         spShift = (Spinner) findViewById(R.id.shift);
-        //主手
-//        master = (TextView)findViewById(R.id.master);
-//        master.setText(App.username);
         //条码补录
         btOk = (ButtonView) findViewById(R.id.ok);
         //返回
@@ -187,9 +187,9 @@ public class FormingSupplementActivity extends BaseActivity {
         //生产日期
         pDate = tvDate.getText().toString().trim();
         //班次
-        shift = spShift.getSelectedItemPosition() + "";
+        shift = (spShift.getSelectedItemPosition() + 1) + "";
         //班组
-        team = spTeam.getSelectedItemPosition() + "";
+        team = (spTeam.getSelectedItemPosition() + 1) + "";
         //机台
         mchId = autoTvMchid.getText().toString().trim();
 
@@ -200,11 +200,9 @@ public class FormingSupplementActivity extends BaseActivity {
         } else if (StringUtil.isNullOrBlank(barCode)) {
             Toast.makeText(FormingSupplementActivity.this, "请扫描补录条码", Toast.LENGTH_LONG).show();
         } else {
-            String parm = "MCHID=" + mchId + "&ITNBR=" + spesc + "&ITDSC=" + spescName + "&SHIFT=" + shift//+"&TEAM="+Team
+            String parm = "MCHID=" + mchId + "&ITNBR=" + spesc + "&ITDSC=" + spescName + "&SHIFT=" + shift// + "&TEAM=" + team
                     + "&TIME_A=" + pDate + "&USER_NAME=" + App.username + "&SwitchTYRE_CODE=" + barCode;
-            System.out.println(parm);
-            prompt(parm);
-//            new SupCodeTask().execute(parm);
+            new SupCodeTask().execute(parm);
         }
     }
 
@@ -414,6 +412,20 @@ public class FormingSupplementActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    //键盘监听
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("key", keyCode + "  ");
+        //按键按下
+        switch (keyCode) {
+            case 0:
+                tvBarCode.requestFocus();
+                break;
+        }
+
+        return true;
     }
 
     @Override
