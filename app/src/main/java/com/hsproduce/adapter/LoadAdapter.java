@@ -53,9 +53,9 @@ public class LoadAdapter extends BaseAdapter {
         if (vLoad.getState() != null) {
             ((TextView) convertView.findViewById(R.id.state)).setText(vLoad.getState());
         }
-        if (vLoad.getSuB_CODE() != null) {
-            ((TextView) convertView.findViewById(R.id.delivery)).setText(vLoad.getSuB_CODE());
-        }
+//        if (vLoad.getSuB_CODE() != null) {
+//            ((TextView) convertView.findViewById(R.id.delivery)).setText(vLoad.getSuB_CODE());
+//        }
         return convertView;
     }
 }

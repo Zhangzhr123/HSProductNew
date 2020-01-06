@@ -1,7 +1,13 @@
 package com.hsproduce.activity;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +31,8 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 import static com.xuexiang.xui.widget.picker.widget.WheelTime.dateFormat;
 import static java.lang.Thread.sleep;
 
@@ -82,6 +90,15 @@ public class LoadFactoryActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //标题栏
         load = (TitleBar) findViewById(R.id.load);
@@ -108,6 +125,7 @@ public class LoadFactoryActivity extends BaseActivity {
         outok = (ButtonView) findViewById(R.id.out_ok);
         //条码扫描
         outbarcode = (TextView) findViewById(R.id.out_barcode);
+        outbarcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //条码记录
         outbarcodelog = (TextView) findViewById(R.id.out_barcode_log);
         //计数
@@ -116,6 +134,7 @@ public class LoadFactoryActivity extends BaseActivity {
         search = (TextView) findViewById(R.id.search);
         //输入框
         barcode = (TextView) findViewById(R.id.barcode);
+        barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //显示录入条码个数
         anum = (TextView) findViewById(R.id.anum);
         //规格
@@ -174,13 +193,13 @@ public class LoadFactoryActivity extends BaseActivity {
                 getOutScan();
             }
         });
-        //点击测试
-        outcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                outcode();
-            }
-        });
+//        //点击测试
+//        outcode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                outcode();
+//            }
+//        });
         //取消扫描返回
         outok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,12 +222,12 @@ public class LoadFactoryActivity extends BaseActivity {
             }
         });
         //点击测试
-        get_code.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadcode();
-            }
-        });
+//        get_code.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                loadcode();
+//            }
+//        });
         //装车完成发送wms
         loadfacok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +238,7 @@ public class LoadFactoryActivity extends BaseActivity {
     }
 
     //发送装车单到WMS
-    public void setWMS(){
+    public void setWMS() {
         String parm = "LOADNO=" + loadid + "&USER_NAME=" + App.username;
         new ToWMSTask().execute(parm);
     }
@@ -229,13 +248,8 @@ public class LoadFactoryActivity extends BaseActivity {
         String searchstr = search.getText().toString().trim();
         searchstr = searchstr.toUpperCase();
         //展示装车单
-        if (isNumeric(searchstr)) {
-            String parm = "SUB_CODE=" + searchstr + "&CAR_CODE=";
-            new SelVLoadTask().execute(parm);
-        } else {
-            String parm = "SUB_CODE=" + "&CAR_CODE=" + searchstr;
-            new SelVLoadTask().execute(parm);
-        }
+        String parm = "SUB_CODE=" + "&CAR_CODE=" + searchstr;
+        new SelVLoadTask().execute(parm);
         search.setText("");
     }
 
@@ -373,9 +387,9 @@ public class LoadFactoryActivity extends BaseActivity {
     }
 
     //出厂扫描
-    public void loadcode() {
+    public void loadcode(String barCode) {
         //获取轮胎条码
-        code = barcode.getText().toString().trim();
+        code = barCode;
         if (codelist.contains(code)) {
             isNew = false;
         }
@@ -393,8 +407,8 @@ public class LoadFactoryActivity extends BaseActivity {
     }
 
     //取消扫描
-    public void outcode() {
-        outCode = outbarcode.getText().toString().trim();
+    public void outcode(String barCode) {
+        outCode = barCode;
         if (outcodelist.contains(outCode)) {
             outIsNew = false;
         }
@@ -410,6 +424,41 @@ public class LoadFactoryActivity extends BaseActivity {
 
     }
 
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
+                            if(sizePager == 2){//出厂扫描
+                                loadcode(barCode);
+                            }else if(sizePager == 3){//取消扫描
+                                outcode(barCode);
+                            }else{
+                                return;
+                            }
+
+                        } else {
+                            Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
+
     //展示装车单信息
     class SelVLoadTask extends AsyncTask<String, Void, String> {
         @Override
@@ -420,8 +469,10 @@ public class LoadFactoryActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -430,24 +481,26 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //展示装车单
                         loadAdapter = new LoadAdapter(LoadFactoryActivity.this, lists);
                         lvload.setAdapter(loadAdapter);
                         loadAdapter.notifyDataSetChanged();
-//                        Toast.makeText(LoadFactoryActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     } else {
                         lists.clear();
                         loadAdapter = new LoadAdapter(LoadFactoryActivity.this, lists);
                         lvload.setAdapter(loadAdapter);
                         loadAdapter.notifyDataSetChanged();
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -466,6 +519,7 @@ public class LoadFactoryActivity extends BaseActivity {
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -474,6 +528,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //获取装车单轮胎规格  获取装车单ID
@@ -495,16 +550,17 @@ public class LoadFactoryActivity extends BaseActivity {
                         llfacok.setVisibility(View.VISIBLE);
                         //第一页
                         sizePager = 1;
-//                        Toast.makeText(LoadFactoryActivity.this, "查询成功！", Toast.LENGTH_LONG).show();
                     } else {
                         datas.clear();
                         list.clear();
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -520,8 +576,12 @@ public class LoadFactoryActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            //清空数据
+            itnbr.setText("");
+            itndsc.setText("");
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -530,6 +590,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //获取条码规格
@@ -537,14 +598,13 @@ public class LoadFactoryActivity extends BaseActivity {
                         //判断条码规格是否在装车单中
                         if (loaditnbr.contains(codeitnbr)) {
                             //展示装车单明细
-                            itnbr.setText("");
-                            itndsc.setText("");
                             itnbr.setText(datas.get(0).getItnbr());
                             itndsc.setText(datas.get(0).getItdsc());
                             //出厂扫描
                             String parm2 = "TYRE_CODE=" + code + "&VLOAD_ID=" + Id + "&USER_NAME=" + App.username;
                             new InsVLoadTask().execute(parm2);
                         } else {
+                            //清空数据
                             itnbr.setText("");
                             itndsc.setText("");
                             Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG).show();
@@ -552,11 +612,13 @@ public class LoadFactoryActivity extends BaseActivity {
                         }
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -574,12 +636,14 @@ public class LoadFactoryActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         codelist.add(code);
@@ -598,14 +662,20 @@ public class LoadFactoryActivity extends BaseActivity {
                         anum.setText("");
                         number++;
                         anum.setText(number + "");
+                        barcode.setText("");
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
+                        //清空数据
+                        itnbr.setText("");
+                        itndsc.setText("");
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -623,12 +693,14 @@ public class LoadFactoryActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         outcodelist.add(outCode);
@@ -646,14 +718,17 @@ public class LoadFactoryActivity extends BaseActivity {
                         outanum.setText("");
                         outnumber++;
                         outanum.setText(outnumber + "");
+                        outbarcode.setText("");
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -671,22 +746,26 @@ public class LoadFactoryActivity extends BaseActivity {
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
                         Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -721,35 +800,23 @@ public class LoadFactoryActivity extends BaseActivity {
         return logstr;
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        if (keyCode == 0) {
-            barcode.setText("");
-            outbarcode.setText("");
-        }
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时
-        if (keyCode == 66) {
-            try {
-                sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                loadcode();
-            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
-                outcode();
-            } else {
-//                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
-            }
-
-        }
         if (keyCode == 4) {
             if (sizePager == 0) {
                 clear();
@@ -765,10 +832,12 @@ public class LoadFactoryActivity extends BaseActivity {
         }
         //右方向键
         if (keyCode == 22) {
-            if (barcode.getText().toString().trim() != null && !barcode.getText().toString().trim().equals("")) {
-                loadcode();
-            } else if (outbarcode.getText().toString().trim() != null && !outbarcode.getText().toString().trim().equals("")) {
-                outcode();
+            if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
+                String barCode = barcode.getText().toString().trim();
+                loadcode(barCode);
+            } else if (!StringUtil.isNullOrEmpty(outbarcode.getText().toString().trim())) {
+                String barCode = outbarcode.getText().toString().trim();
+                outcode(barCode);
             } else {
                 getSearch();
             }
