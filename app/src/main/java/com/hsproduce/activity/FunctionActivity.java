@@ -32,8 +32,8 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15, view16, view17;
-    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan, delectformingcode, ProductNum, deletevulcanization;
+    private View view1, view2, view3, view4, view5, view6, view7, view8, view9, view10, view11, view12, view13, view14, view15, view16, view17, view18;
+    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check, forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan, delectformingcode, ProductNum, deletevulcanization, formingsupplement;
     private RelativeLayout cx, lh, jc, zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
@@ -76,6 +76,7 @@ public class FunctionActivity extends BaseActivity {
         view15 = findViewById(R.id.view15);
         view16 = findViewById(R.id.view16);
         view17 = findViewById(R.id.view17);
+        view18 = findViewById(R.id.view18);
         //按钮
         vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
         repl = (ImageButton) findViewById(R.id.repl);//规格交替
@@ -94,6 +95,7 @@ public class FunctionActivity extends BaseActivity {
         delectformingcode = (ImageButton) findViewById(R.id.delectformingcode);//成型取消扫描
         ProductNum = (ImageButton) findViewById(R.id.ProductNum);//硫化当班产量
         deletevulcanization = (ImageButton)findViewById(R.id.deletevulcanization);//硫化取消扫描
+        formingsupplement = (ImageButton)findViewById(R.id.formingsupplement);//成型条码补录
 
         //菜单权限管理
         String parm = "UserName=" + App.usercode;
@@ -287,6 +289,14 @@ public class FunctionActivity extends BaseActivity {
                 finish();
             }
         });
+        //成型条码补录
+        formingsupplement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FunctionActivity.this, FormingSupplementActivity.class));
+                finish();
+            }
+        });
 
     }
 
@@ -363,6 +373,9 @@ public class FunctionActivity extends BaseActivity {
                         } else if (map.get(0).get("m_CNAME").equals("硫化取消扫描")) {
                             startActivity(new Intent(FunctionActivity.this, DeleteVulcanizationActivity.class));
                             finish();
+                        } else if (map.get(0).get("m_CNAME").equals("成型条码补录")) {
+                            startActivity(new Intent(FunctionActivity.this, FormingSupplementActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
                         }
@@ -423,6 +436,9 @@ public class FunctionActivity extends BaseActivity {
                             } else if (map.get(i).get("m_CNAME").equals("硫化取消扫描")) {
                                 lh.setVisibility(View.VISIBLE);
                                 view17.setVisibility(View.VISIBLE);
+                            } else if (map.get(i).get("m_CNAME").equals("成型条码补录")) {
+                                cx.setVisibility(View.VISIBLE);
+                                view18.setVisibility(View.VISIBLE);
                             } else {
 //                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
