@@ -50,7 +50,7 @@ public class LoadFactoryActivity extends BaseActivity {
     private View ll_search, ll_load, llfacok, llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
     private TextView outbarcodelog, barcode, anum, search, itnbr, itndsc, outbarcode, outanum;
     private TextView barcodelog;
-    private ButtonView ok, get_code, outcode, outok;
+    private ButtonView ok, outok;
     private Button out, loadfacok, inscan, outscan;
     private ImageButton getsearch;
     private TableRow table;
@@ -67,8 +67,6 @@ public class LoadFactoryActivity extends BaseActivity {
     private LoadAdapter loadAdapter;
     private LoadFacAdapter loadFacAdapter;
     private LoadSpescAdapter loadSpescAdapter;
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
     //定义变量  主表ID  条码  装车单ID 规格
     private String Id = "", code = "", loadid = "", codeitnbr = "", outCode = "";
     private List<String> loaditnbr = new ArrayList<>();
@@ -127,7 +125,6 @@ public class LoadFactoryActivity extends BaseActivity {
         lloutcode = findViewById(R.id.ll_out_code);
         lloutcodelog = findViewById(R.id.ll_out_codelog);
         lloutok = findViewById(R.id.ll_scan_out_ok);
-        outcode = (ButtonView) findViewById(R.id.out_code);
         outok = (ButtonView) findViewById(R.id.out_ok);
         //条码扫描
         outbarcode = (TextView) findViewById(R.id.out_barcode);
@@ -155,7 +152,6 @@ public class LoadFactoryActivity extends BaseActivity {
         out = (Button) findViewById(R.id.out);
         loadfacok = (Button) findViewById(R.id.loadfac_ok);
         ok = (ButtonView) findViewById(R.id.ok);
-        get_code = (ButtonView) findViewById(R.id.get_code);
         //ListView
         lvload = (ListView) findViewById(R.id.listview);
         lvloadfac = (ListView) findViewById(R.id.lv_load_fac);
@@ -199,13 +195,6 @@ public class LoadFactoryActivity extends BaseActivity {
                 getOutScan();
             }
         });
-//        //点击测试
-//        outcode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                outcode();
-//            }
-//        });
         //取消扫描返回
         outok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,13 +216,6 @@ public class LoadFactoryActivity extends BaseActivity {
                 getOk();
             }
         });
-        //点击测试
-//        get_code.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                loadcode();
-//            }
-//        });
         //装车完成发送wms
         loadfacok.setOnClickListener(new View.OnClickListener() {
             @Override
