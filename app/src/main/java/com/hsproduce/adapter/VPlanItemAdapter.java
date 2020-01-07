@@ -352,7 +352,7 @@ public class VPlanItemAdapter extends BaseAdapter {
                 }else{
                     Toast.makeText(context, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                 }
-                ((VulcanizationActivity)context).getPlan();
+                ((VulcanizationActivity)context).getPlan(null);
             }
         }
     }
@@ -376,7 +376,7 @@ public class VPlanItemAdapter extends BaseAdapter {
                 }else{
                     Toast.makeText(context, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                 }
-                ((VulcanizationActivity)context).getPlan();
+                ((VulcanizationActivity)context).getPlan(null);
             }
         }
     }
