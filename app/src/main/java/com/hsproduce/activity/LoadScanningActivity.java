@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,7 +27,11 @@ import java.util.*;
 import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
 import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
-//退厂扫描页面
+/**
+ * 退厂扫描页面
+ * 扫描条码将条码从装车单明细中删除
+ * creatBy zhangzhr @ 2020-01-07
+ */
 public class LoadScanningActivity extends BaseActivity {
 
     //声明控件  扫描条码  记录条码  条码计数

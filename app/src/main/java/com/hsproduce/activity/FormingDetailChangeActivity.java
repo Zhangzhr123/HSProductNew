@@ -36,19 +36,19 @@ import java.util.Map;
 public class FormingDetailChangeActivity extends BaseActivity {
 
     //定义控件
-    private TextView barcode, spesc, mchid;
-    private ButtonView getitnbr, getmchid;
-    private Button ok, out;
-    private ImageButton btgetcode;
-    private Spinner shift;
+    private TextView tvBarCode, tvSpesc, tvMchId;
+    private ButtonView btGetItnbr, btGetMchId;
+    private Button btOk, btOut;
+    private ImageButton btGetCode;
+    private Spinner spShift;
     //定义变量
-    private String BarCode = "", Spesc = "", CreateUser = "", Shift = "", MchId = "", spescname = "", codeid = "", Team = "", itnbr = "", itndsc = "", tvDate = "";
+    private String barCode = "", spesc = "", createUser = "", shift = "", mchId = "", spescName = "", codeId = "", team = "", itnbr = "", itndsc = "", date = "";
     //Dialog显示列表
-    private List<String> itnbrlist = new ArrayList<>();
-    private DialogItemAdapter itnbradapter;
-    private List<String> mchidlist = new ArrayList<>();
-    private DialogItemAdapter mchidadapter;
-    private List<VreCord> Itndsc = new ArrayList<>();
+    private List<String> itnbrList = new ArrayList<>();
+    private DialogItemAdapter itnbrAdapter;
+    private List<String> mchidList = new ArrayList<>();
+    private DialogItemAdapter mchidAdapter;
+    private List<VreCord> itndscList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,66 +63,66 @@ public class FormingDetailChangeActivity extends BaseActivity {
 
     public void initView() {
         //补录条码
-        barcode = (TextView) findViewById(R.id.barcode);
+        tvBarCode = (TextView) findViewById(R.id.barcode);
         //获得焦点
-        barcode.requestFocus();
+        tvBarCode.requestFocus();
         //规格编码
-        spesc = (TextView) findViewById(R.id.spesc);
+        tvSpesc = (TextView) findViewById(R.id.spesc);
         //机台号
-        mchid = (TextView) findViewById(R.id.mchid);
+        tvMchId = (TextView) findViewById(R.id.mchid);
         //返回
-        out = (Button) findViewById(R.id.out);
+        btOut = (Button) findViewById(R.id.out);
         //班次
-        shift = (Spinner) findViewById(R.id.shift);
+        spShift = (Spinner) findViewById(R.id.shift);
         //查询条码明细
-        btgetcode = (ImageButton) findViewById(R.id.searchdetail);
+        btGetCode = (ImageButton) findViewById(R.id.searchdetail);
         //条码补录
-        ok = (Button) findViewById(R.id.ok);
+        btOk = (Button) findViewById(R.id.ok);
         //筛选按钮
-        getitnbr = (ButtonView) findViewById(R.id.getitnbr);
-        getmchid = (ButtonView) findViewById(R.id.getmchid);
+        btGetItnbr = (ButtonView) findViewById(R.id.getitnbr);
+        btGetMchId = (ButtonView) findViewById(R.id.getmchid);
     }
 
     public void initEvent() {
         //搜索按钮
-        btgetcode.setOnClickListener(new View.OnClickListener() {
+        btGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCodeDetail();
             }
         });
         //变更按钮
-        ok.setOnClickListener(new View.OnClickListener() {
+        btOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 change();
             }
         });
         //筛选规格
-        getitnbr.setOnClickListener(new View.OnClickListener() {
+        btGetItnbr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //清空数据
-                itnbrlist.clear();
-                Itndsc.clear();
-                String search = spesc.getText().toString().trim();
+                itnbrList.clear();
+                itndscList.clear();
+                String search = tvSpesc.getText().toString().trim();
                 search = search.toUpperCase();//大写转换
                 String parm = "ITNBR=" + search;
                 new GetSpecTask().execute(parm);
             }
         });
         //筛选成型机台
-        getmchid.setOnClickListener(new View.OnClickListener() {
+        btGetMchId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //清空数据
-                mchidlist.clear();
+                mchidList.clear();
                 String parm = "TYPE_ID=10107";
                 new MCHIDTask().execute(parm);
             }
         });
         //返回功能菜单
-        out.setOnClickListener(new View.OnClickListener() {
+        btOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tofunction();
@@ -132,37 +132,37 @@ public class FormingDetailChangeActivity extends BaseActivity {
 
     public void change() {
         //机台号
-        MchId = mchid.getText().toString().trim();
+        mchId = tvMchId.getText().toString().trim();
         //规格编码
-        Spesc = spesc.getText().toString().trim();
+        spesc = tvSpesc.getText().toString().trim();
         //规格名称
-        spescname = toUtf8String(spescname).replace("/", "%2F").replaceAll(" ", "%20");
+        spescName = toUtf8String(spescName).replace("/", "%2F").replaceAll(" ", "%20");
         //补录条码
-        BarCode = barcode.getText().toString().trim();
+        barCode = tvBarCode.getText().toString().trim();
         //班次
-        Shift = shift.getSelectedItem().toString().trim();
-        if (Shift.equals("早班")) {
-            Shift = "1";
-        } else if (Shift.equals("中班")) {
-            Shift = "2";
-        } else if (Shift.equals("晚班")) {
-            Shift = "3";
+        shift = spShift.getSelectedItem().toString().trim();
+        if (shift.equals("早班")) {
+            shift = "1";
+        } else if (shift.equals("中班")) {
+            shift = "2";
+        } else if (shift.equals("晚班")) {
+            shift = "3";
         } else {
-            Shift = "";
+            shift = "";
         }
-        String parm = "MCHID=" + MchId + "&ITNBR=" + Spesc + "&ITDSC=" + spescname
-                + "&SHIFT=" + Shift + "&USER_NAME=" + App.username + "&DateTime_W=" + tvDate + "&SwitchID=" + codeid;
+        String parm = "MCHID=" + mchId + "&ITNBR=" + spesc + "&ITDSC=" + spescName
+                + "&SHIFT=" + shift + "&USER_NAME=" + App.username + "&DateTime_W=" + date + "&SwitchID=" + codeId;
         new ChangeDetailedTask().execute(parm);
     }
 
     //获取条码明细
     public void getCodeDetail() {
-        BarCode = barcode.getText().toString().trim();
-        if (StringUtil.isNullOrEmpty(BarCode)) {
+        barCode = tvBarCode.getText().toString().trim();
+        if (StringUtil.isNullOrEmpty(barCode)) {
 //            Toast.makeText(FormingBarCodeActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
-            String parm = "SwitchTYRE_CODE=" + BarCode;
+            String parm = "SwitchTYRE_CODE=" + barCode;
             new SelDetailedTask().execute(parm);
         }
     }
@@ -178,9 +178,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             //清空
-            spesc.setText("");
-            mchid.setText("");
-            shift.setSelection(0, true);
+            tvSpesc.setText("");
+            tvMchId.setText("");
+            spShift.setSelection(0, true);
 
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(FormingDetailChangeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
@@ -197,25 +197,25 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //填入规格信息
-                        spesc.setText(datas.get(0).getItnbr());
-                        mchid.setText(datas.get(0).getMchid());
+                        tvSpesc.setText(datas.get(0).getItnbr());
+                        tvMchId.setText(datas.get(0).getMchid());
                         if (datas.get(0).getShift().equals("早")) {
-                            shift.setSelection(0, true);
+                            spShift.setSelection(0, true);
                         } else if (datas.get(0).getShift().equals("中")) {
-                            shift.setSelection(1, true);
+                            spShift.setSelection(1, true);
                         } else {
-                            shift.setSelection(2, true);
+                            spShift.setSelection(2, true);
                         }
                         //获取信息
-                        MchId = datas.get(0).getMchid();
-                        Spesc = datas.get(0).getItnbr();
-                        spescname = datas.get(0).getItdsc();
-                        Team = datas.get(0).getTeam();
-                        CreateUser = datas.get(0).getCreateuser();
-                        codeid = datas.get(0).getId();
+                        mchId = datas.get(0).getMchid();
+                        spesc = datas.get(0).getItnbr();
+                        spescName = datas.get(0).getItdsc();
+                        team = datas.get(0).getTeam();
+                        createUser = datas.get(0).getCreateuser();
+                        codeId = datas.get(0).getId();
                         //时间转换
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        tvDate = formatter.format(formatter.parse(datas.get(0).getWdate()));
+                        date = formatter.format(formatter.parse(datas.get(0).getWdate()));
 //                        Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(FormingDetailChangeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
@@ -255,27 +255,27 @@ public class FormingDetailChangeActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        String search = mchid.getText().toString().trim();
+                        String search = tvMchId.getText().toString().trim();
                         for (int i = 0; i < map.size(); i++) {
                             if(map.get(i).get("itemid") == null){
                                 continue;
                             }
                             if (search.contains(map.get(i).get("itemid"))) {
                             }
-                            mchidlist.add(map.get(i).get("itemid"));
+                            mchidList.add(map.get(i).get("itemid"));
                         }
-                        mchidadapter = new DialogItemAdapter(FormingDetailChangeActivity.this, mchidlist);
+                        mchidAdapter = new DialogItemAdapter(FormingDetailChangeActivity.this, mchidList);
                         //弹窗显示选中消失
                         AlertDialog alertDialog = new AlertDialog
                                 .Builder(FormingDetailChangeActivity.this)
-                                .setSingleChoiceItems(mchidadapter, 0, new DialogInterface.OnClickListener() {
+                                .setSingleChoiceItems(mchidAdapter, 0, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        MchId = mchidlist.get(which);
-                                        mchid.setText("");
-                                        mchid.setText(MchId);
+                                        mchId = mchidList.get(which);
+                                        tvMchId.setText("");
+                                        tvMchId.setText(mchId);
                                         dialog.dismiss();
-                                        Toast.makeText(FormingDetailChangeActivity.this, "选择了" + MchId, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FormingDetailChangeActivity.this, "选择了" + mchId, Toast.LENGTH_SHORT).show();
                                     }
                                 }).create();
                         alertDialog.show();
@@ -322,23 +322,23 @@ public class FormingDetailChangeActivity extends BaseActivity {
                             if(datas.get(i).getItnbr() == null){
                                 continue;
                             }
-                            itnbrlist.add(datas.get(i).getItnbr());
-                            Itndsc.add(datas.get(i));
+                            itnbrList.add(datas.get(i).getItnbr());
+                            itndscList.add(datas.get(i));
                         }
-                        itnbradapter = new DialogItemAdapter(FormingDetailChangeActivity.this, itnbrlist);
+                        itnbrAdapter = new DialogItemAdapter(FormingDetailChangeActivity.this, itnbrList);
                         //弹窗显示选中消失
                         AlertDialog alertDialog = new AlertDialog
                                 .Builder(FormingDetailChangeActivity.this)
-                                .setSingleChoiceItems(itnbradapter, 0, new DialogInterface.OnClickListener() {
+                                .setSingleChoiceItems(itnbrAdapter, 0, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        itnbr = itnbrlist.get(which);
-                                        spesc.setText("");
-                                        spesc.setText(itnbr);
+                                        itnbr = itnbrList.get(which);
+                                        tvSpesc.setText("");
+                                        tvSpesc.setText(itnbr);
                                         //规格名称
-                                        for (int j = 0; j < Itndsc.size(); j++) {
-                                            if (Itndsc.get(j).getItnbr().equals(Spesc)) {
-                                                spescname = Itndsc.get(j).getItdsc();//toUtf8String(Itndsc.get(j).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
+                                        for (int j = 0; j < itndscList.size(); j++) {
+                                            if (itndscList.get(j).getItnbr().equals(spesc)) {
+                                                spescName = itndscList.get(j).getItdsc();//toUtf8String(Itndsc.get(j).getItdsc()).replace("/", "%2F").replaceAll(" ", "%20");
                                             }
                                         }
                                         dialog.dismiss();
@@ -431,8 +431,8 @@ public class FormingDetailChangeActivity extends BaseActivity {
         //按键按下
         switch (keyCode) {
             case 0:
-                barcode.requestFocus();
-                barcode.setText("");
+                tvBarCode.requestFocus();
+                tvBarCode.setText("");
                 break;
         }
 

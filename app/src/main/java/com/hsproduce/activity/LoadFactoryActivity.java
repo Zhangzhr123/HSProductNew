@@ -1,5 +1,4 @@
 package com.hsproduce.activity;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,7 +35,14 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 import static com.xuexiang.xui.widget.picker.widget.WheelTime.dateFormat;
 import static java.lang.Thread.sleep;
 
-//装车出厂页面
+/**
+ * 装车出厂页面
+ * 点击装车单列表进入出厂扫描、取消扫描、装车完成页面
+ * 点击出厂扫描扫描条码记录在装车单明细中
+ * 点击取消扫描从装车单明细中删除
+ * 点击装车完成发送装车单给WMS
+ * creatBy zhangzhr @ 2020-01-07
+ */
 public class LoadFactoryActivity extends BaseActivity {
 
     //定义控件

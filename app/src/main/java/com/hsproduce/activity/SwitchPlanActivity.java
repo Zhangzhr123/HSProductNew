@@ -32,26 +32,26 @@ import java.util.Map;
  */
 public class SwitchPlanActivity extends BaseActivity {
 
-    private LinearLayout showlist, llmchid;
-    private TableLayout showVplan;
-    private LinearLayout onclick;
-    private Button repl, out;
-    private TextView spesc, spescname, pro, state, pnum;
+    private LinearLayout llShowList, llMchId;
+    private TableLayout tlShowVPlan;
+    private LinearLayout llOnClick;
+    private Button btRepl, btOut;
+    private TextView tvSpesc, tvSpescName, tvPro, tvState, tvPNum;
     //当前计划展示list  规格交替列表
-    private ListView lvplan;
+    private ListView lvPlan;
     private VPlan v = new VPlan();
     private List<VPlan> planList = new ArrayList<>();
     //输入框
     private TextView tvMchid;
     //获取计划按钮
-    private ButtonView btGetplan;
+    private ButtonView btGetPlan;
     //计划展示适配器  规格交替适配器
     private VPlanReplAdapter adaprer;
     //定义变量 当前计划ID
     private String currid = "";
     public String mchid = "";
     private String num = "";
-    private boolean iscomplate = true;
+    private boolean isComplate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,85 +66,85 @@ public class SwitchPlanActivity extends BaseActivity {
 
     public void initView() {
         //点击之前页面
-        llmchid = findViewById(R.id.ll_mchid);
-        showlist = findViewById(R.id.showlist);
+        llMchId = findViewById(R.id.ll_mchid);
+        llShowList = findViewById(R.id.showlist);
         //点击之后页面
-        showVplan = (TableLayout) findViewById(R.id.showVplan);
-        onclick = findViewById(R.id.onclick);
+        tlShowVPlan = (TableLayout) findViewById(R.id.showVplan);
+        llOnClick = findViewById(R.id.onclick);
         //点击之后的按钮
-        repl = (Button) findViewById(R.id.repl);
-        out = (Button) findViewById(R.id.out);
+        btRepl = (Button) findViewById(R.id.repl);
+        btOut = (Button) findViewById(R.id.out);
         //点击之后显示明细
-        spesc = (TextView) findViewById(R.id.spesc);
-        spescname = (TextView) findViewById(R.id.spescname);
-        pro = (TextView) findViewById(R.id.pro);
-        state = (TextView) findViewById(R.id.state);
-        pnum = (TextView) findViewById(R.id.pnum);
+        tvSpesc = (TextView) findViewById(R.id.spesc);
+        tvSpescName = (TextView) findViewById(R.id.spescname);
+        tvPro = (TextView) findViewById(R.id.pro);
+        tvState = (TextView) findViewById(R.id.state);
+        tvPNum = (TextView) findViewById(R.id.pnum);
         //list列表
-        lvplan = (ListView) findViewById(R.id.lv_plan);
+        lvPlan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
         tvMchid = (TextView) findViewById(R.id.mchid);
         //获取计划按钮
-        btGetplan = (ButtonView) findViewById(R.id.getSwitchPlan);
+        btGetPlan = (ButtonView) findViewById(R.id.getSwitchPlan);
 
     }
 
     public void initEvent() {
         //点击当期计划 和 规格交替计划
-        btGetplan.setOnClickListener(new View.OnClickListener() {
+        btGetPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCurrentVPlan();
             }
         });
         //点击跳转
-        lvplan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvPlan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(currid != null || !currid.equals("")){
                     currid = "";
                 }
                 //初始化一下控件属性
-                repl.setEnabled(true);
-                out.setEnabled(true);
+                btRepl.setEnabled(true);
+                btOut.setEnabled(true);
                 //获取选中的计划
                 v = adaprer.getItem(position);
                 //计划id
                 currid = v.getId();
                 //展示数据在页面
-                spesc.setText(v.getItnbr());
-                spescname.setText(v.getItdsc());
-                pro.setText(v.getPro());
+                tvSpesc.setText(v.getItnbr());
+                tvSpescName.setText(v.getItdsc());
+                tvPro.setText(v.getPro());
                 if (v.getState().equals("10")) {
-                    state.setText("新计划");
+                    tvState.setText("新计划");
                 } else if (v.getState().equals("20")) {
-                    state.setText("等待中");
+                    tvState.setText("等待中");
                 } else if (v.getState().equals("30")) {
-                    state.setText("生产中");
+                    tvState.setText("生产中");
                 } else if (v.getState().equals("40")) {
-                    state.setText("已完成");
+                    tvState.setText("已完成");
                 } else {
-                    state.setText("未知状态");
+                    tvState.setText("未知状态");
                 }
-                pnum.setText(v.getPnum());
+                tvPNum.setText(v.getPnum());
                 //点击之后隐藏
-                llmchid.setVisibility(View.GONE);
-                showlist.setVisibility(View.GONE);
-                lvplan.setVisibility(View.GONE);
+                llMchId.setVisibility(View.GONE);
+                llShowList.setVisibility(View.GONE);
+                lvPlan.setVisibility(View.GONE);
                 //点击之后显示
-                showVplan.setVisibility(View.VISIBLE);
-                onclick.setVisibility(View.VISIBLE);
+                tlShowVPlan.setVisibility(View.VISIBLE);
+                llOnClick.setVisibility(View.VISIBLE);
             }
         });
         //返回
-        out.setOnClickListener(new View.OnClickListener() {
+        btOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnPager();
             }
         });
         //切换规格
-        repl.setOnClickListener(new View.OnClickListener() {
+        btRepl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogToStart();
@@ -175,7 +175,7 @@ public class SwitchPlanActivity extends BaseActivity {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        iscomplate = true;
+                        isComplate = true;
                         //提示音
                         SoundPlayUtils.startAlarm(SwitchPlanActivity.this);
                         SoundPlayUtils.stopAlarm();
@@ -190,12 +190,12 @@ public class SwitchPlanActivity extends BaseActivity {
 //        //清空ID
 //        currid = "";
         //点击之后隐藏
-        showVplan.setVisibility(View.GONE);
-        onclick.setVisibility(View.GONE);
+        tlShowVPlan.setVisibility(View.GONE);
+        llOnClick.setVisibility(View.GONE);
         //点击之后显示
-        llmchid.setVisibility(View.VISIBLE);
-        showlist.setVisibility(View.VISIBLE);
-        lvplan.setVisibility(View.VISIBLE);
+        llMchId.setVisibility(View.VISIBLE);
+        llShowList.setVisibility(View.VISIBLE);
+        lvPlan.setVisibility(View.VISIBLE);
         //刷新数据
         String param1 = "MCHIDLR=" + mchid + "&SHIFT=" + App.shift + "&&TYPE_N=20";
         new GetPlanTask().execute(param1);
@@ -225,7 +225,7 @@ public class SwitchPlanActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            iscomplate = true;
+            isComplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
@@ -242,13 +242,13 @@ public class SwitchPlanActivity extends BaseActivity {
                         if (datas != null && datas.size() > 0) {//有正在执行，并且有等待中的计划
                             //显示等待中的计划；
                             adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, datas);
-                            lvplan.setAdapter(adaprer);
+                            lvPlan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                             planList = datas;
                         } else {
                             Toast.makeText(SwitchPlanActivity.this, "无可规格交替的计划！", Toast.LENGTH_SHORT).show();
                             adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
-                            lvplan.setAdapter(adaprer);
+                            lvPlan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                             planList = datas;
                         }
@@ -259,7 +259,7 @@ public class SwitchPlanActivity extends BaseActivity {
                     } else if (res.get("code").equals("500")) {
                         Toast.makeText(SwitchPlanActivity.this, "查询成功，没有匹配的计划！", Toast.LENGTH_SHORT).show();
                         adaprer = new VPlanReplAdapter(SwitchPlanActivity.this, new ArrayList<VPlan>());
-                        lvplan.setAdapter(adaprer);
+                        lvPlan.setAdapter(adaprer);
                         adaprer.notifyDataSetChanged();
                         planList = datas;
                         return;
@@ -288,7 +288,7 @@ public class SwitchPlanActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            iscomplate = true;
+            isComplate = true;
             if (StringUtil.isNullOrBlank(s)) {
                 Toast.makeText(SwitchPlanActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             } else {
@@ -360,16 +360,16 @@ public class SwitchPlanActivity extends BaseActivity {
         return true;
     }
     private void operate(String msg) {
-        if(!iscomplate){
+        if(!isComplate){
             Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
             return;
         }
-        iscomplate = false;
+        isComplate = false;
         if (!StringUtil.isNullOrBlank(tvMchid.getText().toString().trim())) {
             getCurrentVPlan();
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            iscomplate = true;
+            isComplate = true;
         }
     }
 

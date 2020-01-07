@@ -33,23 +33,21 @@ import java.util.Map;
  */
 public class SwitchFormingActivity extends BaseActivity {
 
-    private LinearLayout showlist, llmchid;
-    private TableLayout showVplan;
-    private LinearLayout onclick;
-    private Button repl, out;
-    private TextView spesc, spescname, pro, state, pnum;
+    private LinearLayout llShowList, llMchId;
+    private TableLayout tlShowVPlan;
+    private LinearLayout llOnClick;
+    private Button btRepl, btOut;
+    private TextView tvSpesc, tvSpescName, tvPro, tvState, tvPNum;
     //当前计划展示list  规格交替列表
-    private ListView lvplan;
+    private ListView lvPlan;
     private VPlan v = new VPlan();
     //输入框
     private AutoCompleteTextView tvMchid;
     private List<String> data1 = new ArrayList<>();
     //获取计划按钮
-    private ButtonView btGetplan;
+    private ButtonView btGetPlan;
     //计划展示适配器  规格交替适配器
     private FormingReplAdapter adaprer;
-    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
-    private long mExitTime = 0;
     //定义变量 当前计划ID
     private String currid = "";
     public String mchid = "";
@@ -72,28 +70,28 @@ public class SwitchFormingActivity extends BaseActivity {
 
     public void initView() {
         //点击之前页面
-        llmchid = findViewById(R.id.ll_mchid);
-        showlist = findViewById(R.id.showlist);
+        llMchId = findViewById(R.id.ll_mchid);
+        llShowList = findViewById(R.id.showlist);
         //点击之后页面
-        showVplan = (TableLayout) findViewById(R.id.showVplan);
-        onclick = findViewById(R.id.onclick);
+        tlShowVPlan = (TableLayout) findViewById(R.id.showVplan);
+        llOnClick = findViewById(R.id.onclick);
         //点击之后的按钮
-        repl = (Button) findViewById(R.id.repl);
-        out = (Button) findViewById(R.id.out);
+        btRepl = (Button) findViewById(R.id.repl);
+        btOut = (Button) findViewById(R.id.out);
         //点击之后显示明细
-        spesc = (TextView) findViewById(R.id.spesc);
-        spescname = (TextView) findViewById(R.id.spescname);
-        pro = (TextView) findViewById(R.id.pro);
-        state = (TextView) findViewById(R.id.state);
-        pnum = (TextView) findViewById(R.id.pnum);
+        tvSpesc = (TextView) findViewById(R.id.spesc);
+        tvSpescName = (TextView) findViewById(R.id.spescname);
+        tvPro = (TextView) findViewById(R.id.pro);
+        tvState = (TextView) findViewById(R.id.state);
+        tvPNum = (TextView) findViewById(R.id.pnum);
         //list列表
-        lvplan = (ListView) findViewById(R.id.lv_plan);
+        lvPlan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
         tvMchid = (AutoCompleteTextView) findViewById(R.id.mchid);
         new MCHIDTask().execute("TYPE_ID=10107");
         eventsViews();
         //获取计划按钮
-        btGetplan = (ButtonView) findViewById(R.id.getSwitchPlan);
+        btGetPlan = (ButtonView) findViewById(R.id.getSwitchPlan);
 
     }
 
@@ -104,62 +102,62 @@ public class SwitchFormingActivity extends BaseActivity {
 
     public void initEvent() {
         //点击当期计划 和 规格交替计划
-        btGetplan.setOnClickListener(new View.OnClickListener() {
+        btGetPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getCurrentVPlan();
             }
         });
         //点击跳转
-        lvplan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvPlan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currid != null || !currid.equals("")) {
                     currid = "";
                 }
                 //初始化一下控件属性
-                repl.setEnabled(true);
-                out.setEnabled(true);
+                btRepl.setEnabled(true);
+                btOut.setEnabled(true);
                 //获取点击的数据
                 v = adaprer.getItem(position);
                 //计划id
                 currid = v.getId();
                 //展示数据在页面
-                spesc.setText(v.getItnbr());
-                spescname.setText(v.getItdsc());
-                pro.setText(v.getPro());
+                tvSpesc.setText(v.getItnbr());
+                tvSpescName.setText(v.getItdsc());
+                tvPro.setText(v.getPro());
                 if (v.getState().equals("10")) {
-                    state.setText("新计划");
+                    tvState.setText("新计划");
                 } else if (v.getState().equals("20")) {
-                    state.setText("等待中");
+                    tvState.setText("等待中");
                 } else if (v.getState().equals("30")) {
-                    state.setText("生产中");
+                    tvState.setText("生产中");
                 } else if (v.getState().equals("40")) {
-                    state.setText("已完成");
+                    tvState.setText("已完成");
                 } else {
-                    state.setText("未知状态");
+                    tvState.setText("未知状态");
                 }
-                pnum.setText(v.getPnum());
+                tvPNum.setText(v.getPnum());
                 //点击之后隐藏
-                llmchid.setVisibility(View.GONE);
-                showlist.setVisibility(View.GONE);
-                lvplan.setVisibility(View.GONE);
+                llMchId.setVisibility(View.GONE);
+                llShowList.setVisibility(View.GONE);
+                lvPlan.setVisibility(View.GONE);
                 //点击之后显示
-                showVplan.setVisibility(View.VISIBLE);
-                onclick.setVisibility(View.VISIBLE);
+                tlShowVPlan.setVisibility(View.VISIBLE);
+                llOnClick.setVisibility(View.VISIBLE);
                 //查询生产中计划
                 new STARTTask().execute("MCHID=" + mchid);
             }
         });
         //返回
-        out.setOnClickListener(new View.OnClickListener() {
+        btOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnPager();
             }
         });
         //切换规格
-        repl.setOnClickListener(new View.OnClickListener() {
+        btRepl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replace();
@@ -244,13 +242,13 @@ public class SwitchFormingActivity extends BaseActivity {
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
                 //显示数据
-                state.setText("");
-                state.setText("生产中");
-                pnum.setText("");
-                pnum.setText(num);
+                tvState.setText("");
+                tvState.setText("生产中");
+                tvPNum.setText("");
+                tvPNum.setText(num);
                 //开始按钮不可用
-                repl.setEnabled(false);
-                out.setEnabled(true);
+                btRepl.setEnabled(false);
+                btOut.setEnabled(true);
                 dialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(SwitchFormingActivity.this);
@@ -370,12 +368,12 @@ public class SwitchFormingActivity extends BaseActivity {
     //跳转页面
     public void returnPager() {
         //点击之后隐藏
-        showVplan.setVisibility(View.GONE);
-        onclick.setVisibility(View.GONE);
+        tlShowVPlan.setVisibility(View.GONE);
+        llOnClick.setVisibility(View.GONE);
         //点击之后显示
-        llmchid.setVisibility(View.VISIBLE);
-        showlist.setVisibility(View.VISIBLE);
-        lvplan.setVisibility(View.VISIBLE);
+        llMchId.setVisibility(View.VISIBLE);
+        llShowList.setVisibility(View.VISIBLE);
+        lvPlan.setVisibility(View.VISIBLE);
         //刷新数据
         String param1 = "MCHID=" + mchid + "&SHIFT=" + App.shift;
         new GetFormingPlanTask().execute(param1);
@@ -485,13 +483,13 @@ public class SwitchFormingActivity extends BaseActivity {
                         if ((zxz.size() > 0 && ddz.size() > 0) || (ywc.size() > 0 && ddz.size() > 0)) {//有正在执行，并且有等待中的计划 或者有已完成和等待中的计划
                             //显示等待中的计划；
                             adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
-                            lvplan.setAdapter(adaprer);
+                            lvPlan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                         } else {
                             //清空数据
                             ddz.clear();
                             adaprer = new FormingReplAdapter(SwitchFormingActivity.this, ddz);
-                            lvplan.setAdapter(adaprer);
+                            lvPlan.setAdapter(adaprer);
                             adaprer.notifyDataSetChanged();
                             Toast.makeText(SwitchFormingActivity.this, "无可规格交替的计划！", Toast.LENGTH_SHORT).show();
                         }
