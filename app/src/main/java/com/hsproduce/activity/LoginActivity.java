@@ -169,7 +169,6 @@ public class LoginActivity extends BaseActivity {
             App.password = password;
             String param = "UserName=" + username + "&PWD=" + password;
             new MyTask().execute(param);
-            Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
         }
 
     }
