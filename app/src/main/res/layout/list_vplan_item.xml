@@ -16,7 +16,7 @@
                     android:textSize="15sp"/>
             <TextView
                     android:id="@+id/plandata"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
@@ -30,7 +30,7 @@
                     android:textSize="15sp"/>
             <TextView
                     android:id="@+id/spesc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
@@ -44,7 +44,7 @@
                     android:textSize="15sp"/>
             <TextView
                     android:id="@+id/spescname"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
@@ -58,7 +58,7 @@
                     android:textSize="15sp"/>
             <TextView
                     android:id="@+id/pnum"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:textSize="15sp"/>
