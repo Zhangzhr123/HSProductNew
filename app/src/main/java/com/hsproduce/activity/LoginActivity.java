@@ -32,6 +32,7 @@ import static android.support.constraint.Constraints.TAG;
  * 登录页面
  * 版本自动更新、设置动态IP地址，接收用户工号和密码
  * createBy zhangzhr @ 2019-12-21
+ * 1.程序更新修改为强制更新，版本号在APP文件中
  */
 public class LoginActivity extends BaseActivity {
 
@@ -52,6 +53,7 @@ public class LoginActivity extends BaseActivity {
     private List<Team> teamList = new ArrayList<>();
     //IP
     public static String IP = "";
+    private String 当前版本 = "", 最新版本 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +61,12 @@ public class LoginActivity extends BaseActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login);
         // 获取设置的版本
-        String version = get("myVersion");
-        if (!TextUtils.isEmpty(version)) {
-            App.version = version;
-        }
+//        String version = get("myVersion");
+//        if (!TextUtils.isEmpty(version)) {
+//            App.version = version;
+//        }
         new 版本更新Task().execute();
 
-        // 获取设置的IP地址
-//        String text = get("myIP");
-//        if (!TextUtils.isEmpty(text)) {
-//            App.ip = text;
-//            new ShiftTask().execute();
-//        }
         new ShiftTask().execute();
 
         initView();
@@ -159,16 +155,23 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void login() {
-        String username = tv_code.getText().toString().trim();
-        String password = tv_password.getText().toString().trim();
-        if(StringUtil.isNullOrEmpty(username) || StringUtil.isNullOrEmpty(password)){
-            Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
-            return;
+        if (!最新版本.equals(当前版本)) {
+            //文件下载
+            download(PathUtil.文件下载);
+        } else {
+            String username = tv_code.getText().toString().trim();
+            String password = tv_password.getText().toString().trim();
+            if(StringUtil.isNullOrEmpty(username) || StringUtil.isNullOrEmpty(password)){
+                Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            App.usercode = username;
+            App.password = password;
+            String param = "UserName=" + username + "&PWD=" + password;
+            new MyTask().execute(param);
+            Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
         }
-        App.usercode = username;
-        App.password = password;
-        String param = "UserName=" + username + "&PWD=" + password;
-        new MyTask().execute(param);
+
     }
 
     //班组
@@ -352,19 +355,16 @@ public class LoginActivity extends BaseActivity {
                     List<UpdateVersion> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<UpdateVersion>>() {
                     }.getType());
                     if (res.get("code").equals("200")) {
-                        String 当前版本 = App.version;
                         if (null != datas) {
-                            String 最新版本 = datas.get(0).getItemname();
+                            最新版本 = datas.get(0).getItemname();
+                            当前版本 = App.version;
                             // 版本判断
-                            if (!最新版本.equals(当前版本)) {
-                                App.version = 最新版本;
+                            if (!当前版本.equals(最新版本)) {
                                 //文件下载
                                 download(PathUtil.文件下载);
-
                             } else {
                                 Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
                             }
-
                         }
                     }
                 }
@@ -407,13 +407,13 @@ public class LoginActivity extends BaseActivity {
         };
         registerReceiver(receiver, filter);
         //数据持久化
-        File file = getDir("myVersion", Context.MODE_PRIVATE);
-        if (file != null) {
-            deleteFile(file);
-            save("myVersion", App.version);
-        } else {
-            save("myVersion", App.version);
-        }
+//        File file = getDir("myVersion", Context.MODE_PRIVATE);
+//        if (file != null) {
+//            deleteFile(file);
+//            save("myVersion", App.version);
+//        } else {
+//            save("myVersion", App.version);
+//        }
     }
 
 

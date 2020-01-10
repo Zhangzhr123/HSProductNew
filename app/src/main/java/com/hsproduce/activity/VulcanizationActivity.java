@@ -196,6 +196,14 @@ public class VulcanizationActivity extends BaseActivity {
                         Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                     }
                     if (res.get("code").equals("200")) {
+                        //清空数据
+                        planId = "";
+                        codeList.clear();
+                        tvScan.setText("");
+                        tvBarCodeLog.setText("");
+                        tvAnum.setText("0");
+                        tvSum.setText("0");
+                        number = 0;
                         //获取计划ID
                         planId = datas.get(0).getId();
                         //展示列表
@@ -204,16 +212,18 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
                         number = Integer.valueOf(datas.get(0).getDnum());
                         tvSum.setText(datas.get(0).getDnum());
-                        tvScan.setText("");
                         //已扫描机台号且有计划
                         isScan = true;
                     } else {
+                        //清空数据
                         planId = "";
+                        number = 0;
                         tvAnum.setText("0");
                         tvSum.setText("0");
                         tvBarCodeLog.setText("");
                         tvScan.setText("");
                         isScan = false;
+                        codeList.clear();
                         datas.clear();
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
