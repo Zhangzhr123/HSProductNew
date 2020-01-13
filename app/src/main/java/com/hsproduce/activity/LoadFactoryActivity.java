@@ -76,8 +76,8 @@ public class LoadFactoryActivity extends BaseActivity {
     private List<String> log = new ArrayList<>();
     private List<String> outlog = new ArrayList<>();
     //添加条码判断是否重复
-    private List<String> codelist = new ArrayList<>();
-    private List<String> outcodelist = new ArrayList<>();
+    private List<String> codeList = new ArrayList<>();
+    private List<String> outCodeList = new ArrayList<>();
     private Boolean isNew = true;
     private Boolean outIsNew = true;
     //页面跳转初始值
@@ -305,7 +305,7 @@ public class LoadFactoryActivity extends BaseActivity {
         outanum.setText("0");
         outlog.clear();
         outnumber = 0;
-        outcodelist.clear();
+        outCodeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
         sizePager = 1;
@@ -352,7 +352,7 @@ public class LoadFactoryActivity extends BaseActivity {
         anum.setText("0");
         number = 0;
         log.clear();
-        codelist.clear();
+        codeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
         sizePager = 1;
@@ -378,7 +378,7 @@ public class LoadFactoryActivity extends BaseActivity {
     public void loadcode(String barCode) {
         //获取轮胎条码
         code = barCode;
-        if (codelist.contains(code)) {
+        if (codeList.contains(code)) {
             isNew = false;
         }
 
@@ -397,7 +397,7 @@ public class LoadFactoryActivity extends BaseActivity {
     //取消扫描
     public void outcode(String barCode) {
         outCode = barCode;
-        if (outcodelist.contains(outCode)) {
+        if (outCodeList.contains(outCode)) {
             outIsNew = false;
         }
 
@@ -634,7 +634,7 @@ public class LoadFactoryActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        codelist.add(code);
+                        codeList.add(code);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         log.add("[" + date + "]" + code);
@@ -691,7 +691,7 @@ public class LoadFactoryActivity extends BaseActivity {
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        outcodelist.add(outCode);
+                        outCodeList.add(outCode);
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         outlog.add("[" + date + "]" + outCode);
@@ -861,8 +861,8 @@ public class LoadFactoryActivity extends BaseActivity {
         list.clear();
         lists.clear();
         loaditnbr.clear();
-        codelist.clear();
-        outcodelist.clear();
+        codeList.clear();
+        outCodeList.clear();
         Id = "";
         code = "";
         loadid = "";
