@@ -39,7 +39,7 @@
         <com.xuexiang.xui.widget.button.ButtonView
                 style="@style/ButtonView.Blue"
                 android:id="@+id/bt_getCode"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:text="@string/search"
                 android:layout_marginTop="5dp"/>

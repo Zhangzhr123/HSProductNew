@@ -1,9 +1,10 @@
 package com.hsproduce.activity;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 硫化明细变更页面
  * 扫描条码获取此条码的生产明细，修改明细内容，发送至后台
@@ -32,6 +36,7 @@ import java.util.Map;
  * 1.时间控件以及时间转换格式需要注意，另外月份需要加一显示正常月份
  * 2.规格名称中文和特殊字符需要转换
  * 3.班组字段不传递给后台
+ * 4.扫描改为广播监听方式
  */
 public class DetailChangeActivity extends BaseActivity {
 
@@ -67,11 +72,21 @@ public class DetailChangeActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //补录条码
         tvBarcode = (TextView) findViewById(R.id.barcode);
         //获得焦点
         tvBarcode.requestFocus();
+        tvBarcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //规格编码
         tvItnbr = (TextView) findViewById(R.id.spesc);
         //规格描述
@@ -182,6 +197,31 @@ public class DetailChangeActivity extends BaseActivity {
         new SelDetailedTask().execute(parm);
         //tvBarcode.setText("");
     }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        tvBarcode.setText(barCode);
+                        getCodeDetail();
+                    } else {
+                        Toast.makeText(DetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //班组
     class ShiftTask extends AsyncTask<String, Void, String> {
@@ -441,21 +481,46 @@ public class DetailChangeActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
+    //是否纯数字
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
+        //按键按下
+        switch (keyCode){
+            case 0://扫描键
+                tvBarcode.requestFocus();
+                tvBarcode.setText("");//成功后清空输入框
+                break;
+        }
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode){
-            case 0:
-                if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
-                    getCodeDetail();
-                }
-                break;
+//            case 0:
+//                if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
+//                    getCodeDetail();
+//                }
+//                break;
             case 22:
                 if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
                     getCodeDetail();

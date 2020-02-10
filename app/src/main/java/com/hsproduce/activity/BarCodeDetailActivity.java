@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,7 +32,7 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
 /**
  * 生产追溯页面
- * 扫描条码显示硫化条码明细和成型条码明细
+ * 扫描条码显示硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
  * createBy zahngzr @ 2019-12-20
  */
 public class BarCodeDetailActivity extends BaseActivity {
@@ -74,6 +75,7 @@ public class BarCodeDetailActivity extends BaseActivity {
         tvBarCode = (TextView) findViewById(R.id.BarCode);
         //获得焦点
         tvBarCode.requestFocus();
+        tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //获取计划按钮
         btGetPlan = (ImageButton) findViewById(R.id.getBarCode);
         //成型
@@ -142,8 +144,8 @@ public class BarCodeDetailActivity extends BaseActivity {
                 try {
                     String barCode = "";
                     barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-                    //判断条码是否为空
-                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
                         getBarCode(barCode);
                     } else {
                         Toast.makeText(BarCodeDetailActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
@@ -289,13 +291,24 @@ public class BarCodeDetailActivity extends BaseActivity {
         super.onPause();
     }
 
+    //是否纯数字
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
         switch (keyCode) {
-            case 0://扫描键
+            case 0://扫描键按下清空
                 tvBarCode.setText("");
                 break;
         }

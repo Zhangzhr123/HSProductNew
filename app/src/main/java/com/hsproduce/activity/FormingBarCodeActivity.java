@@ -29,7 +29,7 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
 /**
  * 成型胎胚报废页面
- * 扫描条码，报废条码成功后写入扫描记录中
+ * 扫描条码，报废条码成功后写入扫描记录中，广播监听响应事件
  * createBy zhangzhr @ 2019-12-21
  */
 public class FormingBarCodeActivity extends BaseActivity {

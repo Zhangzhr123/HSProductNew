@@ -47,7 +47,7 @@
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:text="搜索"
-                android:layout_margin="5dp" android:visibility="visible"/>
+                android:layout_marginTop="5dp" android:visibility="visible"/>
     </LinearLayout>
     <View
             android:layout_height="1px"
@@ -97,7 +97,7 @@
                     android:layout_width="70dp"
                     android:layout_height="30dp"
                     android:text="选择规格"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="5dp"
                     android:visibility="visible"/>
 
         </TableRow>
