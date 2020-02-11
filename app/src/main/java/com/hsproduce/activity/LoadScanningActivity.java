@@ -31,6 +31,7 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 退厂扫描页面
  * 扫描条码将条码从装车单明细中删除
  * creatBy zhangzhr @ 2020-01-07
+ * 1.扫描改为广播监听方式扫描
  */
 public class LoadScanningActivity extends BaseActivity {
 

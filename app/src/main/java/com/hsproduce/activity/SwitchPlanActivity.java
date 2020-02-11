@@ -1,8 +1,13 @@
 package com.hsproduce.activity;
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,10 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 硫化规格交替页面
  * 扫描机台号，查询等待中的计划，点击规格交替显示是否交替，传递计划ID切换计划
  * createBy zhangzhr @ 2019-12-21
+ * 1.扫描改为广播监听响应方式
  */
 public class SwitchPlanActivity extends BaseActivity {
 
@@ -64,6 +73,15 @@ public class SwitchPlanActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //点击之前页面
         llMchId = findViewById(R.id.ll_mchid);
@@ -84,6 +102,7 @@ public class SwitchPlanActivity extends BaseActivity {
         lvPlan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
         tvMchid = (TextView) findViewById(R.id.mchid);
+        tvMchid.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
         //获取计划按钮
         btGetPlan = (ButtonView) findViewById(R.id.getSwitchPlan);
 
@@ -215,6 +234,31 @@ public class SwitchPlanActivity extends BaseActivity {
         }
     }
 
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String mchID = "";
+                    mchID = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(mchID) && mchID.length() == 4 && isNum(mchID) == false) {
+                        tvMchid.setText(mchID);
+                        operate("扫描失败！");
+                    } else {
+                        Toast.makeText(SwitchPlanActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
+
     //获取硫化计划
     class GetPlanTask extends AsyncTask<String, Void, String> {
         @Override
@@ -318,6 +362,24 @@ public class SwitchPlanActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
+    //是否纯数字
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -348,10 +410,10 @@ public class SwitchPlanActivity extends BaseActivity {
                 operate(msg);
                 break;
             //扫描键
-            case 0:
-                msg = "扫描失败！";
-                operate(msg);
-                break;
+//            case 0:
+//                msg = "扫描失败！";
+//                operate(msg);
+//                break;
             default:
 
                 break;

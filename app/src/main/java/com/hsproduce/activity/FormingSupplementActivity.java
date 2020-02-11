@@ -1,8 +1,8 @@
 package com.hsproduce.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +29,9 @@ import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.util.*;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 成型条码补录页面
  * 扫描条码，填写条码明细，将条码添加进条码表中
@@ -37,6 +40,7 @@ import java.util.*;
  * 2.机台为查询下拉模式选择
  * 3.时间格式为yyyy-mm-dd，时间控件月份自动加一为正确时间
  * 4.规格名称有中文和特殊字符需要转换
+ * 5.扫描改为广播监听响应方式
  */
 public class FormingSupplementActivity extends BaseActivity {
 
@@ -68,6 +72,15 @@ public class FormingSupplementActivity extends BaseActivity {
         initView();
         //设置控件事件
         initEvent();
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
     }
 
     public void initView() {
@@ -228,6 +241,30 @@ public class FormingSupplementActivity extends BaseActivity {
         String parm = "TYPE_ID=10107";
         new MCHIDTask().execute(parm);
     }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        tvBarCode.setText(barCode);
+                    } else {
+                        Toast.makeText(FormingSupplementActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //班组
     class ShiftTask extends AsyncTask<String, Void, String> {
@@ -414,6 +451,24 @@ public class FormingSupplementActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
+    //是否纯数字
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -422,6 +477,7 @@ public class FormingSupplementActivity extends BaseActivity {
         switch (keyCode) {
             case 0:
                 tvBarCode.requestFocus();
+                tvBarCode.setText("");
                 break;
         }
 

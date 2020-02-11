@@ -1,9 +1,11 @@
 package com.hsproduce.activity;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,11 +29,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+
 /**
  * 成型明细变更页面
  * 扫描条码查询成型生产明细，修改明细发送到后台
  * createBy zhangzhr @ 2019-12-21
  * 1.注意规格名称中文和特殊字符需要转换
+ * 2.扫描改为广播监听响应方式
  */
 public class FormingDetailChangeActivity extends BaseActivity {
 
@@ -61,11 +67,21 @@ public class FormingDetailChangeActivity extends BaseActivity {
         initEvent();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
+
     public void initView() {
         //补录条码
         tvBarCode = (TextView) findViewById(R.id.barcode);
         //获得焦点
         tvBarCode.requestFocus();
+        tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //规格编码
         tvSpesc = (TextView) findViewById(R.id.spesc);
         //机台号
@@ -166,6 +182,31 @@ public class FormingDetailChangeActivity extends BaseActivity {
             new SelDetailedTask().execute(parm);
         }
     }
+
+    //广播监听
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        tvBarCode.setText(barCode);
+                        getCodeDetail();
+                    } else {
+                        Toast.makeText(FormingDetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //根据条码查询明细
     class SelDetailedTask extends AsyncTask<String, Void, String> {
@@ -424,6 +465,24 @@ public class FormingDetailChangeActivity extends BaseActivity {
         return sb.toString();
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
+    //是否纯数字
+    public Boolean isNum(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!(c >= '0' && c <= '9')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -443,9 +502,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时
         switch (keyCode) {
-            case 0://扫描键
-                getCodeDetail();//查询明细
-                break;
+//            case 0://扫描键
+//                getCodeDetail();//查询明细
+//                break;
             case 22://右方向键
                 getCodeDetail();
                 break;

@@ -42,6 +42,7 @@ import static java.lang.Thread.sleep;
  * 点击取消扫描从装车单明细中删除
  * 点击装车完成发送装车单给WMS
  * creatBy zhangzhr @ 2020-01-07
+ * 1.扫描方式改为广播监听响应
  */
 public class LoadFactoryActivity extends BaseActivity {
 
