@@ -101,4 +101,11 @@ public interface PathUtil {
     public static final String OUTVULBARCODE = SERVER + "/api/PDA/DelVrecord";
     //成型条码补录
     public static final String FORMINGSUPPLEMENT = SERVER + "/api/PDA/SupplementForming_BarCode";
+    //新质检
+    public static final String qualityTesting_N = SERVER + "/api/PDA/qualityTesting_N";
+    //复检
+    public static final String reExamination = SERVER + "/api/PDA/reExamination";
+    //查询热补
+    public static final String selQualityTesting = SERVER + "/api/PDA/selQualityTesting";
+
 }
