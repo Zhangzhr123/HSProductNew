@@ -1,0 +1,108 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/contentConstraintLayout"
+                                             android:layout_width="240dp"
+                                             android:layout_height="250dp">
+    <TextView
+            android:id="@+id/textview"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="质检"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="0dp"
+            app:layout_constraintVertical_bias="0.013"/>
+
+    <TextView
+            android:id="@+id/typeTextview"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="不合格原因："
+            android:textColor="@color/black_textview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintVertical_bias="0.322"/>
+    <EditText
+            android:id="@+id/input"
+            android:textSize="20sp"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edit_background"
+            android:textColor="@color/black_textview"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextview" app:layout_constraintEnd_toEndOf="@+id/typeTextview"
+            app:layout_constraintStart_toStartOf="@+id/typeTextview" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintHorizontal_bias="0.275"/>
+    <TextView
+            android:id="@+id/typeTextview2"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备注："
+            android:textColor="@color/black_textview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input" android:layout_marginStart="16dp"
+            app:layout_constraintVertical_bias="0.068"/>
+    <EditText
+            android:id="@+id/input2"
+            android:textSize="20sp"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edit_background"
+            android:textColor="@color/black_textview"
+            app:layout_constraintEnd_toEndOf="@+id/typeTextview2"
+            app:layout_constraintStart_toStartOf="@+id/typeTextview2" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextview2"
+            app:layout_constraintHorizontal_bias="0.163"/>
+
+    <Button
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:id="@+id/finish"
+            app:layout_editor_absoluteX="16dp"
+            android:layout_marginTop="8dp"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:background="@color/green"
+            app:layout_constraintTop_toBottomOf="@+id/input2" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/input2"/>
+
+    <Button
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:text="确定"
+            android:id="@+id/ok"
+            android:textColor="@color/white"
+            android:background="@color/blue"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/input2" app:layout_constraintEnd_toEndOf="@+id/input2"
+            android:layout_marginEnd="8dp"/>
+    <CheckBox
+            android:text="报废"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_editor_absoluteY="39dp"
+            app:layout_editor_absoluteX="0dp" android:id="@+id/checkBox1" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview" app:layout_constraintStart_toStartOf="@+id/textview"
+            android:layout_marginStart="0dp"/>
+    <CheckBox
+            android:text="打磨(B"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_editor_absoluteY="39dp"
+            app:layout_editor_absoluteX="60dp" android:id="@+id/checkBox2" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview" app:layout_constraintStart_toEndOf="@+id/checkBox1"
+            android:layout_marginStart="0dp"/>
+    <CheckBox
+            android:text="热补(A"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_editor_absoluteY="40dp"
+            app:layout_editor_absoluteX="120dp" android:id="@+id/checkBox3" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview" app:layout_constraintStart_toEndOf="@+id/checkBox2"
+            android:layout_marginStart="0dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

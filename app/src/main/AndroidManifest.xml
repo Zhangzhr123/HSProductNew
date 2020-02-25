@@ -130,6 +130,11 @@
                 android:launchMode="singleInstance"
                 android:name=".activity.FormingSupplementActivity">
         </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.NewCheckActivity">
+        </activity>
     </application>
 
 </manifest>
