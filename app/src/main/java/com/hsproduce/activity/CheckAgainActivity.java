@@ -166,7 +166,7 @@ public class CheckAgainActivity extends BaseActivity {
     }
 
     //合格
-    public void isCheck(){
+    public void isCheck() {
         if (StringUtil.isNullOrEmpty(sBarCode)) {
             Toast.makeText(CheckAgainActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
             return;
@@ -500,21 +500,7 @@ public class CheckAgainActivity extends BaseActivity {
                         }
                         //获取不合格原因
                         error = datas.get(0).getReason();
-                        if (datas.get(0).getReason().equals("A-1")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 杂物");
-                        } else if (datas.get(0).getReason().equals("A-2")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 缺胶");
-                        } else if (datas.get(0).getReason().equals("A-3")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 气泡");
-                        } else if (datas.get(0).getReason().equals("A-4")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 损伤");
-                        } else if (datas.get(0).getReason().equals("A-5")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 杂裂口物");
-                        } else if (datas.get(0).getReason().equals("A-6")) {
-                            tv_Reson.setText(datas.get(0).getReason() + " 周牌号偏");
-                        } else {
-                            tv_Reson.setText(datas.get(0).getReason());
-                        }
+                        tv_Reson.setText(datas.get(0).getReason());
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                         tv_Time.setText(df.format(df.parse(datas.get(0).getCreatetime())));
                         tv_Name.setText(datas.get(0).getCreateuser());
