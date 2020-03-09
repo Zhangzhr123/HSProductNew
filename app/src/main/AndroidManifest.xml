@@ -135,6 +135,11 @@
                 android:launchMode="singleInstance"
                 android:name=".activity.NewCheckActivity">
         </activity>
+        <activity
+                android:screenOrientation="portrait"
+                android:launchMode="singleInstance"
+                android:name=".activity.CheckAgainActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.icu.text.StringSearch;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -22,9 +21,7 @@ import com.hsproduce.bean.VreCord;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
-import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,17 +32,19 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
 import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
 
 /**
- * 新改质检页面
- * 扫描条码显示硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
- * 点击不合格出现弹窗输入不合格原因，如果是热补则进行热补复检
- * createBy zahngzr @ 2020-02-20
+ * 热补复检检页面
+ * 扫描条码显示质检信息、硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
+ * 点击不合格出现弹窗输入不合格原因，点击合格则直接设为合格
+ * createBy zahngzr @ 2020-03-09
  */
-public class NewCheckActivity extends BaseActivity {
+public class CheckAgainActivity extends BaseActivity {
 
     //轮胎条码
     private TextView tvBarCode;
     //获取计划按钮
     private ImageButton btGetPlan;
+    //质检信息
+    private TextView tv_Lx, tv_Reson, tv_Time, tv_Name;
     //成型明细
     private TextView fSpesc, fSpescName, fMchId, fDate, fShift, fMaster, fState;
     //硫化明细
@@ -54,11 +53,11 @@ public class NewCheckActivity extends BaseActivity {
     private List<VreCord> data1 = new ArrayList<>();
     private List<VreCord> data2 = new ArrayList<>();
     //控件
-    private Button bt_not, bt_out;
+    private Button bt_Not, bt_Out, bt_Ok;
     //轮胎条码
     private String sBarCode = "";
     //不合格原因
-    private String reason = "";
+    private String reason = "", error;
     //备注
     private String remark = "";
     //类型
@@ -69,7 +68,7 @@ public class NewCheckActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_new_check);
+        setContentView(R.layout.activity_check_again);
         //加载控件
         initView();
         //设置控件事件
@@ -92,6 +91,11 @@ public class NewCheckActivity extends BaseActivity {
         tvBarCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //获取计划按钮
         btGetPlan = (ImageButton) findViewById(R.id.getBarCode);
+        //质检
+        tv_Lx = (TextView) findViewById(R.id.lx);
+        tv_Reson = (TextView) findViewById(R.id.reson);
+        tv_Time = (TextView) findViewById(R.id.time);
+        tv_Name = (TextView) findViewById(R.id.name);
         //成型
         fSpesc = (TextView) findViewById(R.id.fspesc);
         fSpescName = (TextView) findViewById(R.id.fspescname);
@@ -110,8 +114,9 @@ public class NewCheckActivity extends BaseActivity {
         vMaster = (TextView) findViewById(R.id.vmaster);
         vState = (TextView) findViewById(R.id.vstate);
         //控件
-        bt_not = (Button) findViewById(R.id.not);
-        bt_out = (Button) findViewById(R.id.out);
+        bt_Not = (Button) findViewById(R.id.not);
+        bt_Out = (Button) findViewById(R.id.out);
+        bt_Ok = (Button) findViewById(R.id.ok);
 
 
     }
@@ -124,20 +129,22 @@ public class NewCheckActivity extends BaseActivity {
                 getBarCode();
             }
         });
+
         //点击不合格按钮弹窗
-        bt_not.setOnClickListener(new View.OnClickListener() {
+        bt_Not.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (StringUtil.isNullOrEmpty(sBarCode)) {
-                    Toast.makeText(NewCheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     dialogToCheck();
                 }
             }
         });
+
         //点击返回按钮
-        bt_out.setOnClickListener(new View.OnClickListener() {
+        bt_Out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sBarCode = "";
@@ -149,12 +156,33 @@ public class NewCheckActivity extends BaseActivity {
             }
         });
 
+        //点击合格按钮
+        bt_Ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCheck();
+            }
+        });
+    }
+
+    //合格
+    public void isCheck(){
+        if (StringUtil.isNullOrEmpty(sBarCode)) {
+            Toast.makeText(CheckAgainActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (StringUtil.isNullOrEmpty(error)) {
+            Toast.makeText(CheckAgainActivity.this, "不合格原因为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String parm = "barCode=" + sBarCode + "&isHg=0" + "&type=3" + "&reason=" + error + "&remarks=" + "&userName=" + App.username;
+        new reExaminationTask().execute(parm);
     }
 
     //质检弹窗
     public void dialogToCheck() {
         //显示弹窗
-        final MaterialDialog dialog = new MaterialDialog.Builder(NewCheckActivity.this)
+        final MaterialDialog dialog = new MaterialDialog.Builder(CheckAgainActivity.this)
                 .customView(R.layout.dialog_checkbox, true)
                 .show();
         //控件
@@ -220,12 +248,12 @@ public class NewCheckActivity extends BaseActivity {
                         check();
                     } else {
                         reason = "";
-                        Toast.makeText(NewCheckActivity.this, "报废类型和不合格原因不能为空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckAgainActivity.this, "报废类型和不合格原因不能为空", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else {
                     reason = "";
-                    Toast.makeText(NewCheckActivity.this, "报废类型和不合格原因不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "报废类型和不合格原因不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialog.dismiss();
@@ -239,17 +267,15 @@ public class NewCheckActivity extends BaseActivity {
         //不合格原因
         String error = reason;
         if (error == null || error.equals("")) {
-            Toast.makeText(NewCheckActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckAgainActivity.this, "不合格原因为必填项，请输入", Toast.LENGTH_SHORT).show();
             return;
         }
         if (StringUtil.isNullOrEmpty(sBarCode)) {
-            Toast.makeText(NewCheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckAgainActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
             return;
         }
-        String parm = "barCode=" + sBarCode + "&type=" + size[0] + "&reason=" + error + "&remarks=" + remark + "&userName=" + App.username;
-        new QualityTestingTask().execute(parm);
-        //刷新数据
-        getBarCode();
+        String parm = "barCode=" + sBarCode + "&isHg=1" + "&type=" + size[0] + "&reason=" + error + "&remarks=" + remark + "&userName=" + App.username;
+        new reExaminationTask().execute(parm);
     }
 
 
@@ -261,6 +287,8 @@ public class NewCheckActivity extends BaseActivity {
             return;
         } else {
             String parm = "SwitchTYRE_CODE=" + barCode;
+            String parm1 = "barCode=" + barCode;
+            new selQualityTestingTask().execute(parm1);
             new GetFormingDetail().execute(parm);
             new GetVulcanizaDetail().execute(parm);
         }
@@ -294,7 +322,7 @@ public class NewCheckActivity extends BaseActivity {
                         sBarCode = barCode;
                         getBarCode(barCode);
                     } else {
-                        Toast.makeText(NewCheckActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckAgainActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -327,7 +355,7 @@ public class NewCheckActivity extends BaseActivity {
             fState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(NewCheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CheckAgainActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -357,7 +385,7 @@ public class NewCheckActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(NewCheckActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -386,7 +414,7 @@ public class NewCheckActivity extends BaseActivity {
             vState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(NewCheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CheckAgainActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
@@ -414,7 +442,7 @@ public class NewCheckActivity extends BaseActivity {
                     } else {
 //                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         if ((data1 == null && data2 == null) || (data1.isEmpty() && data2.isEmpty())) {
-                            Toast.makeText(NewCheckActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CheckAgainActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
                         }
                     }
                     data1.clear();
@@ -422,7 +450,7 @@ public class NewCheckActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(NewCheckActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -430,43 +458,120 @@ public class NewCheckActivity extends BaseActivity {
         }
     }
 
-    //质检 不合格品登记
-    class QualityTestingTask extends AsyncTask<String, Void, String> {
+    //查询热补质检信息
+    class selQualityTestingTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = HttpUtil.sendGet(PathUtil.qualityTesting_N, strings[0]);
+            String result = HttpUtil.sendGet(PathUtil.selQualityTesting, strings[0]);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //清空数据
+            tv_Lx.setText("");
+            tv_Reson.setText("");
+            tv_Time.setText("");
+            tv_Name.setText("");
+
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(CheckAgainActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                try {
+                    Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
+                    }.getType());
+                    List<CheckReason> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<CheckReason>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(CheckAgainActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (res.get("code").equals("200")) {
+                        //填入信息
+                        if (datas.get(0).getType().equals("1")) {
+                            tv_Lx.setText("报废");
+                        } else if (datas.get(0).getType().equals("2")) {
+                            tv_Lx.setText("打磨");
+                        } else if (datas.get(0).getType().equals("3")) {
+                            tv_Lx.setText("热补");
+                        } else {
+                            tv_Lx.setText(datas.get(0).getType());
+                        }
+                        //获取不合格原因
+                        error = datas.get(0).getReason();
+                        if (datas.get(0).getReason().equals("A-1")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 杂物");
+                        } else if (datas.get(0).getReason().equals("A-2")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 缺胶");
+                        } else if (datas.get(0).getReason().equals("A-3")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 气泡");
+                        } else if (datas.get(0).getReason().equals("A-4")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 损伤");
+                        } else if (datas.get(0).getReason().equals("A-5")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 杂裂口物");
+                        } else if (datas.get(0).getReason().equals("A-6")) {
+                            tv_Reson.setText(datas.get(0).getReason() + " 周牌号偏");
+                        } else {
+                            tv_Reson.setText(datas.get(0).getReason());
+                        }
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        tv_Time.setText(df.format(df.parse(datas.get(0).getCreatetime())));
+                        tv_Name.setText(datas.get(0).getCreateuser());
+                        Toast.makeText(CheckAgainActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        Toast.makeText(CheckAgainActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(CheckAgainActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        }
+    }
+
+    //复检
+    class reExaminationTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = HttpUtil.sendGet(PathUtil.reExamination, strings[0]);
             return result;
         }
 
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(NewCheckActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CheckAgainActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(NewCheckActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckAgainActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (res.get("code").equals("200")) {
+                        //清空数据
                         sBarCode = "";
                         reason = "";
                         remark = "";
                         size[0] = 0;
                         tvBarCode.setText("");
-                        Toast.makeText(NewCheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckAgainActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        Toast.makeText(NewCheckActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CheckAgainActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(NewCheckActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -523,13 +628,16 @@ public class NewCheckActivity extends BaseActivity {
                 tofunction();//返回功能菜单页面
                 break;
             case 131://F1键
+                isCheck();
+                break;
+            case 132://F2键
                 if (StringUtil.isNullOrEmpty(sBarCode)) {
-                    Toast.makeText(NewCheckActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckAgainActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
                 } else {
                     dialogToCheck();
                 }
                 break;
-            case 132://F2键
+            case 133://F3键
                 sBarCode = "";
                 reason = "";
                 remark = "";
