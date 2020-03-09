@@ -301,6 +301,8 @@ public class CheckAgainActivity extends BaseActivity {
         sBarCode = tvBarCode.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(sBarCode) && sBarCode.length() == 12 && isNum(sBarCode) == true) {
             String parm = "SwitchTYRE_CODE=" + sBarCode;
+            String parm1 = "barCode=" + sBarCode;
+            new selQualityTestingTask().execute(parm1);
             new GetFormingDetail().execute(parm);
             new GetVulcanizaDetail().execute(parm);
         } else {
