@@ -3,6 +3,7 @@ package com.hsproduce.activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -56,6 +57,7 @@ public class SwitchFormingActivity extends BaseActivity {
     private String num = "";
     //是否提示错误
     private Boolean isShow = true;
+    private String preEndCode = "";//上一计划结束条码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,15 +269,18 @@ public class SwitchFormingActivity extends BaseActivity {
         View customeView = dialog.getCustomView();
         final TextView itnbr = customeView.findViewById(R.id.input);
         final TextView itdec = customeView.findViewById(R.id.input4);
-        final TextView number = customeView.findViewById(R.id.input2);
+        final EditText ed_StartCode = customeView.findViewById(R.id.input2);
         final EditText ed_EndCode = dialog.findViewById(R.id.input3);
+        //设置扫描框输入字符数
+        ed_StartCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        ed_EndCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //获取焦点
         ed_EndCode.requestFocus();
 
         if (vplan != null) {
             itnbr.setText(vplan.getItnbr());
             itdec.setText(vplan.getItdsc());
-            number.setText(vplan.getPnum());
+            ed_StartCode.setText(vplan.getBarcodestart());
             ed_EndCode.setText("");
         }
         Button finish = customeView.findViewById(R.id.finish);
@@ -353,9 +358,22 @@ public class SwitchFormingActivity extends BaseActivity {
                     return;
                 }
 
-                //执行操作接口
-                String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                new FINISHTask().execute(param);
+                //上一计划结束条码
+                if(!StringUtil.isNullOrEmpty(preEndCode)){
+                    preEndCode = "";
+                }
+                preEndCode = ed_EndCode.getText().toString().trim();
+                //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
+                if(ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                    //执行结束上一计划操作
+                    String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                    new FINISHTask().execute(param);
+                }else if(!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                    //执行开始计划接口更新开始条码
+                    String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                    new PRESTARTTask().execute(param);
+                }
+
                 dialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(SwitchFormingActivity.this);
@@ -572,6 +590,46 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
 
+                    } else {
+                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        }
+    }
+
+    //修改上一计划开始条码
+    class PRESTARTTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.GETSTART, strs[0]);
+            return result;
+        }
+
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(SwitchFormingActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchFormingActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (res.get("code").equals("200")) {
+                        //执行结束上一计划操作
+                        String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                        new FINISHTask().execute(param);
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
