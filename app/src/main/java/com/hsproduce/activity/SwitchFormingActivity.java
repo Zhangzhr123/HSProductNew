@@ -305,33 +305,34 @@ public class SwitchFormingActivity extends BaseActivity {
                 String endCode = ed_EndCode.getText().toString();
 
                 //如果为空则进行操作
-                if (endCode.equals("")) {
+                if (endCode.equals("") || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
                     Toast.makeText(SwitchFormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (endCode.length() != 12) {
+                if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
                     Toast.makeText(SwitchFormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String endjt = endCode.substring(4, 6);
-                if (!jt.equals(endjt)) {
+                String startjt = ed_StartCode.getText().toString().substring(4, 6);
+                if (!jt.equals(endjt) || !jt.equals(startjt)) {
                     Toast.makeText(SwitchFormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String start = vplan.getBarcodestart().substring(0, 6);
+                String start = ed_StartCode.getText().toString().substring(0, 6);
                 String end = endCode.substring(0, 6);
                 if (!start.equals(end)) {
                     Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //判断数量是否正确
-                Integer startNum = Integer.valueOf(vplan.getBarcodestart().substring(6, 12));
+                Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
                 Integer endNum = Integer.valueOf(endCode.substring(6, 12));
                 if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
                     final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
                     normalDialog.setTitle("提示");
-                    normalDialog.setMessage("开始条码为：" + vplan.getBarcodestart() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                    normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
                     normalDialog.setPositiveButton("确定",
                             new DialogInterface.OnClickListener() {
                                 @Override
