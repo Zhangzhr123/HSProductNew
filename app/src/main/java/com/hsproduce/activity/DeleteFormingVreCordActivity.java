@@ -191,8 +191,12 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
         mchid = actvMchid.getText().toString().trim();
         date = tvDate.getText().toString().trim();
 
-        if (StringUtil.isNullOrEmpty(mchid) || StringUtil.isNullOrEmpty(date)) {
-            Toast.makeText(DeleteFormingVreCordActivity.this, "查询条件不能为空", Toast.LENGTH_SHORT).show();
+        if (StringUtil.isNullOrEmpty(mchid)) {
+            Toast.makeText(DeleteFormingVreCordActivity.this, "机台号不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (StringUtil.isNullOrEmpty(date)) {
+            Toast.makeText(DeleteFormingVreCordActivity.this, "查询时间不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -455,7 +459,7 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
                     if (barCode.length() == 12 && isNum(barCode) == true) {
                         getBarCode(barCode);
                     }else{
-                        Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeleteFormingVreCordActivity.this, "请重新输入机台号", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

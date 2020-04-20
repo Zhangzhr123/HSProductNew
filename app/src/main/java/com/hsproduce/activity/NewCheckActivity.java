@@ -166,35 +166,35 @@ public class NewCheckActivity extends BaseActivity {
         Button returnDialog = customeView.findViewById(R.id.finish);
         Button okDialog = customeView.findViewById(R.id.ok);
         //复选框
-        final CheckBox checkBox1 = customeView.findViewById(R.id.checkBox1);
-        final CheckBox checkBox2 = customeView.findViewById(R.id.checkBox2);
-        final CheckBox checkBox3 = customeView.findViewById(R.id.checkBox3);
+        final RadioGroup group_temo = (RadioGroup) customeView.findViewById(R.id.rg_1);
+        //改变默认的选项
+        group_temo.check(R.id.rb_1);
+        //获取默认被被选中值
+        final RadioButton[] checkRadioButton = {(RadioButton) group_temo.findViewById(group_temo.getCheckedRadioButtonId())};
+         //注册事件
+        group_temo.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                //点击事件获取的选择对象
+                checkRadioButton[0] = (RadioButton) group_temo.findViewById(checkedId);
+                if(checkRadioButton[0].getText().equals("报废")){
+                    size[0] = 1;
+                }else if(checkRadioButton[0].getText().equals("打磨(B")){
+                    size[0] = 2;
+                }else if(checkRadioButton[0].getText().equals("热补(A")){
+                    size[0] = 3;
+                }else{
+                    Toast.makeText(NewCheckActivity.this, "请选择报废类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         //点击取消
         returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-            }
-        });
-        ////报废
-        checkBox1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                size[0] = 1;
-            }
-        });
-        //打磨(B)
-        checkBox2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                size[0] = 2;
-            }
-        });
-        //热补(A)
-        checkBox3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                size[0] = 3;
             }
         });
 
