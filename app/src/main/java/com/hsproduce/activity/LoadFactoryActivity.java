@@ -814,6 +814,14 @@ public class LoadFactoryActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
+        if (keyCode == 0) {
+            if(sizePager == 2){
+                barcode.setText("");
+            }
+            if(sizePager == 3){
+                outbarcode.setText("");
+            }
+        }
         return true;
     }
 
