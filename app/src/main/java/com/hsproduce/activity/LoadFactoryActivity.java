@@ -329,6 +329,19 @@ public class LoadFactoryActivity extends BaseActivity {
         new SelVLoadTask().execute(parm);
         //初始页
         sizePager = 0;
+        //数据清空
+        itnbr.setText("");
+        itndsc.setText("");
+        anum.setText("0");
+        number = 0;
+        log.clear();
+        codeList.clear();
+        outanum.setText("0");
+        outlog.clear();
+        outnumber = 0;
+        outCodeList.clear();
+        barcodelog.setText("");
+        outbarcodelog.setText("");
     }
 
     //出厂扫描返回
