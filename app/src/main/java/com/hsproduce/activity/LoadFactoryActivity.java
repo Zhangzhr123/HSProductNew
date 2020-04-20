@@ -836,28 +836,42 @@ public class LoadFactoryActivity extends BaseActivity {
         //右方向键
         if (keyCode == 22) {
             if (!StringUtil.isNullOrEmpty(barcode.getText().toString().trim())) {
-                String barCode = barcode.getText().toString().trim();
-                loadcode(barCode);
-            } else if (!StringUtil.isNullOrEmpty(outbarcode.getText().toString().trim())) {
-                String barCode = outbarcode.getText().toString().trim();
-                outcode(barCode);
-            } else {
+                if (sizePager == 2) {
+                    String barCode = barcode.getText().toString().trim();
+                    loadcode(barCode);
+                }
+            }
+            if (!StringUtil.isNullOrEmpty(outbarcode.getText().toString().trim())) {
+                if (sizePager == 3) {
+                    String barCode = outbarcode.getText().toString().trim();
+                    outcode(barCode);
+                }
+            }
+            if(sizePager == 0) {
                 getSearch();
             }
         }
         //增加快捷键
         switch (keyCode) {
             case 131://F1键
-                getInScan();//出场扫描
+                if (sizePager == 1) {
+                    getInScan();//出场扫描
+                }
                 break;
             case 132://F2键
-                getOutScan();//取消扫描
+                if (sizePager == 1) {
+                    getOutScan();//取消扫描
+                }
                 break;
             case 133://F3键
-                getOut();//返回
+                if (sizePager == 1) {
+                    getOut();//返回
+                }
                 break;
             case 134://F4键
-                setWMS();//装车完成
+                if (sizePager == 1) {
+                    setWMS();//装车完成
+                }
                 break;
             default:
                 break;
