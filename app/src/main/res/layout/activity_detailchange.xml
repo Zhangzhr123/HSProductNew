@@ -39,6 +39,8 @@
                 android:layout_height="@dimen/input_height"
                 android:layout_margin="@dimen/input_margin"
                 android:hint="@string/vul_barcode_scan"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textAlignment="center"/>
         <!-- 搜索按钮 -->
         <com.xuexiang.xui.widget.button.ButtonView

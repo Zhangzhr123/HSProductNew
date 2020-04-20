@@ -39,6 +39,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:hint="@string/vul_scan_mchid"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:completionThreshold="1"
                 android:textAlignment="center"/>
         <!--            <com.xuexiang.xui.widget.edittext.ClearEditText-->

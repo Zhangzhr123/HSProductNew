@@ -111,8 +111,12 @@ public class SelectFormingPlanActivity extends BaseActivity {
         mchid = tvMchid.getText().toString().trim();
         date = tvDate.getText().toString().trim();
 
-        if(StringUtil.isNullOrEmpty(mchid) || StringUtil.isNullOrEmpty(date)){
-            Toast.makeText(SelectFormingPlanActivity.this, "查询条件不能为空", Toast.LENGTH_SHORT).show();
+        if(StringUtil.isNullOrEmpty(mchid)){
+            Toast.makeText(SelectFormingPlanActivity.this, "机台号不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(StringUtil.isNullOrEmpty(date)){
+            Toast.makeText(SelectFormingPlanActivity.this, "查询日期不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -205,13 +209,11 @@ public class SelectFormingPlanActivity extends BaseActivity {
                         Toast.makeText(SelectFormingPlanActivity.this, "没有成型计划", Toast.LENGTH_SHORT).show();
                     }
 
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(SelectFormingPlanActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
             }
         }
     }
@@ -222,12 +224,6 @@ public class SelectFormingPlanActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         //按键按下
-        return true;
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //按键弹开
         switch (keyCode) {
             case 22://右方向键
                 getCurrentVPlan();
@@ -238,6 +234,12 @@ public class SelectFormingPlanActivity extends BaseActivity {
             default:
                 break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        //按键弹开
         return true;
     }
 

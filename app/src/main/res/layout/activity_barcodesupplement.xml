@@ -38,6 +38,8 @@
                         android:layout_height="@dimen/input_height"
                         android:layout_margin="@dimen/input_margin_xs"
                         android:hint="@string/vul_barcode_scan"
+                        android:maxLines="1"
+                        android:singleLine="true"
                         android:textAlignment="center"/>
             </LinearLayout>
             <View

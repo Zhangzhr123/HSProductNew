@@ -196,7 +196,7 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
             return;
         }
         if (StringUtil.isNullOrEmpty(date)) {
-            Toast.makeText(DeleteFormingVreCordActivity.this, "查询时间不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DeleteFormingVreCordActivity.this, "查询日期不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");

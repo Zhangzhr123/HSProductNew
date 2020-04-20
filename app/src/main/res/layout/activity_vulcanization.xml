@@ -74,6 +74,8 @@
                 android:layout_width="160dp"
                 android:layout_height="30dp"
                 android:hint="请扫描条码"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:layout_marginLeft="5dp"/>
     </LinearLayout>

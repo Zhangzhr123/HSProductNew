@@ -33,6 +33,8 @@
                 android:layout_width="160dp"
                 android:layout_height="30dp"
                 android:hint="@string/old_barcode_scan"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:layout_margin="5dp"/>
         <!-- 搜索按钮 -->
@@ -177,6 +179,8 @@
                 android:layout_width="160dp"
                 android:layout_height="30dp"
                 android:hint="@string/new_barcode_scan"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:layout_margin="5dp"/>
         <!-- 搜索按钮 -->
