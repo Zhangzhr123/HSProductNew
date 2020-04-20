@@ -44,6 +44,7 @@ import static java.lang.Thread.sleep;
  * 点击装车完成发送装车单给WMS
  * creatBy zhangzhr @ 2020-01-07
  * 1.扫描方式改为广播监听响应
+ * 2.倒序输出修改
  */
 public class LoadFactoryActivity extends BaseActivity {
 
@@ -289,30 +290,6 @@ public class LoadFactoryActivity extends BaseActivity {
         sizePager = 3;
     }
 
-    //取消扫描返回
-    public void getOutOk() {
-        //隐藏
-        lloutok.setVisibility(View.GONE);
-        lloutcodelog.setVisibility(View.GONE);
-        lloutcode.setVisibility(View.GONE);
-        outload.setVisibility(View.GONE);//标题
-        //显示
-        load.setVisibility(View.VISIBLE);//标题
-        lvloadfac.setVisibility(View.VISIBLE);
-        ll_load.setVisibility(View.VISIBLE);
-        table.setVisibility(View.VISIBLE);
-        hs_spesc.setVisibility(View.VISIBLE);
-        llfacok.setVisibility(View.VISIBLE);
-        //刷新规格列表
-        //outanum.setText("0");
-        //outlog.clear();
-        //outnumber = 0;
-        outCodeList.clear();
-        new SelVLoadListMXTask().execute("ID=" + Id);
-        //第1页
-        sizePager = 1;
-    }
-
     //返回初始页面
     public void getOut() {
         //隐藏
@@ -330,18 +307,20 @@ public class LoadFactoryActivity extends BaseActivity {
         //初始页
         sizePager = 0;
         //数据清空
+        //出厂扫描
         itnbr.setText("");
         itndsc.setText("");
-        anum.setText("0");
         number = 0;
+        anum.setText("0");
+        barcodelog.setText("");
         log.clear();
         codeList.clear();
-        outanum.setText("0");
-        outlog.clear();
+        //取消扫描
         outnumber = 0;
-        outCodeList.clear();
-        barcodelog.setText("");
+        outanum.setText("0");
         outbarcodelog.setText("");
+        outlog.clear();
+        outCodeList.clear();
     }
 
     //出厂扫描返回
@@ -368,6 +347,30 @@ public class LoadFactoryActivity extends BaseActivity {
         //number = 0;
         //log.clear();
         codeList.clear();
+        new SelVLoadListMXTask().execute("ID=" + Id);
+        //第1页
+        sizePager = 1;
+    }
+
+    //取消扫描返回
+    public void getOutOk() {
+        //隐藏
+        lloutok.setVisibility(View.GONE);
+        lloutcodelog.setVisibility(View.GONE);
+        lloutcode.setVisibility(View.GONE);
+        outload.setVisibility(View.GONE);//标题
+        //显示
+        load.setVisibility(View.VISIBLE);//标题
+        lvloadfac.setVisibility(View.VISIBLE);
+        ll_load.setVisibility(View.VISIBLE);
+        table.setVisibility(View.VISIBLE);
+        hs_spesc.setVisibility(View.VISIBLE);
+        llfacok.setVisibility(View.VISIBLE);
+        //刷新规格列表
+        //outanum.setText("0");
+        //outlog.clear();
+        //outnumber = 0;
+        outCodeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
         sizePager = 1;

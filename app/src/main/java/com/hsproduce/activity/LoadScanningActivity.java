@@ -1,4 +1,5 @@
 package com.hsproduce.activity;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -195,7 +196,6 @@ public class LoadScanningActivity extends BaseActivity {
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         list.add("[" + date + "]" + scanBarCode);
-                        //list.add(scanbarcode);
                         tvBarCodeLog.setText("");
                         for (int i = 0; i < list.size(); i++) {
                             if (i == 0) {
@@ -225,8 +225,7 @@ public class LoadScanningActivity extends BaseActivity {
     //递归显示
     public String getlog(List<String> list) {
         String logstr = "";
-        Collections.reverse(list);//倒序
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             logstr += list.get(i) + "\n";
         }
         return logstr;
