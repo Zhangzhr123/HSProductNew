@@ -167,8 +167,6 @@ public class NewCheckActivity extends BaseActivity {
         Button okDialog = customeView.findViewById(R.id.ok);
         //复选框
         final RadioGroup group_temo = (RadioGroup) customeView.findViewById(R.id.rg_1);
-        //改变默认的选项
-        group_temo.check(R.id.rb_1);
         //获取默认被被选中值
         final RadioButton[] checkRadioButton = {(RadioButton) group_temo.findViewById(group_temo.getCheckedRadioButtonId())};
          //注册事件

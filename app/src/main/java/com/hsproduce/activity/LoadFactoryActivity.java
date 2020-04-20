@@ -1,4 +1,5 @@
 package com.hsproduce.activity;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -260,7 +261,7 @@ public class LoadFactoryActivity extends BaseActivity {
         llscanok.setVisibility(View.VISIBLE);
         //焦点扫描框
         barcode.setText("");
-        barcodelog.setText("");
+        //barcodelog.setText("");
         barcode.requestFocus();
         //第二页
         sizePager = 2;
@@ -282,7 +283,7 @@ public class LoadFactoryActivity extends BaseActivity {
         lloutok.setVisibility(View.VISIBLE);
         //锁定扫描框
         outbarcode.setText("");
-        outbarcodelog.setText("");
+        //outbarcodelog.setText("");
         outbarcode.requestFocus();
         //第三页
         sizePager = 3;
@@ -303,9 +304,9 @@ public class LoadFactoryActivity extends BaseActivity {
         hs_spesc.setVisibility(View.VISIBLE);
         llfacok.setVisibility(View.VISIBLE);
         //刷新规格列表
-        outanum.setText("0");
-        outlog.clear();
-        outnumber = 0;
+        //outanum.setText("0");
+        //outlog.clear();
+        //outnumber = 0;
         outCodeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
@@ -348,11 +349,11 @@ public class LoadFactoryActivity extends BaseActivity {
         llfacok.setVisibility(View.VISIBLE);
         //刷新规格列表
         //清空数据
-        itnbr.setText("");
-        itndsc.setText("");
-        anum.setText("0");
-        number = 0;
-        log.clear();
+        //itnbr.setText("");
+        //itndsc.setText("");
+        //anum.setText("0");
+        //number = 0;
+        //log.clear();
         codeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
@@ -424,11 +425,11 @@ public class LoadFactoryActivity extends BaseActivity {
                     //判断条码是否为空
                     if (!StringUtil.isNullOrEmpty(barCode)) {
                         if (barCode.length() == 12 && isNumeric(barCode) == true) {
-                            if(sizePager == 2){//出厂扫描
+                            if (sizePager == 2) {//出厂扫描
                                 loadcode(barCode);
-                            }else if(sizePager == 3){//取消扫描
+                            } else if (sizePager == 3) {//取消扫描
                                 outcode(barCode);
-                            }else{
+                            } else {
                                 return;
                             }
 
@@ -639,7 +640,6 @@ public class LoadFactoryActivity extends BaseActivity {
                         //显示绑定条码数量
                         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                         log.add("[" + date + "]" + code);
-                        //log.add(code);
                         barcodelog.setText("");
                         for (int i = 0; i < log.size(); i++) {
                             if (i == 0) {
@@ -770,11 +770,10 @@ public class LoadFactoryActivity extends BaseActivity {
         return true;
     }
 
-    //递归显示
+    //递归显示倒序输出
     public String getlog(List<String> list) {
         String logstr = "";
-        Collections.reverse(list);//倒序
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             logstr += list.get(i) + "\n";
         }
         return logstr;
@@ -782,8 +781,7 @@ public class LoadFactoryActivity extends BaseActivity {
 
     public String getoutlog(List<String> list) {
         String logstr = "";
-        Collections.reverse(list);//倒序
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             logstr += list.get(i) + "\n";
         }
         return logstr;
