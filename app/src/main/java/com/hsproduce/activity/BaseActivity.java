@@ -15,9 +15,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.hsproduce.App;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 基础页面
@@ -167,5 +171,23 @@ public abstract class BaseActivity extends Activity {
             HttpUtil.sendGet(PathUtil.LOGOUT, "");
             return null;
         }
+    }
+
+    //设置弹出信息时长
+    public void showMyToast(final Toast toast, final int cnt) {
+        final Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                toast.show();
+            }
+        }, 0, 1000);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                toast.cancel();
+                timer.cancel();
+            }
+        }, cnt );
     }
 }

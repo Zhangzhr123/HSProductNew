@@ -106,7 +106,8 @@ public class VulcanizationActivity extends BaseActivity {
             tvMchId.setText("");
         }
         if (StringUtil.isNullOrEmpty(mchid)) {
-            Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(VulcanizationActivity.this, "请扫描机台号", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
             tvScan.setText("");
             return;
         } else {
@@ -122,11 +123,14 @@ public class VulcanizationActivity extends BaseActivity {
         //获取轮胎上barcode
         barCode = barcode;
         if (StringUtil.isNullOrEmpty(barCode)) {
-            Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(VulcanizationActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
+            return;
         } else {
             //扫描记录中是否已经存在该条码，存在提示已扫描，不存在调用接口记录硫化记录
             if (codeList.contains(barCode)) {
-                Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(VulcanizationActivity.this, "此条码已经扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 tvScan.setText("");
                 return;
             } else {
@@ -135,7 +139,8 @@ public class VulcanizationActivity extends BaseActivity {
                     String param1 = "PLAN_ID=" + planId + "&barcode=" + barCode + "&User_Name=" + App.username + "&TEAM=" + App.shift + "&doit=0";
                     new TypeCodeTask().execute(param1);
                 } else {
-                    Toast.makeText(VulcanizationActivity.this, "请先扫描机台", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(VulcanizationActivity.this, "请先扫描机台", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -158,12 +163,14 @@ public class VulcanizationActivity extends BaseActivity {
                         } else if (barCode.length() == 4 && isNumeric(barCode) == false) {
                             getPlan(barCode);
                         } else {
-                            Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
                             return;
                         }
 
                     } else {
-                        Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
@@ -186,7 +193,9 @@ public class VulcanizationActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
@@ -194,7 +203,9 @@ public class VulcanizationActivity extends BaseActivity {
                     List<VPlan> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VPlan>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         //清空数据
@@ -229,13 +240,16 @@ public class VulcanizationActivity extends BaseActivity {
                         adapter = new VPlanAdapter(VulcanizationActivity.this, datas);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        Toast.makeText(VulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
+                    return;
                 }
 
             }
@@ -253,13 +267,17 @@ public class VulcanizationActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(VulcanizationActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "未获取到数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
                     }
                     if (res.get("code").equals("200")) {
                         tvBarCodeLog.append(barCode + "\n");
@@ -268,9 +286,13 @@ public class VulcanizationActivity extends BaseActivity {
                         tvAnum.setText(codeList.size() + "");
                         tvSum.setText((number + codeList.size()) + "");
                     } else if (res.get("code").equals("100")) {
-                        Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确！", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "扫描条码位数不正确", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
                     } else if (res.get("code").equals("300")) {
-                        Toast.makeText(VulcanizationActivity.this, barCode + ":" + res.get("msg") + "", Toast.LENGTH_LONG).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, barCode + ":" + res.get("msg") + "", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
                     } else if (res.get("code").equals("400")) {
                         //提示音
                         SoundPlayUtils.playSoundByMedia(VulcanizationActivity.this, R.raw.raw3);
@@ -307,12 +329,16 @@ public class VulcanizationActivity extends BaseActivity {
                         materialDialog.show();
 
                     } else {
-                        Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "错误，条码未识别！", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(VulcanizationActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
+                    return;
                 }
             }
         }
@@ -380,12 +406,14 @@ public class VulcanizationActivity extends BaseActivity {
             } else if (str.length() == 4 && isNumeric(str) == false) {
                 getPlan(str);
             } else {
-                Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             }
 
         } else {
-            Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
             return;
         }
     }

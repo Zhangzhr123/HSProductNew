@@ -107,7 +107,9 @@ public class LoadScanningActivity extends BaseActivity {
         //退厂扫描条码
         //判断是否为空
         if (StringUtil.isNullOrEmpty(barCode)) {
-            Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(LoadScanningActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
+            return;
         } else {
             if (codeList.contains(barCode)) {
                 isNew = false;
@@ -119,12 +121,14 @@ public class LoadScanningActivity extends BaseActivity {
                     String parm = "TYRE_CODE=" + barCode + "&USER_NAME=" + App.username;
                     new OutsVLoadTask().execute(parm);
                 } else {
-                    Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             } else {
                 isNew = true;
-                Toast.makeText(LoadScanningActivity.this, "此条码已经扫描", Toast.LENGTH_LONG).show();
+                Toast toast = Toast.makeText(LoadScanningActivity.this, "此条码已经扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             }
 
@@ -144,11 +148,11 @@ public class LoadScanningActivity extends BaseActivity {
                         if (barCode.length() == 12 && isNum(barCode) == true) {
                             outVLoad(barCode);
                         } else {
-                            Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
                             return;
                         }
                     } else {
-//                        Toast.makeText(LoadScanningActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -181,14 +185,16 @@ public class LoadScanningActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadScanningActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadScanningActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadScanningActivity.this, "未获取到数据，数据返回异常", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadScanningActivity.this, "未获取到数据，数据返回异常", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -207,15 +213,16 @@ public class LoadScanningActivity extends BaseActivity {
                         tvAnum.setText("");
                         number++;
                         tvAnum.setText(number + "");
-//                        Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadScanningActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadScanningActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
+                    Toast toast = Toast.makeText(LoadScanningActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }

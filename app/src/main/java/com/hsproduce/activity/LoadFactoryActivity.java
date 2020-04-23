@@ -28,6 +28,7 @@ import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.button.ButtonView;
 
+import java.net.IDN;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -406,7 +407,8 @@ public class LoadFactoryActivity extends BaseActivity {
             new SelCodeTask().execute(parm1);
         } else {
             isNew = true;
-            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
             return;
         }
 
@@ -424,7 +426,8 @@ public class LoadFactoryActivity extends BaseActivity {
             new DelVLoadTask().execute(parm);
         } else {
             outIsNew = true;
-            Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(LoadFactoryActivity.this, "此条码已经扫描", Toast.LENGTH_LONG);
+            showMyToast(toast, 500);
             return;
         }
 
@@ -450,7 +453,8 @@ public class LoadFactoryActivity extends BaseActivity {
                             }
 
                         } else {
-                            Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
                             return;
                         }
                     } else {
@@ -477,7 +481,8 @@ public class LoadFactoryActivity extends BaseActivity {
         protected void onPostExecute(String s) {
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
@@ -486,7 +491,8 @@ public class LoadFactoryActivity extends BaseActivity {
                     lists = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoad>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -499,13 +505,15 @@ public class LoadFactoryActivity extends BaseActivity {
                         loadAdapter = new LoadAdapter(LoadFactoryActivity.this, lists);
                         lvload.setAdapter(loadAdapter);
                         loadAdapter.notifyDataSetChanged();
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -524,7 +532,8 @@ public class LoadFactoryActivity extends BaseActivity {
         protected void onPostExecute(String s) {
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
@@ -533,7 +542,8 @@ public class LoadFactoryActivity extends BaseActivity {
                     List<VLoadHxm> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VLoadHxm>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -559,13 +569,15 @@ public class LoadFactoryActivity extends BaseActivity {
                     } else {
                         datas.clear();
                         list.clear();
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -586,7 +598,8 @@ public class LoadFactoryActivity extends BaseActivity {
             itnbr.setText("");
             itndsc.setText("");
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
@@ -595,7 +608,8 @@ public class LoadFactoryActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -613,17 +627,20 @@ public class LoadFactoryActivity extends BaseActivity {
                             //清空数据
                             itnbr.setText("");
                             itndsc.setText("");
-                            Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG).show();
+                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "装车单中无此规格，请重新扫描！", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
                             return;
                         }
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -641,14 +658,16 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -667,19 +686,21 @@ public class LoadFactoryActivity extends BaseActivity {
                         anum.setText("");
                         number++;
                         anum.setText(number + "");
-                        barcode.setText("");
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                     } else {
                         //清空数据
                         itnbr.setText("");
                         itndsc.setText("");
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -697,14 +718,16 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
@@ -723,16 +746,18 @@ public class LoadFactoryActivity extends BaseActivity {
                         outanum.setText("");
                         outnumber++;
                         outanum.setText(outnumber + "");
-                        outbarcode.setText("");
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -750,26 +775,31 @@ public class LoadFactoryActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String s) {
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(LoadFactoryActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
                     Map<Object, Object> res = App.gson.fromJson(s, new TypeToken<Map<Object, Object>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-                        Toast.makeText(LoadFactoryActivity.this, "未获取到数据", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, "未获取数据", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
                     if (res.get("code").equals("200")) {
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                     } else {
-                        Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoadFactoryActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoadFactoryActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
             }
@@ -815,10 +845,10 @@ public class LoadFactoryActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
         if (keyCode == 0) {
-            if(sizePager == 2){
+            if (sizePager == 2) {
                 barcode.setText("");
             }
-            if(sizePager == 3){
+            if (sizePager == 3) {
                 outbarcode.setText("");
             }
         }
@@ -855,7 +885,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     outcode(barCode);
                 }
             }
-            if(sizePager == 0) {
+            if (sizePager == 0) {
                 getSearch();
             }
         }
