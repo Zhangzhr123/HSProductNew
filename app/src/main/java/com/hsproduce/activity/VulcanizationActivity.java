@@ -361,6 +361,7 @@ public class VulcanizationActivity extends BaseActivity {
         Log.e("key", keyCode + "  ");
         switch (keyCode) {
             case 0:
+                tvScan.setText("");
                 tvScan.requestFocus();
                 break;
         }
