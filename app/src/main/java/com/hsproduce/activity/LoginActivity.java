@@ -54,6 +54,7 @@ public class LoginActivity extends BaseActivity {
     //IP
     public static String IP = "";
     private String 当前版本 = "", 最新版本 = "";
+    private String teamName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +127,10 @@ public class LoginActivity extends BaseActivity {
         sp_shift.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String teamName = parent.getItemAtPosition(position).toString();
+                if(!StringUtil.isNullOrEmpty(teamName)){
+                    teamName = "";
+                }
+                teamName = parent.getItemAtPosition(position).toString();
                 String teamId = "";
                 //根据ID获取内容
                 for(int i = 0;i<teamList.size();i++){
@@ -159,10 +163,21 @@ public class LoginActivity extends BaseActivity {
             //文件下载
             download(PathUtil.文件下载);
         } else {
+            if(teamName.equals("请选择")){
+                Toast toast = Toast.makeText(LoginActivity.this, "请选择班组", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
             String username = tv_code.getText().toString().trim();
             String password = tv_password.getText().toString().trim();
-            if(StringUtil.isNullOrEmpty(username) || StringUtil.isNullOrEmpty(password)){
-                Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+            if(StringUtil.isNullOrEmpty(username)){
+                Toast toast = Toast.makeText(LoginActivity.this, "用户名不能为空", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            if(StringUtil.isNullOrEmpty(password)){
+                Toast toast = Toast.makeText(LoginActivity.this, "密码不能为空", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             }
             App.usercode = username;
@@ -197,6 +212,7 @@ public class LoginActivity extends BaseActivity {
                     teamList.addAll(datas);
                     //班组名称数据清空
                     shiftlist.clear();
+                    shiftlist.add("请选择");
                     for (int i = 0; i < map.size(); i++) {
                         shiftlist.add(map.get(i).get("name"));
                     }
@@ -362,7 +378,9 @@ public class LoginActivity extends BaseActivity {
                                 //文件下载
                                 download(PathUtil.文件下载);
                             } else {
-                                Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(LoginActivity.this, "已经是最新版本", Toast.LENGTH_LONG);
+                                showMyToast(toast, 500);
+                                return;
                             }
                         }
                     }
