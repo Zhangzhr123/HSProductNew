@@ -163,7 +163,7 @@ public class LoginActivity extends BaseActivity {
             //文件下载
             download(PathUtil.文件下载);
         } else {
-            if(teamName.equals("请选择")){
+            if(teamName.equals("请选择") || teamName.equals("") || teamName == null){
                 Toast toast = Toast.makeText(LoginActivity.this, "请选择班组", Toast.LENGTH_LONG);
                 showMyToast(toast, 500);
                 return;
