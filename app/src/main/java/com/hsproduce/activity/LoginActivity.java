@@ -1,11 +1,11 @@
 package com.hsproduce.activity;
+
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,20 +14,16 @@ import android.widget.*;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.bean.Result;
 import com.hsproduce.bean.Team;
 import com.hsproduce.bean.UpdateVersion;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
-import com.hsproduce.util.TaskUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
-
 import java.io.*;
 import java.util.*;
 
 import static android.support.constraint.Constraints.TAG;
-
 /**
  * 登录页面
  * 版本自动更新、设置动态IP地址，接收用户工号和密码
@@ -61,11 +57,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login);
-        // 获取设置的版本
-//        String version = get("myVersion");
-//        if (!TextUtils.isEmpty(version)) {
-//            App.version = version;
-//        }
+
         new 版本更新Task().execute();
 
         new ShiftTask().execute();
@@ -113,7 +105,6 @@ public class LoginActivity extends BaseActivity {
                                 } else {
                                     save("myIP", IP);
                                 }
-//                                new ShiftTask().execute();//查询班组
                                 Toast.makeText(getApplicationContext(), et.getText().toString(), Toast.LENGTH_SHORT).show();
                             }
                         }).setNegativeButton("取消", null).show();
@@ -229,7 +220,6 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... strs) {
             String result = HttpUtil.sendGet(PathUtil.LOGIN, strs[0]);
-            //String result = HttpUtil.sendPost(PathUtil.LOGIN, strs[0], HttpUtil.formContent);
             return result;
         }
 
@@ -353,7 +343,6 @@ public class LoginActivity extends BaseActivity {
     class 版本更新Task extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... voids) {
-//            UpdateVersion 终端版本 = null;
             // 获取服务器最新版本
             String result = HttpUtil.sendGet(PathUtil.获取最新版本, "");
             return result;
@@ -423,15 +412,6 @@ public class LoginActivity extends BaseActivity {
             }
         };
         registerReceiver(receiver, filter);
-        //数据持久化
-//        File file = getDir("myVersion", Context.MODE_PRIVATE);
-//        if (file != null) {
-//            deleteFile(file);
-//            save("myVersion", App.version);
-//        } else {
-//            save("myVersion", App.version);
-//        }
     }
-
 
 }
