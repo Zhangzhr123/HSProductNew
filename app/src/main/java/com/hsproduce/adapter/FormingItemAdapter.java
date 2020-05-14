@@ -79,6 +79,17 @@ public class FormingItemAdapter extends BaseAdapter {
         if (vPlan.getPnum() != null) {
             ((TextView) convertView.findViewById(R.id.pnum)).setText(vPlan.getPnum());
         }
+        if (vPlan.getShift() != null) {
+            if (vPlan.getShift().equals("1")) {
+                ((TextView) convertView.findViewById(R.id.shift)).setText("早班");
+            } else if (vPlan.getShift().equals("2")) {
+                ((TextView) convertView.findViewById(R.id.shift)).setText("中班");
+            } else if (vPlan.getShift().equals("3")) {
+                ((TextView) convertView.findViewById(R.id.shift)).setText("晚班");
+            } else {
+                ((TextView) convertView.findViewById(R.id.shift)).setText("未知数据");
+            }
+        }
         //是否隐藏按钮
 //        if(!((FormingActivity) context).show){
 //            convertView.findViewById(R.id.start).setVisibility(View.GONE);

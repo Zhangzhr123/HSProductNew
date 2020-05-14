@@ -46,7 +46,7 @@ public class FormingActivity extends BaseActivity {
     private TableLayout tlShowVPlan;
     private LinearLayout llOnClick;
     private Button btStart, btUpdate, btFinish, btOut;
-    private TextView tvSpesc, tvSpescName, tvPro, tvState, tvPNum;
+    private TextView tvSpesc, tvSpescName, tvPro, tvState, tvPNum, tvShift;
     //当前计划展示list  规格交替列表
     private ListView lvPlan;
     private VPlan v = new VPlan();
@@ -101,6 +101,8 @@ public class FormingActivity extends BaseActivity {
         tvPro = (TextView) findViewById(R.id.pro);
         tvState = (TextView) findViewById(R.id.state);
         tvPNum = (TextView) findViewById(R.id.pnum);
+        //班次新增
+        tvShift = (TextView) findViewById(R.id.shift);
         //list列表
         lvPlan = (ListView) findViewById(R.id.lv_plan);
         //扫描框
@@ -152,6 +154,16 @@ public class FormingActivity extends BaseActivity {
                     tvState.setText("未知状态");
                 }
                 tvPNum.setText(v.getPnum());
+                //班次
+                if (v.getShift().equals("1")) {
+                    tvShift.setText("早班");
+                } else if (v.getShift().equals("2")) {
+                    tvShift.setText("中班");
+                } else if (v.getShift().equals("3")) {
+                    tvShift.setText("晚班");
+                } else {
+                    tvShift.setText("未知数据");
+                }
                 //设置按钮是否可用
                 if (v.getBtnflag().equals("1")) {//修改和完成不可用
                     //按钮不可用
