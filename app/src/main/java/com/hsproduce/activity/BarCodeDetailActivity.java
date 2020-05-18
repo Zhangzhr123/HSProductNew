@@ -18,6 +18,7 @@ import com.hsproduce.R;
 import com.hsproduce.adapter.FormingItemAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.bean.VreCord;
+import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -27,13 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_ACTION_SCODE;
-import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
+import static com.hsproduce.broadcast.SystemBroadCast.*;
 
 /**
  * 生产追溯页面
  * 扫描条码显示硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
  * createBy zahngzr @ 2019-12-20
+ * 1.封装SDK
  */
 public class BarCodeDetailActivity extends BaseActivity {
 
@@ -49,7 +50,6 @@ public class BarCodeDetailActivity extends BaseActivity {
     private List<VreCord> data1 = new ArrayList<>();
     private List<VreCord> data2 = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,15 +59,6 @@ public class BarCodeDetailActivity extends BaseActivity {
         initView();
         //设置控件事件
         initEvent();
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onResume() {
-        //注册广播监听
-        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-        registerReceiver(scanDataReceiver, intentFilter);
-        super.onResume();
     }
 
     public void initView() {
@@ -113,7 +104,6 @@ public class BarCodeDetailActivity extends BaseActivity {
     public void getBarCode(String barCode) {
         //获取输入机台上barcode
         if (StringUtil.isNullOrEmpty(barCode)) {
-//            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
             String parm = "SwitchTYRE_CODE=" + barCode;
@@ -127,7 +117,6 @@ public class BarCodeDetailActivity extends BaseActivity {
         //获取输入机台上barcode
         String barCode = tvBarCode.getText().toString().trim();
         if (StringUtil.isNullOrEmpty(barCode)) {
-//            Toast.makeText(BarCodeDetailActivity.this, "请扫描轮胎条码", Toast.LENGTH_LONG).show();
             return;
         } else {
             String parm = "SwitchTYRE_CODE=" + barCode;
@@ -135,30 +124,6 @@ public class BarCodeDetailActivity extends BaseActivity {
             new GetVulcanizaDetail().execute(parm);
         }
     }
-
-    //广播监听
-    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-                try {
-                    String barCode = "";
-                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-                    //判断条码是否为空 是否为12位 是否纯数字组成
-                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
-                        getBarCode(barCode);
-                    } else {
-                        Toast.makeText(BarCodeDetailActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("ScannerService", e.toString());
-                }
-            }
-        }
-    };
 
 
     //获取成型明细
@@ -181,7 +146,8 @@ public class BarCodeDetailActivity extends BaseActivity {
             fState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
@@ -190,7 +156,6 @@ public class BarCodeDetailActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-//                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
                     //赋值判断是否提示
@@ -205,13 +170,13 @@ public class BarCodeDetailActivity extends BaseActivity {
                         fMaster.setText(datas.get(0).getCreateuser());
                         fState.setText(datas.get(0).getiS_H());
                     } else {
-//                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
 
@@ -240,7 +205,8 @@ public class BarCodeDetailActivity extends BaseActivity {
             vState.setText("");
 
             if (StringUtil.isNullOrBlank(s)) {
-                Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(BarCodeDetailActivity.this, "网络连接异常", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
                 return;
             } else {
                 try {
@@ -249,7 +215,6 @@ public class BarCodeDetailActivity extends BaseActivity {
                     List<VreCord> datas = App.gson.fromJson(App.gson.toJson(res.get("data")), new TypeToken<List<VreCord>>() {
                     }.getType());
                     if (res == null || res.isEmpty()) {
-//                        Toast.makeText(BarCodeDetailActivity.this, "未获取到数据", Toast.LENGTH_LONG).show();
                         return;
                     }
                     //赋值判断是否提示
@@ -266,9 +231,9 @@ public class BarCodeDetailActivity extends BaseActivity {
                         vMaster.setText(datas.get(0).getCreateuser());
                         vState.setText(datas.get(0).getiS_H());
                     } else {
-//                        Toast.makeText(BarCodeDetailActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                         if ((data1 == null && data2 == null) || (data1.isEmpty() && data2.isEmpty())) {
-                            Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(BarCodeDetailActivity.this, "没有条码明细", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
                         }
                     }
                     data1.clear();
@@ -276,19 +241,13 @@ public class BarCodeDetailActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(BarCodeDetailActivity.this, "数据处理异常", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                     return;
                 }
 
             }
         }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onPause() {
-        unregisterReceiver(scanDataReceiver);
-        super.onPause();
     }
 
     //是否纯数字
@@ -312,7 +271,6 @@ public class BarCodeDetailActivity extends BaseActivity {
                 tvBarCode.setText("");
                 break;
         }
-
         return true;
     }
 
@@ -320,9 +278,15 @@ public class BarCodeDetailActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-//            case 66://回车键
-//                getBarCode();
-//                break;
+            case 0://扫描键
+                //业务方法
+                if(App.pdaType.equals("销邦科技X5A")){
+                    if(!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)){
+                        getBarCode(SystemBroadCast.barCode);
+                    }
+                    SystemBroadCast.barCode = "";
+                }
+                break;
             case 22://右方向键
                 getBarCode();
                 break;
