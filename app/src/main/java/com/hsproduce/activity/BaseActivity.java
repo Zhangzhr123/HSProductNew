@@ -20,11 +20,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.honeywell.aidc.*;
 import com.hsproduce.App;
 import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,7 +37,16 @@ import static com.hsproduce.broadcast.SystemBroadCast.closeBroadcastReceiver;
  * 基础页面
  * createBy zhangzr @ 2019-12-21
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity implements BarcodeReader.BarcodeListener, BarcodeReader.TriggerListener, AidcManager.BarcodeDeviceListener {
+
+    public static final String TAG = "example_demo";
+
+    private AidcManager mAidcManager;
+    private BarcodeReader mBarcodeReader;
+    private BarcodeReader mInternalScannerReader;
+    private boolean mKeyPressed = false;
+
+    public static String tvBarCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +54,13 @@ public abstract class BaseActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); //弹出软键盘
         //判断PDA类型
-        if (App.pdaType.equals("销邦科技X5A")) {
+        if (App.pdaType.equals("PDA")) {
             //PDA调用注册广播监听
             addBroadcastReceiver(BaseActivity.this);
+        }else if (App.pdaType.equals("EDA50KP-3")){
+            //广播监听
+            Log.d(TAG, "MainActivity onCreate !!!");
+            AidcManager.create(this, new MyCreatedCallback());
         }
     }
 
@@ -208,11 +223,181 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         //判断PDA类型
-        if (App.pdaType.equals("销邦科技X5A")) {
+        if (App.pdaType.equals("PDA")) {
             //PDA关闭广播监听
             closeBroadcastReceiver(BaseActivity.this);
+        }else if (App.pdaType.equals("EDA50KP-3")){
+            if (this.mInternalScannerReader != null) {
+                this.mInternalScannerReader.release();
+                Log.d(TAG, "Release internal scanner");
+            }
         }
         super.onPause();
+    }
+
+    class MyCreatedCallback implements AidcManager.CreatedCallback {
+        MyCreatedCallback() {
+        }
+
+        @Override
+        public void onCreated(AidcManager aidcManager) {
+            Log.d(TAG, "MyCreatedCallback onCreate !!!");
+            mAidcManager = aidcManager;
+            mAidcManager.addBarcodeDeviceListener(BaseActivity.this);
+            initAllBarcodeReaderAndSetDefault();
+        }
+    }
+
+    void initAllBarcodeReaderAndSetDefault() {
+        List<BarcodeReaderInfo> readerList = mAidcManager.listBarcodeDevices();
+        Log.d(TAG, "initAllBarcodeReaderAndSetDefault readerList = "+readerList);
+        mInternalScannerReader = null;
+
+        for (BarcodeReaderInfo reader : readerList) {
+            if ("dcs.scanner.imager".equals(reader.getName())) {
+                mInternalScannerReader = initBarcodeReader(mInternalScannerReader, reader.getName());
+            }
+        }
+
+        Log.d(TAG, "initAllBarcodeReaderAndSetDefault mInternalScannerReader = "+mInternalScannerReader);
+
+        if (mInternalScannerReader != null) {
+            mBarcodeReader = mInternalScannerReader;
+        }
+        else {
+            Log.d(TAG, "No reader find");
+        }
+        if (mBarcodeReader != null) {
+            try {
+                mBarcodeReader.addBarcodeListener(this);
+                mBarcodeReader.addTriggerListener(this);
+            }
+            catch (Throwable e2) {
+                e2.printStackTrace();
+            }
+            try {
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_NOTIFICATION_GOOD_READ_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_NOTIFICATION_BAD_READ_ENABLED, true);
+
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_39_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_EAN_8_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_39_FULL_ASCII_ENABLED, true);
+                mBarcodeReader.setProperty(BarcodeReader.PROPERTY_CODE_93_ENABLED, true);
+            } catch (UnsupportedPropertyException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    BarcodeReader initBarcodeReader(BarcodeReader mReader, String mReaderName) {
+        if (mReader == null) {
+            if (mReaderName == null) {
+                mReader = mAidcManager.createBarcodeReader();
+            } else {
+                mReader = mAidcManager.createBarcodeReader(mReaderName);
+            }
+            try {
+                mReader.claim();
+                Log.d(TAG, "Call DCS interface claim() " + mReaderName);
+            } catch (ScannerUnavailableException e) {
+                e.printStackTrace();
+            }
+            try {
+                mReader.setProperty(BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE, BarcodeReader.TRIGGER_CONTROL_MODE_CLIENT_CONTROL);
+
+            } catch (UnsupportedPropertyException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return mReader;
+    }
+
+    public void onBarcodeDeviceConnectionEvent(BarcodeDeviceConnectionEvent event) {
+        Log.d(TAG, event.getBarcodeReaderInfo() + " Connection status: " + event.getConnectionStatus());
+    }
+
+    public void onBarcodeEvent(final BarcodeReadEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+
+                Log.d(TAG,"Enter onBarcodeEvent ==> "+ event.getBarcodeData());
+                String barcodeDate = new String(event.getBarcodeData().getBytes(event.getCharset()));
+                Log.d(TAG, "Enter onBarcodeEvent ==> " + barcodeDate);
+
+                tvBarCode = barcodeDate;
+            }
+        });
+    }
+
+    public void onFailureEvent(final BarcodeFailureEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "Enter onFailureEvent ===> " + event.getTimestamp());
+                tvBarCode = "failed!";
+            }
+        });
+    }
+
+    public void onTriggerEvent(TriggerStateChangeEvent event) {
+        if (event.getState()) {
+            if (!mKeyPressed) {
+                mKeyPressed = true;
+                doScan(true);
+            }
+        } else {
+            mKeyPressed = false;
+            doScan(false);
+        }
+        Log.d(TAG, "OnTriggerEvent status: " + event.getState());
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (this.mInternalScannerReader != null) {
+            try {
+                this.mInternalScannerReader.claim();
+                Log.d(TAG, "Claim internal scanner");
+            } catch (ScannerUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (this.mInternalScannerReader != null) {
+            this.mInternalScannerReader.removeBarcodeListener(this);
+            this.mInternalScannerReader.removeTriggerListener(this);
+            this.mInternalScannerReader.close();
+            this.mInternalScannerReader = null;
+            Log.d(TAG, "Close internal scanner");
+        }
+        if (this.mAidcManager != null) {
+            this.mAidcManager.removeBarcodeDeviceListener(this);
+            this.mAidcManager.close();
+        }
+    }
+
+    void doScan(boolean do_scan) {
+        try {
+            if (do_scan) {
+                Log.d(TAG, "Start a new Scan!");
+            } else {
+                Log.d(TAG, "Cancel last Scan!");
+            }
+            mBarcodeReader.decode(do_scan);
+        } catch (ScannerNotClaimedException e) {
+            Log.e(TAG, "catch ScannerNotClaimedException",e);
+            e.printStackTrace();
+        } catch (ScannerUnavailableException e2) {
+            Log.e(TAG, "catch ScannerUnavailableException",e2);
+            e2.printStackTrace();
+        } catch (Exception e3) {
+            e3.printStackTrace();
+        }
     }
 
 }

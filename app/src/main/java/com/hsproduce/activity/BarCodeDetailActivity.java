@@ -1,4 +1,5 @@
 package com.hsproduce.activity;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,10 +10,12 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
+import com.honeywell.aidc.*;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingItemAdapter;
@@ -27,8 +30,6 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.hsproduce.broadcast.SystemBroadCast.*;
 
 /**
  * 生产追溯页面
@@ -124,7 +125,6 @@ public class BarCodeDetailActivity extends BaseActivity {
             new GetVulcanizaDetail().execute(parm);
         }
     }
-
 
     //获取成型明细
     class GetFormingDetail extends AsyncTask<String, Void, String> {
@@ -280,12 +280,16 @@ public class BarCodeDetailActivity extends BaseActivity {
         switch (keyCode) {
             case 0://扫描键
                 //业务方法
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if(!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)){
-                        getBarCode(SystemBroadCast.barCode);
-                    }
-                    SystemBroadCast.barCode = "";
-                }
+                scan(SystemBroadCast.barCode);
+                break;
+            case 288:
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289:
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290:
+                scan(BaseActivity.tvBarCode);
                 break;
             case 22://右方向键
                 getBarCode();
@@ -297,6 +301,24 @@ public class BarCodeDetailActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode)) {
+                tvBarCode.setText(barcode);
+                getBarCode(barcode);
+            }
+            BaseActivity.tvBarCode = "";
+        //销邦科技
+        }else if (App.pdaType.equals("PDA")) {
+            if (!StringUtil.isNullOrEmpty(barcode)) {
+                tvBarCode.setText(barcode);
+                getBarCode(barcode);
+            }
+            SystemBroadCast.barCode = "";
+        }
     }
 
 }
