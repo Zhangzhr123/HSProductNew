@@ -282,13 +282,13 @@ public class BarCodeDetailActivity extends BaseActivity {
                 //业务方法
                 scan(SystemBroadCast.barCode);
                 break;
-            case 288:
+            case 288://扫描键
                 scan(BaseActivity.tvBarCode);
                 break;
-            case 289:
+            case 289://扫描键
                 scan(BaseActivity.tvBarCode);
                 break;
-            case 290:
+            case 290://扫描键
                 scan(BaseActivity.tvBarCode);
                 break;
             case 22://右方向键

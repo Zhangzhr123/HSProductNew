@@ -219,14 +219,9 @@ public abstract class BaseActivity extends Activity implements BarcodeReader.Bar
         }, cnt);
     }
 
-    @SuppressLint("MissingSuperCall")
-    @Override
     protected void onPause() {
         //判断PDA类型
-        if (App.pdaType.equals("PDA")) {
-            //PDA关闭广播监听
-            closeBroadcastReceiver(BaseActivity.this);
-        }else if (App.pdaType.equals("EDA50KP-3")){
+        if (App.pdaType.equals("EDA50KP-3")){
             if (this.mInternalScannerReader != null) {
                 this.mInternalScannerReader.release();
                 Log.d(TAG, "Release internal scanner");
@@ -355,30 +350,38 @@ public abstract class BaseActivity extends Activity implements BarcodeReader.Bar
 
     protected void onResume() {
         super.onResume();
-        if (this.mInternalScannerReader != null) {
-            try {
-                this.mInternalScannerReader.claim();
-                Log.d(TAG, "Claim internal scanner");
-            } catch (ScannerUnavailableException e) {
-                e.printStackTrace();
+        if(App.pdaType.equals("EDA50KP-3")){
+            if (this.mInternalScannerReader != null) {
+                try {
+                    this.mInternalScannerReader.claim();
+                    Log.d(TAG, "Claim internal scanner");
+                } catch (ScannerUnavailableException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
     }
 
     public void onDestroy() {
         super.onDestroy();
+        if (App.pdaType.equals("PDA")) {
+            //PDA关闭广播监听
+            closeBroadcastReceiver(BaseActivity.this);
+        }else if(App.pdaType.equals("EDA50KP-3")){
+            if (this.mInternalScannerReader != null) {
+                this.mInternalScannerReader.removeBarcodeListener(this);
+                this.mInternalScannerReader.removeTriggerListener(this);
+                this.mInternalScannerReader.close();
+                this.mInternalScannerReader = null;
+                Log.d(TAG, "Close internal scanner");
+            }
+            if (this.mAidcManager != null) {
+                this.mAidcManager.removeBarcodeDeviceListener(this);
+                this.mAidcManager.close();
+            }
+        }
 
-        if (this.mInternalScannerReader != null) {
-            this.mInternalScannerReader.removeBarcodeListener(this);
-            this.mInternalScannerReader.removeTriggerListener(this);
-            this.mInternalScannerReader.close();
-            this.mInternalScannerReader = null;
-            Log.d(TAG, "Close internal scanner");
-        }
-        if (this.mAidcManager != null) {
-            this.mAidcManager.removeBarcodeDeviceListener(this);
-            this.mAidcManager.close();
-        }
     }
 
     void doScan(boolean do_scan) {
