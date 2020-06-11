@@ -41,6 +41,7 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 4.规格名称有中文和特殊字符需要转换
  * 5.扫描回调改为广播监听方式
  * 6.封装SDK
+ * 7.增加霍尼韦尔SDK
  */
 public class BarcodeSupplementActivity extends BaseActivity {
 
@@ -494,17 +495,23 @@ public class BarcodeSupplementActivity extends BaseActivity {
         String msg = "";
         switch (keyCode) {
             case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
+                if (App.pdaType.equals("销邦科技X5A")) {
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
                         tvBarCode.setText(SystemBroadCast.barCode);
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(BarcodeSupplementActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
                     }
                     SystemBroadCast.barCode = "";
+                    Toast toast = Toast.makeText(BarcodeSupplementActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             //返回键
             case 4:
@@ -517,7 +524,17 @@ public class BarcodeSupplementActivity extends BaseActivity {
         return true;
     }
 
-    private void clear(){
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
+                tvBarCode.setText(barcode);
+            }
+            BaseActivity.tvBarCode = "";
+        }
+    }
+
+    private void clear() {
         barCode = "";
         spesc = "";
         spescName = "";

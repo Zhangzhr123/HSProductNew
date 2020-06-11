@@ -36,6 +36,7 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * createBy zhangzr @ 2019-12-20
  * 1.扫描回调改为广播监听方式
  * 2.封装SDK
+ * 3.增加霍尼韦尔SDK
  */
 public class BarcodeReplaceActivity extends BaseActivity {
 
@@ -285,7 +286,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.e("key", keyCode + "  ");
-        switch(keyCode){
+        switch (keyCode) {
             case 0:
                 break;
         }
@@ -298,7 +299,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
         switch (keyCode) {
             //扫描键
             case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
+                if (App.pdaType.equals("PDA")) {
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
                         //判断填入那个扫描框
                         if (StringUtil.isNullOrEmpty(tvBarCode.getText().toString().trim()) && StringUtil.isNullOrEmpty(tvNewBarCode.getText().toString().trim())) {
@@ -320,8 +321,7 @@ public class BarcodeReplaceActivity extends BaseActivity {
                             Toast toast = Toast.makeText(BarcodeReplaceActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
                             showMyToast(toast, 500);
                             break;
-                        }
-                        else {
+                        } else {
                             Toast toast = Toast.makeText(BarcodeReplaceActivity.this, "请删除原有条码再扫描", Toast.LENGTH_LONG);
                             showMyToast(toast, 500);
                             break;
@@ -335,6 +335,15 @@ public class BarcodeReplaceActivity extends BaseActivity {
 //                    }
                     SystemBroadCast.barCode = "";
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             //右方向键
             case 22:
@@ -351,6 +360,17 @@ public class BarcodeReplaceActivity extends BaseActivity {
         }
         super.onKeyDown(keyCode, event);
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
+                tvBarCode.setText(barcode);
+                selCode();
+            }
+            BaseActivity.tvBarCode = "";
+        }
     }
 
 }

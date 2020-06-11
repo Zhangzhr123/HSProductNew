@@ -36,6 +36,7 @@ import java.util.Map;
  * 扫描条码显示硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
  * createBy zahngzr @ 2019-12-20
  * 1.封装SDK
+ * 2.增加霍尼韦尔SDK
  */
 public class BarCodeDetailActivity extends BaseActivity {
 
@@ -306,14 +307,14 @@ public class BarCodeDetailActivity extends BaseActivity {
     public void scan(String barcode) {
         //霍尼韦尔
         if (App.pdaType.equals("EDA50KP-3")) {
-            if (!StringUtil.isNullOrEmpty(barcode)) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
                 tvBarCode.setText(barcode);
                 getBarCode(barcode);
             }
             BaseActivity.tvBarCode = "";
-        //销邦科技
-        }else if (App.pdaType.equals("PDA")) {
-            if (!StringUtil.isNullOrEmpty(barcode)) {
+            //销邦科技
+        } else if (App.pdaType.equals("PDA")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
                 tvBarCode.setText(barcode);
                 getBarCode(barcode);
             }

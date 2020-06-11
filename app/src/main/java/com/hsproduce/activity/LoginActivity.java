@@ -60,6 +60,7 @@ public class LoginActivity extends BaseActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_login);
 
+        //判断设备型号并赋值
         String device_model = Build.MODEL; // 设备型号
         App.pdaType = device_model;
         System.out.println("设备型号=="+device_model);
