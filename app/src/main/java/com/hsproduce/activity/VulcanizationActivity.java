@@ -379,7 +379,7 @@ public class VulcanizationActivity extends BaseActivity {
         switch (keyCode) {
             //扫描键
             case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
+                if(App.pdaType.equals("PDA")){
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
                         //判断位数和是否是纯数字
                         if ((SystemBroadCast.barCode).length() == 12 && isNumeric(SystemBroadCast.barCode) == true) {
@@ -401,6 +401,15 @@ public class VulcanizationActivity extends BaseActivity {
                     }
                     SystemBroadCast.barCode = "";
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             //返回键
             case 4:
@@ -443,6 +452,30 @@ public class VulcanizationActivity extends BaseActivity {
             Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
             showMyToast(toast, 500);
             return;
+        }
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode)) {
+                if (barcode.length() == 12 && isNumeric(barcode) == true) {
+                    getBarCode(barcode);
+                } else if (barcode.length() == 4 && isNumeric(barcode) == false) {
+                    getPlan(barcode);
+                } else {
+                    BaseActivity.tvBarCode = "";
+                    Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                    showMyToast(toast, 500);
+                    return;
+                }
+            }else{
+                BaseActivity.tvBarCode = "";
+                Toast toast = Toast.makeText(this, "请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            BaseActivity.tvBarCode = "";
         }
     }
 

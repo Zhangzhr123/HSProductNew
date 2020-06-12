@@ -894,7 +894,7 @@ public class LoadFactoryActivity extends BaseActivity {
         //增加快捷键
         switch (keyCode) {
             case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
+                if(App.pdaType.equals("PDA")){
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
                         if ((SystemBroadCast.barCode).length() == 12 && isNumeric(SystemBroadCast.barCode) == true) {
                             if (sizePager == 2) {//出厂扫描
@@ -917,6 +917,15 @@ public class LoadFactoryActivity extends BaseActivity {
                     }
                     SystemBroadCast.barCode = "";
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             case 131://F1键
                 if (sizePager == 1) {
@@ -942,6 +951,28 @@ public class LoadFactoryActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12 && isNumeric(barcode) == true) {
+                if (sizePager == 2) {//出厂扫描
+                    loadcode(barcode);
+                } else if (sizePager == 3) {//取消扫描
+                    outcode(barcode);
+                } else {
+                    BaseActivity.tvBarCode = "";
+                    return;
+                }
+            }else{
+                BaseActivity.tvBarCode = "";
+                Toast toast = Toast.makeText(this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            BaseActivity.tvBarCode = "";
+        }
     }
 
     //清空数据

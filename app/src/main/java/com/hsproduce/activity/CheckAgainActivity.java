@@ -605,7 +605,7 @@ public class CheckAgainActivity extends BaseActivity {
         //按键弹开
         switch (keyCode) {
             case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
+                if(App.pdaType.equals("PDA")){
                     sBarCode = "";
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
                         sBarCode = SystemBroadCast.barCode;
@@ -618,6 +618,15 @@ public class CheckAgainActivity extends BaseActivity {
                     }
                     SystemBroadCast.barCode = "";
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             case 22://右方向键
                 getBarCode();
@@ -652,6 +661,17 @@ public class CheckAgainActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
+                tvBarCode.setText(barcode);
+                getBarCode(barcode);
+            }
+            BaseActivity.tvBarCode = "";
+        }
     }
 
 }

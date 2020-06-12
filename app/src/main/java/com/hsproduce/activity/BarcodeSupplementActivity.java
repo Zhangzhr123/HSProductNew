@@ -495,7 +495,7 @@ public class BarcodeSupplementActivity extends BaseActivity {
         String msg = "";
         switch (keyCode) {
             case 0:
-                if (App.pdaType.equals("销邦科技X5A")) {
+                if (App.pdaType.equals("PDA")) {
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
                         tvBarCode.setText(SystemBroadCast.barCode);
                     }

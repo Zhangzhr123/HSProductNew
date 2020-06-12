@@ -408,15 +408,14 @@ public class SwitchPlanActivity extends BaseActivity {
                 break;
             //右方向键
             case 22:
-                msg = "扫描失败！";
-                operate(msg);
+                operate();
                 break;
             //扫描键
             case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
+                if(App.pdaType.equals("PDA")){
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 4 && isNum(SystemBroadCast.barCode) == false) {
                         tvMchid.setText(SystemBroadCast.barCode);
-                        operate("扫描失败！");
+                        operate();
                     } else {
                         SystemBroadCast.barCode = "";
                         Toast toast = Toast.makeText(SwitchPlanActivity.this, "请重新扫描", Toast.LENGTH_LONG);
@@ -426,6 +425,15 @@ public class SwitchPlanActivity extends BaseActivity {
                     SystemBroadCast.barCode = "";
                 }
                 break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
             default:
 
                 break;
@@ -433,7 +441,24 @@ public class SwitchPlanActivity extends BaseActivity {
         }
         return true;
     }
-    private void operate(String msg) {
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 4 && isNum(barcode) == false) {
+                tvMchid.setText(barcode);
+                operate();
+            }else{
+                BaseActivity.tvBarCode = "";
+                Toast toast = Toast.makeText(this, "请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            BaseActivity.tvBarCode = "";
+        }
+    }
+
+    private void operate() {
         if(!isComplate){
             Toast.makeText(this, "请等待上一次操作完成再继续！", Toast.LENGTH_SHORT).show();
             return;
@@ -442,7 +467,7 @@ public class SwitchPlanActivity extends BaseActivity {
         if (!StringUtil.isNullOrBlank(tvMchid.getText().toString().trim())) {
             getCurrentVPlan();
         } else {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "扫描失败！", Toast.LENGTH_SHORT).show();
             isComplate = true;
         }
     }

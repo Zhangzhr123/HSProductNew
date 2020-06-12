@@ -469,7 +469,7 @@ public class NewCheckActivity extends BaseActivity {
         //按键弹开
         switch (keyCode) {
             case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
+                if(App.pdaType.equals("PDA")){
                     sBarCode = "";
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
                         sBarCode = SystemBroadCast.barCode;
@@ -482,6 +482,15 @@ public class NewCheckActivity extends BaseActivity {
                     }
                     SystemBroadCast.barCode = "";
                 }
+                break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
                 break;
             case 22://右方向键
                 getBarCode();
@@ -513,6 +522,22 @@ public class NewCheckActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12 && isNum(barcode) == true) {
+                sBarCode = barcode;
+                getBarCode(barcode);
+            }else{
+                BaseActivity.tvBarCode = "";
+                Toast toast = Toast.makeText(this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            BaseActivity.tvBarCode = "";
+        }
     }
 
 }

@@ -518,6 +518,15 @@ public class FormingDetailChangeActivity extends BaseActivity {
                     SystemBroadCast.barCode = "";
                 }
                 break;
+            case 288://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 289://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
+            case 290://扫描键
+                scan(BaseActivity.tvBarCode);
+                break;
             case 22://右方向键
                 getCodeDetail();
                 break;
@@ -533,8 +542,23 @@ public class FormingDetailChangeActivity extends BaseActivity {
             default:
                 break;
         }
-
         return true;
+    }
+
+    public void scan(String barcode) {
+        //霍尼韦尔
+        if (App.pdaType.equals("EDA50KP-3")) {
+            if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12 && isNum(barcode) == true) {
+                tvBarCode.setText(barcode);
+                getCodeDetail();
+            }else{
+                BaseActivity.tvBarCode = "";
+                Toast toast = Toast.makeText(this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                showMyToast(toast, 500);
+                return;
+            }
+            BaseActivity.tvBarCode = "";
+        }
     }
 
 
