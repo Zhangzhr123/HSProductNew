@@ -30,20 +30,20 @@
                 <View
                         android:layout_height="1px"
                         android:layout_width="350dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="35dp"
                         android:background="@color/black_textview"/>
                 <LinearLayout
                         android:id="@+id/view9"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/forming"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/brown"
                             android:src="@drawable/btn_vplan"
@@ -59,14 +59,14 @@
                 <LinearLayout
                         android:id="@+id/view10"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/switchforming"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/darkviolet"
                             android:src="@drawable/formingrepl"
@@ -82,14 +82,14 @@
                 <LinearLayout
                         android:id="@+id/view11"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingbarcode"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/forestgreen"
                             android:src="@drawable/outbarcode"
@@ -105,14 +105,14 @@
                 <LinearLayout
                         android:id="@+id/view12"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingchange"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/gold"
                             android:src="@drawable/btn_detial"
@@ -129,14 +129,14 @@
                 <LinearLayout
                         android:id="@+id/view14"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/selectformingplan"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/magenta"
                             android:src="@drawable/btn_detial"
@@ -153,14 +153,14 @@
                 <LinearLayout
                         android:id="@+id/view15"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/delectformingcode"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/pink"
                             android:src="@drawable/btn_detial"
@@ -177,14 +177,14 @@
                 <LinearLayout
                         android:id="@+id/view18"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingsupplement"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/darksalmon"
                             android:src="@drawable/btn_detial"
