@@ -7,15 +7,9 @@
 >
     <!-- 标题 功能菜单 -->
     <include layout="@layout/titel_update"/>
-    <!--    <com.xuexiang.xui.widget.actionbar.TitleBar-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="40dp"-->
-    <!--            android:background="@color/xui_btn_blue_normal_color"-->
-    <!--            app:tb_dividerColor="@color/xui_config_color_red"-->
-    <!--            app:tb_titleText="@string/Function">-->
-    <!--    </com.xuexiang.xui.widget.actionbar.TitleBar>-->
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -25,7 +19,8 @@
                     android:layout_height="250dp"
                     android:layout_marginTop="0dp"
                     android:id="@+id/cx"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +52,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型生产"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_head"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -79,7 +74,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型规格交替"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -101,7 +96,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型胎胚报废"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -123,7 +118,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型生产变更"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -146,7 +141,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="查看成型计划"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -169,7 +164,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型取消扫描"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -192,7 +187,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="成型条码补录"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -202,12 +197,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/lh"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="硫化"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
@@ -234,7 +230,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化生产"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -258,7 +254,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化规格交替"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -281,7 +277,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化条码补录"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -304,7 +300,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化条码变更"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -326,7 +322,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化明细变更"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -349,7 +345,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="当班产量"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -372,7 +368,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="硫化取消扫描"
-                            android:textSize="11sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -382,12 +378,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/jc"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="检测与其他"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
@@ -415,7 +412,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="检测"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -439,7 +436,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="生产追溯"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -463,7 +460,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="质检"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -487,7 +484,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="热补复检"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -503,7 +500,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="出厂"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
@@ -531,7 +528,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="装车出厂"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -554,7 +551,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="退厂扫描"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
             </RelativeLayout>
