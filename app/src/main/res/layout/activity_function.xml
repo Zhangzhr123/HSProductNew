@@ -49,10 +49,11 @@
                             android:src="@drawable/btn_vplan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型生产"
-                            android:textSize="@dimen/text_head"
+                            android:textSize="@dimen/text_children"
+                            android:textAlignment="center"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -71,9 +72,10 @@
                             android:src="@drawable/formingrepl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型规格交替"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -93,9 +95,10 @@
                             android:src="@drawable/outbarcode"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型胎胚报废"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -115,9 +118,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型生产变更"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -138,9 +142,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="查看成型计划"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -161,9 +166,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型取消扫描"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -184,9 +190,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型条码补录"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -227,9 +234,10 @@
                             android:src="@drawable/btn_vplan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化生产"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -251,9 +259,10 @@
                             android:src="@drawable/btn_itnbrrepl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化规格交替"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -274,9 +283,10 @@
                             android:src="@drawable/btn_supp"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化条码补录"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -297,9 +307,10 @@
                             android:src="@drawable/btn_repl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化条码变更"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -319,9 +330,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化明细变更"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -342,9 +354,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="当班产量"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -365,9 +378,10 @@
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化取消扫描"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -409,9 +423,10 @@
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="检测"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -433,9 +448,10 @@
                             android:src="@drawable/barcodedetail"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="生产追溯"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -457,9 +473,10 @@
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="质检"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -481,9 +498,10 @@
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="热补复检"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -495,7 +513,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:id="@+id/zc"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -525,9 +544,10 @@
                             android:src="@drawable/btn_vload"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="装车出厂"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
@@ -548,9 +568,10 @@
                             android:src="@drawable/btn_loadscan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="退厂扫描"
+                            android:textAlignment="center"
                             android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
