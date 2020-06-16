@@ -29,28 +29,33 @@
             app:layout_constraintVertical_bias="0.165"/>
     <EditText
             android:id="@+id/input"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:layout_width="180dp"
             android:layout_height="30dp"
             android:background="@drawable/edit_background"
             android:textColor="@color/black_textview"
-            app:layout_constraintTop_toBottomOf="@+id/typeTextview" app:layout_constraintEnd_toEndOf="@+id/typeTextview"
-            app:layout_constraintStart_toStartOf="@+id/typeTextview" android:layout_marginStart="8dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/typeTextview"
+            app:layout_constraintEnd_toEndOf="@+id/typeTextview"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/textview"/>
     <TextView
             android:id="@+id/typeTextview2"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="数量："
             android:textColor="@color/black_textview"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input" android:layout_marginStart="16dp"
-            app:layout_constraintVertical_bias="0.068" android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/input"
+            android:layout_marginStart="16dp"
+            app:layout_constraintVertical_bias="0.068"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
             android:id="@+id/input2"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:layout_width="180dp"
             android:layout_height="30dp"
             android:text="500"
@@ -59,7 +64,7 @@
             app:layout_constraintEnd_toEndOf="@+id/typeTextview2"
             app:layout_constraintStart_toStartOf="@+id/typeTextview2" android:layout_marginStart="8dp"
             app:layout_constraintTop_toBottomOf="@+id/typeTextview2"
-            android:layout_marginTop="12dp" app:layout_constraintHorizontal_bias="0.562"/>
+            android:layout_marginTop="12dp" app:layout_constraintHorizontal_bias="0.517"/>
 
     <Button
             android:layout_width="60dp"

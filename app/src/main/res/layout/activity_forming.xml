@@ -26,11 +26,11 @@
                 android:layout_marginTop="0dp"
                 android:text="机台号"
                 android:textAlignment="textStart"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/text_son"/>
         <AutoCompleteTextView
                 android:id="@+id/mchid"
                 android:layout_width="160dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
                 android:hint="@string/vul_scan_mchid"
@@ -61,7 +61,7 @@
                 android:text="已下达的计划："
                 android:textColor="@color/white"
                 android:textAlignment="center"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_son"/>
     </LinearLayout>
     <ListView
             android:id="@+id/lv_plan"
@@ -75,7 +75,8 @@
     <TableLayout
             android:id="@+id/showVplan"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
         <TableRow>
             <TextView
@@ -83,13 +84,13 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="规格"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/spesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
             <TextView
@@ -97,13 +98,13 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="规格名称"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/spescname"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
             <TextView
@@ -111,13 +112,13 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="优先级"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/pro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
             <TextView
@@ -125,13 +126,13 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="状态"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
             <TextView
@@ -139,13 +140,13 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="数量"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/pnum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
             <TextView
@@ -153,14 +154,14 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="班次"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/shift"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:textColor="@color/red"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
     </TableLayout>
     <LinearLayout
@@ -176,7 +177,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="开始"/>
         <Button
@@ -187,7 +189,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="修改"/>
         <Button
@@ -198,7 +201,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="完成"/>
         <Button
@@ -209,7 +213,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="返回"/>
     </LinearLayout>

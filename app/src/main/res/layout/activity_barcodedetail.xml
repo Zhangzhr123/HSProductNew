@@ -30,7 +30,7 @@
                     android:layout_marginTop="10dp"
                     android:text="条码"
                     android:textAlignment="textStart"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <com.xuexiang.xui.widget.edittext.ClearEditText
                     style="@style/EditText.Normal"
                     android:id="@+id/BarCode"
@@ -65,13 +65,14 @@
                     android:text="成型生产信息"
                     android:textColor="@color/white"
                     android:textAlignment="center"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_head"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" android:visibility="visible">
+                android:orientation="horizontal"
+                android:visibility="visible">
             <!-- 条码扫描框 -->
             <TableLayout
                     android:layout_width="match_parent"
@@ -83,13 +84,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="规格"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fspesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -97,13 +98,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="规格名称"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fspescname"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -111,13 +112,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="机台号"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fmchid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -125,13 +126,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="生产日期"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fdate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -139,13 +140,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="班次"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fshift"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -153,13 +154,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="主手"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fmaster"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -167,13 +168,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="状态"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/fstate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
             </TableLayout>
         </LinearLayout>
@@ -191,14 +192,15 @@
                     android:text="硫化生产信息"
                     android:textColor="@color/white"
                     android:textAlignment="center"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_head"/>
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal" android:visibility="visible">
+                android:orientation="horizontal"
+                android:visibility="visible">
             <!-- 条码扫描框 -->
             <TableLayout
                     android:layout_width="match_parent"
@@ -210,13 +212,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="规格"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vspesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -224,13 +226,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="规格名称"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vspescname"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -238,13 +240,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="机台号"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vmchid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -252,13 +254,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="LorR"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/LorR"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -266,13 +268,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="生产日期"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vdate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -280,13 +282,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="班次"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vshift"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -294,13 +296,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="主手"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vmaster"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
                 <TableRow>
                     <TextView
@@ -308,13 +310,13 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="状态"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:id="@+id/vstate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                 </TableRow>
             </TableLayout>
         </LinearLayout>

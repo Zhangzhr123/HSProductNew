@@ -14,21 +14,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/lr"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/dnum"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

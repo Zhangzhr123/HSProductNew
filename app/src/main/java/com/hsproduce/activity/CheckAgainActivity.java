@@ -667,6 +667,7 @@ public class CheckAgainActivity extends BaseActivity {
         //霍尼韦尔
         if (App.pdaType.equals("EDA50KP-3")) {
             if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12) {
+                sBarCode = barcode;
                 tvBarCode.setText(barcode);
                 getBarCode(barcode);
             }

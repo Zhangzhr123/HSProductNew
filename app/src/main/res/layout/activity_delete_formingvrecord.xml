@@ -5,7 +5,7 @@
               android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
 >
-    <!-- 标题 规格交替 -->
+    <!-- 标题 成型取消扫描 -->
     <com.xuexiang.xui.widget.actionbar.TitleBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,13 +30,13 @@
                     android:layout_marginTop="0dp"
                     android:text="机台号"
                     android:textAlignment="textStart"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <AutoCompleteTextView
                     android:id="@+id/mchid"
                     android:layout_width="160dp"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="20dp"
                     android:hint="@string/vul_scan_mchid"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -53,7 +53,7 @@
                     android:layout_height="@dimen/label_height"
                     android:layout_margin="@dimen/input_margin_xs"
                     android:text="日期"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:background="@drawable/edit_background"
                     android:id="@+id/date"
@@ -85,7 +85,7 @@
                     android:text="成型计划："
                     android:textColor="@color/white"
                     android:textAlignment="center"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_son"/>
         </LinearLayout>
         <ListView
                 android:id="@+id/lv_plan"
@@ -106,7 +106,8 @@
         <TableLayout
                 android:id="@+id/tl_show"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:visibility="visible">
+                android:layout_height="wrap_content"
+                android:visibility="visible">
 
             <TableRow>
                 <TextView
@@ -114,13 +115,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:text="规格"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <TextView
                         android:id="@+id/spesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -128,13 +129,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:text="规格名称"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <TextView
                         android:id="@+id/spescname"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -142,13 +143,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:text="机台"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <TextView
                         android:id="@+id/tv_mchid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -156,13 +157,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:text="日期"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <TextView
                         android:id="@+id/wdate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
             </TableRow>
         </TableLayout>
         <LinearLayout
@@ -177,7 +178,7 @@
                     android:layout_marginTop="10dp"
                     android:text="条码"
                     android:textAlignment="textStart"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <com.xuexiang.xui.widget.edittext.ClearEditText
                     style="@style/EditText.Normal"
                     android:id="@+id/barCode"
@@ -209,7 +210,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginTop="0dp"
-                android:orientation="horizontal" android:visibility="visible">
+                android:orientation="horizontal"
+                android:visibility="visible">
             <!-- 条码扫描框 -->
             <TextView
                     android:layout_width="90dp"
@@ -218,7 +220,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="扫描记录"
                     android:textAlignment="center"
-                    android:textSize="18sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:background="@drawable/edit_background"
                     android:id="@+id/outBarCodeLog"
@@ -239,7 +241,7 @@
                     android:text="0"
                     android:textColor="@color/red"
                     android:textAlignment="center"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:id="@+id/num"
                     android:visibility="visible"/>
         </LinearLayout>

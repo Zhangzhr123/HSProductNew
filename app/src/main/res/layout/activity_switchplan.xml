@@ -23,10 +23,10 @@
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="5dp"
                 android:text="机台号"
                 android:textAlignment="textStart"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/text_son"/>
         <EditText
                 android:id="@+id/mchid"
                 android:layout_width="160dp"
@@ -35,6 +35,7 @@
                 android:layout_marginLeft="10dp"
                 android:hint="@string/vul_scan_mchid"
                 android:maxLines="1"
+                android:textSize="13sp"
                 android:singleLine="true"
                 android:completionThreshold="1"
                 android:textAlignment="center"/>
@@ -63,7 +64,7 @@
                 android:text="等待中的计划："
                 android:textColor="@color/white"
                 android:textAlignment="center"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_son"/>
     </LinearLayout>
     <ListView
             android:id="@+id/lv_plan"
@@ -163,7 +164,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="规格交替"/>
         <Button
@@ -174,7 +176,8 @@
                 android:background="@drawable/button_change"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_head"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="返回"/>
     </LinearLayout>

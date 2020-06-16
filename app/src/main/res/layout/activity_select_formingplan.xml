@@ -26,13 +26,13 @@
                 android:layout_marginTop="0dp"
                 android:text="机台号"
                 android:textAlignment="textStart"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/text_son"/>
         <AutoCompleteTextView
                 android:id="@+id/mchid"
                 android:layout_width="160dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="20dp"
                 android:hint="@string/vul_scan_mchid"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -47,9 +47,9 @@
         <TextView
                 android:layout_width="@dimen/label_width"
                 android:layout_height="@dimen/label_height"
-                android:layout_margin="@dimen/input_margin_xs"
+                android:layout_margin="@dimen/input_margin"
                 android:text="日期"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/text_son"/>
         <TextView
                 android:background="@drawable/edit_background"
                 android:id="@+id/date"
@@ -81,7 +81,7 @@
                 android:text="成型计划："
                 android:textColor="@color/white"
                 android:textAlignment="center"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_son"/>
     </LinearLayout>
     <ListView
             android:id="@+id/lv_plan"

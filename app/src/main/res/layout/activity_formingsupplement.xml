@@ -29,7 +29,7 @@
                         android:layout_height="@dimen/label_height"
                         android:layout_margin="@dimen/input_margin_xs"
                         android:text="条码"
-                        android:textSize="15sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <!-- 条码扫描框 -->
                 <com.xuexiang.xui.widget.edittext.ClearEditText
                         style="@style/EditText.Normal"
@@ -42,12 +42,7 @@
                         android:singleLine="true"
                         android:textAlignment="center"/>
             </LinearLayout>
-            <View
-                    android:layout_height="1px"
-                    android:layout_width="350dp"
-                    android:layout_marginLeft="30dp"
-                    android:background="@color/black_textview"
-                    android:id="@+id/view"/>
+
             <TableLayout
                     android:layout_width="match_parent"
                     android:layout_marginTop="35dp"
@@ -58,7 +53,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="规格"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <com.xuexiang.xui.widget.edittext.ClearEditText
                             style="@style/EditText.Normal"
                             android:id="@+id/spesc"
@@ -75,7 +70,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="规格名称"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <com.xuexiang.xui.widget.edittext.ClearEditText
                             style="@style/EditText.Normal"
                             android:id="@+id/spescname"
@@ -100,7 +95,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="机台"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <AutoCompleteTextView
                             android:id="@+id/mchid"
                             style="@style/EditText.Normal"
@@ -116,7 +111,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="日期"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <TextView
                             android:background="@drawable/edit_background"
                             android:id="@+id/date"
@@ -133,7 +128,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="班次"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <Spinner
                             android:id="@+id/shift"
                             android:layout_width="@dimen/input_width"
@@ -152,7 +147,7 @@
                             android:layout_height="@dimen/label_height"
                             android:layout_margin="@dimen/input_margin_xs"
                             android:text="班组"
-                            android:textSize="15sp"/>
+                            android:textSize="@dimen/text_son"/>
                     <Spinner
                             android:id="@+id/team"
                             android:layout_width="@dimen/input_width"

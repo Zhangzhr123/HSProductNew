@@ -52,14 +52,12 @@ import static java.lang.Thread.sleep;
 public class LoadFactoryActivity extends BaseActivity {
 
     //定义控件
-    private HorizontalScrollView hs_load, hs_spesc;
-    private View ll_search, llfacok, llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
+    private View llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
     private TextView outbarcodelog, barcode, anum, search, itnbr, itndsc, outbarcode, outanum;
     private TextView barcodelog;
     private ButtonView ok, outok;
     private Button out, loadfacok, inscan, outscan;
     private ImageButton getsearch;
-    private TableRow table;
     private TableLayout lltable;
     private View view6;
     //标题控件
@@ -88,6 +86,9 @@ public class LoadFactoryActivity extends BaseActivity {
     private Boolean outIsNew = true;
     //页面跳转初始值
     private Integer sizePager = 0;
+    //页面
+    private RelativeLayout page1, page2, page3_1, page3_2;
+    private ScrollView page3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,32 +101,15 @@ public class LoadFactoryActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
-
     public void initView() {
         //标题栏
         load = (TitleBar) findViewById(R.id.load);
         inload = (TitleBar) findViewById(R.id.inload);
         outload = (TitleBar) findViewById(R.id.outload);
-        //HorizontalScrollView  ListView列表
-        hs_load = (HorizontalScrollView) findViewById(R.id.hs_load);
-        hs_spesc = (HorizontalScrollView) findViewById(R.id.hs_spesc);
         view6 = findViewById(R.id.view6);
-        //layout
-        ll_search = findViewById(R.id.ll_search);
-//        ll_load = findViewById(R.id.ll_load_fac);
-        llfacok = findViewById(R.id.ll_fac_ok);
         llscanok = findViewById(R.id.ll_scan_ok);
         llcode = findViewById(R.id.ll_code);
         llcodelog = findViewById(R.id.ll_codelog);
-        table = (TableRow) findViewById(R.id.table);
         lltable = (TableLayout) findViewById(R.id.ll_table);
         //取消扫描
         lloutcode = findViewById(R.id.ll_out_code);
@@ -162,6 +146,12 @@ public class LoadFactoryActivity extends BaseActivity {
         lvload = (ListView) findViewById(R.id.listview);
         lvloadfac = (ListView) findViewById(R.id.lv_load_fac);
         lvloadspesc = (ListView) findViewById(R.id.lv_load_spesc);
+        //页面
+        page1 = (RelativeLayout) findViewById(R.id.page1);
+        page2 = (RelativeLayout) findViewById(R.id.page2);
+        page3 = (ScrollView) findViewById(R.id.page3);
+        page3_1 = (RelativeLayout) findViewById(R.id.page3_1);
+        page3_2 = (RelativeLayout) findViewById(R.id.page3_2);
         //展示装车单
         String parm = "SUB_CODE=" + "&CAR_CODE=";
         new SelVLoadTask().execute(parm);
@@ -251,18 +241,16 @@ public class LoadFactoryActivity extends BaseActivity {
     public void getInScan() {
         //隐藏
         load.setVisibility(View.GONE);//标题
-        llfacok.setVisibility(View.GONE);
-        hs_spesc.setVisibility(View.GONE);
-        table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
-        lvloadfac.setVisibility(View.GONE);
+        page2.setVisibility(View.GONE);
         //显示
         inload.setVisibility(View.VISIBLE);//标题
-        llcode.setVisibility(View.VISIBLE);
-        lltable.setVisibility(View.VISIBLE);
-        view6.setVisibility(View.VISIBLE);
-        llcodelog.setVisibility(View.VISIBLE);
-        llscanok.setVisibility(View.VISIBLE);
+        page3.setVisibility(View.VISIBLE);
+        page3_1.setVisibility(View.VISIBLE);
+//        llcode.setVisibility(View.VISIBLE);
+//        lltable.setVisibility(View.VISIBLE);
+//        view6.setVisibility(View.VISIBLE);
+//        llcodelog.setVisibility(View.VISIBLE);
+//        llscanok.setVisibility(View.VISIBLE);
         //焦点扫描框
         barcode.setText("");
         //barcodelog.setText("");
@@ -275,16 +263,14 @@ public class LoadFactoryActivity extends BaseActivity {
     public void getOutScan() {
         //隐藏
         load.setVisibility(View.GONE);//标题
-        llfacok.setVisibility(View.GONE);
-        hs_spesc.setVisibility(View.GONE);
-        table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
-        lvloadfac.setVisibility(View.GONE);
+        page2.setVisibility(View.GONE);
         //显示
         outload.setVisibility(View.VISIBLE);//标题
-        lloutcode.setVisibility(View.VISIBLE);
-        lloutcodelog.setVisibility(View.VISIBLE);
-        lloutok.setVisibility(View.VISIBLE);
+        page3.setVisibility(View.VISIBLE);
+        page3_2.setVisibility(View.VISIBLE);
+//        lloutcode.setVisibility(View.VISIBLE);
+//        lloutcodelog.setVisibility(View.VISIBLE);
+//        lloutok.setVisibility(View.VISIBLE);
         //锁定扫描框
         outbarcode.setText("");
         //outbarcodelog.setText("");
@@ -296,14 +282,9 @@ public class LoadFactoryActivity extends BaseActivity {
     //返回初始页面
     public void getOut() {
         //隐藏
-        llfacok.setVisibility(View.GONE);
-        hs_spesc.setVisibility(View.GONE);
-        table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
-        lvloadfac.setVisibility(View.GONE);
+        page2.setVisibility(View.GONE);
         //显示
-        ll_search.setVisibility(View.VISIBLE);
-        hs_load.setVisibility(View.VISIBLE);
+        page1.setVisibility(View.VISIBLE);
         //刷新装车单列表
         String parm = "SUB_CODE=" + "&CAR_CODE=";
         new SelVLoadTask().execute(parm);
@@ -330,26 +311,19 @@ public class LoadFactoryActivity extends BaseActivity {
     public void getOk() {
         //隐藏
         inload.setVisibility(View.GONE);//标题
-        llscanok.setVisibility(View.GONE);
-        llcodelog.setVisibility(View.GONE);
-        view6.setVisibility(View.GONE);
-        lltable.setVisibility(View.GONE);
-        llcode.setVisibility(View.GONE);
+        page3.setVisibility(View.GONE);
+        page3_1.setVisibility(View.GONE);
+//        llscanok.setVisibility(View.GONE);
+//        llcodelog.setVisibility(View.GONE);
+//        view6.setVisibility(View.GONE);
+//        lltable.setVisibility(View.GONE);
+//        llcode.setVisibility(View.GONE);
         //显示
         load.setVisibility(View.VISIBLE);//标题
-        lvloadfac.setVisibility(View.VISIBLE);
-//        ll_load.setVisibility(View.VISIBLE);
-        table.setVisibility(View.VISIBLE);
-        hs_spesc.setVisibility(View.VISIBLE);
-        llfacok.setVisibility(View.VISIBLE);
-        //刷新规格列表
+        page2.setVisibility(View.VISIBLE);
         //清空数据
-        //itnbr.setText("");
-        //itndsc.setText("");
-        //anum.setText("0");
-        //number = 0;
-        //log.clear();
         codeList.clear();
+        //刷新规格列表
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
         sizePager = 1;
@@ -358,21 +332,16 @@ public class LoadFactoryActivity extends BaseActivity {
     //取消扫描返回
     public void getOutOk() {
         //隐藏
-        lloutok.setVisibility(View.GONE);
-        lloutcodelog.setVisibility(View.GONE);
-        lloutcode.setVisibility(View.GONE);
+        page3.setVisibility(View.GONE);
+        page3_2.setVisibility(View.GONE);
+//        lloutok.setVisibility(View.GONE);
+//        lloutcodelog.setVisibility(View.GONE);
+//        lloutcode.setVisibility(View.GONE);
         outload.setVisibility(View.GONE);//标题
         //显示
         load.setVisibility(View.VISIBLE);//标题
-        lvloadfac.setVisibility(View.VISIBLE);
-//        ll_load.setVisibility(View.VISIBLE);
-        table.setVisibility(View.VISIBLE);
-        hs_spesc.setVisibility(View.VISIBLE);
-        llfacok.setVisibility(View.VISIBLE);
+        page2.setVisibility(View.VISIBLE);
         //刷新规格列表
-        //outanum.setText("0");
-        //outlog.clear();
-        //outnumber = 0;
         outCodeList.clear();
         new SelVLoadListMXTask().execute("ID=" + Id);
         //第1页
@@ -434,42 +403,6 @@ public class LoadFactoryActivity extends BaseActivity {
         }
 
     }
-
-    //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
-//                            if (sizePager == 2) {//出厂扫描
-//                                loadcode(barCode);
-//                            } else if (sizePager == 3) {//取消扫描
-//                                outcode(barCode);
-//                            } else {
-//                                return;
-//                            }
-//
-//                        } else {
-//                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-//                            showMyToast(toast, 500);
-//                            return;
-//                        }
-//                    } else {
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
 
     //展示装车单信息
     class SelVLoadTask extends AsyncTask<String, Void, String> {
@@ -558,14 +491,9 @@ public class LoadFactoryActivity extends BaseActivity {
                         lvloadspesc.setAdapter(loadSpescAdapter);
                         loadSpescAdapter.notifyDataSetChanged();
                         //隐藏
-                        ll_search.setVisibility(View.GONE);
-                        hs_load.setVisibility(View.GONE);
+                        page1.setVisibility(View.GONE);
                         //显示
-                        lvloadfac.setVisibility(View.VISIBLE);
-//                        ll_load.setVisibility(View.VISIBLE);
-                        table.setVisibility(View.VISIBLE);
-                        hs_spesc.setVisibility(View.VISIBLE);
-                        llfacok.setVisibility(View.VISIBLE);
+                        page2.setVisibility(View.VISIBLE);
                         //第一页
                         sizePager = 1;
                     } else {
@@ -835,13 +763,6 @@ public class LoadFactoryActivity extends BaseActivity {
         return logstr;
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
-
     //键盘监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -894,7 +815,7 @@ public class LoadFactoryActivity extends BaseActivity {
         //增加快捷键
         switch (keyCode) {
             case 0://扫描键
-                if(App.pdaType.equals("PDA")){
+                if (App.pdaType.equals("PDA")) {
                     if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
                         if ((SystemBroadCast.barCode).length() == 12 && isNumeric(SystemBroadCast.barCode) == true) {
                             if (sizePager == 2) {//出厂扫描
@@ -965,7 +886,7 @@ public class LoadFactoryActivity extends BaseActivity {
                     BaseActivity.tvBarCode = "";
                     return;
                 }
-            }else{
+            } else {
                 BaseActivity.tvBarCode = "";
                 Toast toast = Toast.makeText(this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
                 showMyToast(toast, 500);

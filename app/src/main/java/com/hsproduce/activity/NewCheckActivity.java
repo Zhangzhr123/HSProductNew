@@ -529,6 +529,7 @@ public class NewCheckActivity extends BaseActivity {
         if (App.pdaType.equals("EDA50KP-3")) {
             if (!StringUtil.isNullOrEmpty(barcode) && barcode.length() == 12 && isNum(barcode) == true) {
                 sBarCode = barcode;
+                tvBarCode.setText(barcode);
                 getBarCode(barcode);
             }else{
                 BaseActivity.tvBarCode = "";

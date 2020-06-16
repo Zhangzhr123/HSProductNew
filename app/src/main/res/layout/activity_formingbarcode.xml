@@ -29,7 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:text="条码"
                 android:textAlignment="textStart"
-                android:textSize="15sp"/>
+                android:textSize="@dimen/text_son"/>
         <com.xuexiang.xui.widget.edittext.ClearEditText
                 style="@style/EditText.Normal"
                 android:id="@+id/barCode"
@@ -79,164 +79,12 @@
                     android:background="@color/black_textview"
             />
 
-<!--            <LinearLayout-->
-<!--                    android:id="@+id/ll_code"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="2dp"-->
-<!--                    android:orientation="horizontal" android:visibility="visible">-->
-<!--                &lt;!&ndash; 条码扫描框 &ndash;&gt;-->
-<!--                <TableLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content">-->
-
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="80dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="规格"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/spesc"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="80dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="规格名称"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/spescname"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="80dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="优先级"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/pro"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="80dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="状态"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/state"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="80dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="数量"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/anum"-->
-<!--                                android:layout_width="20dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAlignment="textEnd"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:text="/"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <TextView-->
-<!--                                android:id="@+id/pnum"-->
-<!--                                android:layout_width="20dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_margin="5dp"-->
-<!--                                android:textSize="15sp"/>-->
-<!--                        <com.xuexiang.xui.widget.button.ButtonView-->
-<!--                                style="@style/ButtonView.Green"-->
-<!--                                android:id="@+id/barcodeok"-->
-<!--                                android:layout_width="110dp"-->
-<!--                                android:layout_height="30dp"-->
-<!--                                android:background="@color/limegreen"-->
-<!--                                android:text="报废条码录入"-->
-<!--                                android:textColor="@color/white"-->
-<!--                        />-->
-<!--                    </TableRow>-->
-<!--                </TableLayout>-->
-
-<!--            </LinearLayout>-->
-<!--            <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_marginTop="120dp"-->
-<!--                    android:layout_height="wrap_content">-->
-<!--                <TextView-->
-<!--                        android:layout_width="80dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="数量"-->
-<!--                        android:textSize="15sp"/>-->
-<!--                <TextView-->
-<!--                        android:id="@+id/anum"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textAlignment="textEnd"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:textSize="15sp"/>-->
-<!--                <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="/"-->
-<!--                        android:textSize="15sp"/>-->
-<!--                <TextView-->
-<!--                        android:id="@+id/pnum"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:textSize="15sp"/>-->
-<!--                <com.xuexiang.xui.widget.button.ButtonView-->
-<!--                        style="@style/ButtonView.Green"-->
-<!--                        android:id="@+id/barcodeok"-->
-<!--                        android:layout_width="110dp"-->
-<!--                        android:layout_height="30dp"-->
-<!--                        android:layout_marginLeft="50dp"-->
-<!--                        android:background="@color/limegreen"-->
-<!--                        android:text="报废条码录入"-->
-<!--                        android:textColor="@color/white"-->
-<!--                />-->
-<!--            </LinearLayout>-->
-<!--            <View-->
-<!--                    android:layout_height="1px"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_marginTop="158dp"-->
-<!--                    android:background="@color/black_textview"-->
-<!--            />-->
-
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_marginTop="0dp"
-                    android:orientation="horizontal" android:visibility="visible">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
                 <!-- 条码扫描框 -->
                 <TextView
                         android:layout_width="90dp"
@@ -245,7 +93,7 @@
                         android:layout_marginLeft="5dp"
                         android:text="扫描记录"
                         android:textAlignment="center"
-                        android:textSize="18sp"/>
+                        android:textSize="@dimen/text_son"/>
                 <TextView
                         android:background="@drawable/edit_background"
                         android:id="@+id/barcode_log"
@@ -266,7 +114,7 @@
                         android:text="0"
                         android:textColor="@color/red"
                         android:textAlignment="center"
-                        android:textSize="30sp"
+                        android:textSize="25sp"
                         android:id="@+id/num"
                         android:visibility="visible"/>
             </LinearLayout>

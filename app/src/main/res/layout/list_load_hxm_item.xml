@@ -9,43 +9,44 @@
             android:layout_height="wrap_content">
         <TableRow>
             <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="装车单号"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/loadid"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
-        </TableRow>
-        <TableRow>
+                    android:textSize="@dimen/text_son"/>
             <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="车牌"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/carnum"
-                    android:layout_width="80dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
+        </TableRow>
+        <TableRow>
+
             <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="仓库名称"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
             <TextView
                     android:id="@+id/subcode"
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textSize="15sp"/>
+                    android:textSize="@dimen/text_son"/>
         </TableRow>
         <TableRow>
 

@@ -5,7 +5,7 @@
                                              android:layout_height="250dp">
     <TextView
             android:id="@+id/textview"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_son"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="质检"
@@ -18,47 +18,53 @@
 
     <TextView
             android:id="@+id/typeTextview"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_son"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="不合格原因："
             android:textColor="@color/black_textview"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"
-            app:layout_constraintVertical_bias="0.322"/>
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview"/>
     <EditText
             android:id="@+id/input"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_son"
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:background="@drawable/edit_background"
             android:textColor="@color/black_textview"
             app:layout_constraintTop_toBottomOf="@+id/typeTextview" app:layout_constraintEnd_toEndOf="@+id/typeTextview"
             app:layout_constraintStart_toStartOf="@+id/typeTextview" android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintHorizontal_bias="0.275"/>
+            app:layout_constraintHorizontal_bias="0.563"/>
     <TextView
             android:id="@+id/typeTextview2"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_son"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="备注："
             android:textColor="@color/black_textview"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input" android:layout_marginStart="16dp"
-            app:layout_constraintVertical_bias="0.068"/>
+            app:layout_constraintTop_toBottomOf="@+id/input"
+            android:layout_marginStart="8dp"
+            app:layout_constraintVertical_bias="0.068"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
             android:id="@+id/input2"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_son"
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:background="@drawable/edit_background"
             android:textColor="@color/black_textview"
             app:layout_constraintEnd_toEndOf="@+id/typeTextview2"
-            app:layout_constraintStart_toStartOf="@+id/typeTextview2" android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/typeTextview2"
+            android:layout_marginStart="8dp"
             app:layout_constraintTop_toBottomOf="@+id/typeTextview2"
-            app:layout_constraintHorizontal_bias="0.163"/>
+            app:layout_constraintHorizontal_bias="0.552"/>
 
     <Button
             android:layout_width="60dp"
@@ -69,7 +75,8 @@
             android:text="取消"
             android:textColor="@color/white"
             android:background="@color/green"
-            app:layout_constraintTop_toBottomOf="@+id/input2" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/input2"
+            android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="@+id/input2"/>
 
     <Button
@@ -80,7 +87,8 @@
             android:textColor="@color/white"
             android:background="@color/blue"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/input2" app:layout_constraintEnd_toEndOf="@+id/input2"
+            app:layout_constraintTop_toBottomOf="@+id/input2"
+            app:layout_constraintEnd_toEndOf="@+id/input2"
             android:layout_marginEnd="8dp"/>
 
     <RadioGroup
@@ -99,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="报废"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_children"
                 android:textColor="#111111"
         />
         <RadioButton
@@ -108,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="打磨(B"
                 android:layout_below="@id/rb_1"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_children"
                 android:textColor="#111111"
         />
         <RadioButton
@@ -117,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:text="热补(A"
                 android:layout_below="@id/rb_2"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_children"
                 android:textColor="#111111"
         />
     </RadioGroup>
