@@ -327,6 +327,8 @@ public class VulcanizationActivity extends BaseActivity {
                                     })
                                     .cancelable(false)
                                     .show();
+                        }else{
+                            materialDialog.setContent(res.get("msg") + "");
                         }
                         materialDialog.show();
 
