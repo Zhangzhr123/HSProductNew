@@ -368,6 +368,18 @@ public class VulcanizationActivity extends BaseActivity {
                 tvScan.setText("");
                 tvScan.requestFocus();
                 break;
+            case 288://扫描键
+                tvScan.setText("");
+                tvScan.requestFocus();
+                break;
+            case 289://扫描键
+                tvScan.setText("");
+                tvScan.requestFocus();
+                break;
+            case 290://扫描键
+                tvScan.setText("");
+                tvScan.requestFocus();
+                break;
         }
         return true;
     }
@@ -405,12 +417,15 @@ public class VulcanizationActivity extends BaseActivity {
                 }
                 break;
             case 288://扫描键
+                tvScan.setText(BaseActivity.tvBarCode);
                 scan(BaseActivity.tvBarCode);
                 break;
             case 289://扫描键
+                tvScan.setText(BaseActivity.tvBarCode);
                 scan(BaseActivity.tvBarCode);
                 break;
             case 290://扫描键
+                tvScan.setText(BaseActivity.tvBarCode);
                 scan(BaseActivity.tvBarCode);
                 break;
             //返回键
