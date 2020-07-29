@@ -15,12 +15,15 @@ import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingReplAdapter;
+import com.hsproduce.adapter.HomeGridAdapter;
+import com.hsproduce.bean.HomeBtnBean;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,17 +36,30 @@ import java.util.Map;
 public class FunctionActivity extends BaseActivity {
 
     //硫化、装车、检测---控件
-    private View view1, view2, view3, view4, view5, view6,
-            view7, view8, view9, view10, view11, view12,
-            view13, view14, view15, view16, view17, view18, view20, view21;
-    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check,
-            forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan,
-            delectformingcode, ProductNum, deletevulcanization, formingsupplement, newcheck, checkagain;
-    private RelativeLayout cx, lh, jc, zc;
+//    private View view1, view2, view3, view4, view5, view6,
+//            view7, view8, view9, view10, view11, view12,
+//            view13, view14, view15, view16, view17, view18, view20, view21;
+//    private ImageButton vplan, repl, load, loadsc, barrep, barsup, detch, check,
+//            forming, switchforming, formingchange, formingbarcode, barcodedetail, selectformingplan,
+//            delectformingcode, ProductNum, deletevulcanization, formingsupplement, newcheck, checkagain;
+//    private RelativeLayout cx, lh, jc, zc;
+    private View ll_ch, ll_lh, ll_jc, ll_zc;
     //声明一个long类型变量：用于存放上一点击“返回键”的时刻
     private long mExitTime = 0;
     //修改密码
     private TextView tv_updatePW;
+
+    private GridView gv_ch;
+    private HomeGridAdapter chAdapter;
+
+    private GridView gv_lh;
+    private HomeGridAdapter lhAdapter;
+
+    private GridView gv_jc;
+    private HomeGridAdapter jcAdapter;
+
+    private GridView gv_zc;
+    private HomeGridAdapter zcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,56 +71,67 @@ public class FunctionActivity extends BaseActivity {
         tv_updatePW = (TextView) findViewById(R.id.updatePW);
         //获取控件
         initView();
+
     }
 
     public void initView() {
+        ll_ch = (LinearLayout) findViewById(R.id.ll_ch);
+        ll_lh = (LinearLayout) findViewById(R.id.ll_lh);
+        ll_jc = (LinearLayout) findViewById(R.id.ll_jc);
+        ll_zc = (LinearLayout) findViewById(R.id.ll_zc);
+
+        gv_ch = (GridView) findViewById(R.id.gv_ch);
+        gv_lh = (GridView) findViewById(R.id.gv_lh);
+        gv_jc = (GridView) findViewById(R.id.gv_jc);
+        gv_zc = (GridView) findViewById(R.id.gv_zc);
+
         //功能分类控件
-        cx = (RelativeLayout) findViewById(R.id.cx);
-        lh = (RelativeLayout) findViewById(R.id.lh);
-        jc = (RelativeLayout) findViewById(R.id.jc);
-        zc = (RelativeLayout) findViewById(R.id.zc);
-        //view功能显示
-        view1 = findViewById(R.id.view1);
-        view2 = findViewById(R.id.view2);
-        view3 = findViewById(R.id.view3);
-        view4 = findViewById(R.id.view4);
-        view5 = findViewById(R.id.view5);
-        view6 = findViewById(R.id.view6);
-        view7 = findViewById(R.id.view7);
-        view8 = findViewById(R.id.view8);
-        view9 = findViewById(R.id.view9);
-        view10 = findViewById(R.id.view10);
-        view11 = findViewById(R.id.view11);
-        view12 = findViewById(R.id.view12);
-        view13 = findViewById(R.id.view13);
-        view14 = findViewById(R.id.view14);
-        view15 = findViewById(R.id.view15);
-        view16 = findViewById(R.id.view16);
-        view17 = findViewById(R.id.view17);
-        view18 = findViewById(R.id.view18);
-        view20 = findViewById(R.id.view20);
-        view21 = findViewById(R.id.view21);
-        //按钮
-        vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
-        repl = (ImageButton) findViewById(R.id.repl);//规格交替
-        load = (ImageButton) findViewById(R.id.load);//装车出厂
-        detch = (ImageButton) findViewById(R.id.detch);//明细更改
-        loadsc = (ImageButton) findViewById(R.id.loadsc);//退厂扫描
-        barrep = (ImageButton) findViewById(R.id.barrep);//条码更换
-        barsup = (ImageButton) findViewById(R.id.barsup);//条码补录
-        check = (ImageButton) findViewById(R.id.check);//检测
-        forming = (ImageButton) findViewById(R.id.forming);//成型生产
-        switchforming = (ImageButton) findViewById(R.id.switchforming);//成型规格切换
-        formingchange = (ImageButton) findViewById(R.id.formingchange);//成型明细变更
-        formingbarcode = (ImageButton) findViewById(R.id.formingbarcode);//成型胚胎报废
-        barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
-        selectformingplan = (ImageButton) findViewById(R.id.selectformingplan);//查看成型计划
-        delectformingcode = (ImageButton) findViewById(R.id.delectformingcode);//成型取消扫描
-        ProductNum = (ImageButton) findViewById(R.id.ProductNum);//硫化当班产量
-        deletevulcanization = (ImageButton) findViewById(R.id.deletevulcanization);//硫化取消扫描
-        formingsupplement = (ImageButton) findViewById(R.id.formingsupplement);//成型条码补录
-        newcheck = (ImageButton) findViewById(R.id.newcheck);//新改质检
-        checkagain = (ImageButton) findViewById(R.id.checkagain);//热补复检
+//        cx = (RelativeLayout) findViewById(R.id.cx);
+//        lh = (RelativeLayout) findViewById(R.id.lh);
+//        jc = (RelativeLayout) findViewById(R.id.jc);
+//        zc = (RelativeLayout) findViewById(R.id.zc);
+//        //view功能显示
+//        view1 = findViewById(R.id.view1);
+//        view2 = findViewById(R.id.view2);
+//        view3 = findViewById(R.id.view3);
+//        view4 = findViewById(R.id.view4);
+//        view5 = findViewById(R.id.view5);
+//        view6 = findViewById(R.id.view6);
+//        view7 = findViewById(R.id.view7);
+//        view8 = findViewById(R.id.view8);
+//        view9 = findViewById(R.id.view9);
+//        view10 = findViewById(R.id.view10);
+//        view11 = findViewById(R.id.view11);
+//        view12 = findViewById(R.id.view12);
+//        view13 = findViewById(R.id.view13);
+//        view14 = findViewById(R.id.view14);
+//        view15 = findViewById(R.id.view15);
+//        view16 = findViewById(R.id.view16);
+//        view17 = findViewById(R.id.view17);
+//        view18 = findViewById(R.id.view18);
+//        view20 = findViewById(R.id.view20);
+//        view21 = findViewById(R.id.view21);
+//        //按钮
+//        vplan = (ImageButton) findViewById(R.id.vplan);//硫化生产
+//        repl = (ImageButton) findViewById(R.id.repl);//规格交替
+//        load = (ImageButton) findViewById(R.id.load);//装车出厂
+//        detch = (ImageButton) findViewById(R.id.detch);//明细更改
+//        loadsc = (ImageButton) findViewById(R.id.loadsc);//退厂扫描
+//        barrep = (ImageButton) findViewById(R.id.barrep);//条码更换
+//        barsup = (ImageButton) findViewById(R.id.barsup);//条码补录
+//        check = (ImageButton) findViewById(R.id.check);//检测
+//        forming = (ImageButton) findViewById(R.id.forming);//成型生产
+//        switchforming = (ImageButton) findViewById(R.id.switchforming);//成型规格切换
+//        formingchange = (ImageButton) findViewById(R.id.formingchange);//成型明细变更
+//        formingbarcode = (ImageButton) findViewById(R.id.formingbarcode);//成型胚胎报废
+//        barcodedetail = (ImageButton) findViewById(R.id.barcodeDetail);//条码追溯
+//        selectformingplan = (ImageButton) findViewById(R.id.selectformingplan);//查看成型计划
+//        delectformingcode = (ImageButton) findViewById(R.id.delectformingcode);//成型取消扫描
+//        ProductNum = (ImageButton) findViewById(R.id.ProductNum);//硫化当班产量
+//        deletevulcanization = (ImageButton) findViewById(R.id.deletevulcanization);//硫化取消扫描
+//        formingsupplement = (ImageButton) findViewById(R.id.formingsupplement);//成型条码补录
+//        newcheck = (ImageButton) findViewById(R.id.newcheck);//新改质检
+//        checkagain = (ImageButton) findViewById(R.id.checkagain);//热补复检
         //菜单权限管理
         String parm = "UserName=" + App.usercode;
         new TeamTask().execute(parm);
@@ -157,172 +184,276 @@ public class FunctionActivity extends BaseActivity {
         });
 
         //Button点击事件
-        initEvent();
-    }
+        //initEvent();
 
-    private void initEvent() {
-        //硫化生产  控件监听事件
-        vplan.setOnClickListener(new View.OnClickListener() {
+        gv_ch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
-                finish();
-            }
-        });
-        //装车出厂  控件监听事件
-        load.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
-                finish();
-            }
-        });
-        //条码更换  控件监听事件
-        barrep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
-                finish();
-            }
-        });
-        //条码补录  控件监听事件
-        barsup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
-                finish();
-            }
-        });
-        //明细变更  控件监听事件
-        detch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
-                finish();
-            }
-        });
-        //退厂扫描  控件监听事件
-        loadsc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
-                finish();
-            }
-        });
-        //规格交替  控件监听事件
-        repl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
-                finish();
-            }
-        });
-        //检测  控件监听事件
-        check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
-                finish();
-            }
-        });
-        //成型生产
-        forming.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
-                finish();
-            }
-        });
-        //成型规格切换
-        switchforming.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
-                finish();
-            }
-        });
-        //成型明细变更
-        formingchange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
-                finish();
-            }
-        });
-        //成型胚胎报废
-        formingbarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
-                finish();
-            }
-        });
-        //条码追溯
-        barcodedetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
-                finish();
-            }
-        });
-        //查看成型计划
-        selectformingplan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
-                finish();
-            }
-        });
-        //成型取消扫描
-        delectformingcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, DeleteFormingVreCordActivity.class));
-                finish();
-            }
-        });
-        //硫化当班产量
-        ProductNum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, ProductNumActivity.class));
-                finish();
-            }
-        });
-        //硫化取消扫描
-        deletevulcanization.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, DeleteVulcanizationActivity.class));
-                finish();
-            }
-        });
-        //成型条码补录
-        formingsupplement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, FormingSupplementActivity.class));
-                finish();
-            }
-        });
-        //新改质检
-        newcheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, NewCheckActivity.class));
-                finish();
-            }
-        });
-        //热补复检
-        checkagain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FunctionActivity.this, CheckAgainActivity.class));
-                finish();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HomeBtnBean ho = (HomeBtnBean) gv_ch.getAdapter().getItem(position);
+                //Toast.makeText(FunctionActivity.this, ho.getBtnName(), Toast.LENGTH_LONG).show();
+                if (ho.getBtnName().equals("成型生产")) {
+                    startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("成型规格切换")) {
+                    startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("成型生产变更")) {
+                    startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("成型胎胚报废")) {
+                    startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("查看成型计划")) {
+                    startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("成型取消扫描")) {
+                    startActivity(new Intent(FunctionActivity.this, DeleteFormingVreCordActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("成型条码补录")) {
+                    startActivity(new Intent(FunctionActivity.this, FormingSupplementActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
+        gv_lh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HomeBtnBean ho = (HomeBtnBean) gv_ch.getAdapter().getItem(position);
+                //Toast.makeText(FunctionActivity.this, ho.getBtnName(), Toast.LENGTH_LONG).show();
+                if (ho.getBtnName().equals("硫化生产")) {
+                    startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("硫化规格交替")) {
+                    startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("条码更换")) {
+                    startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("条码补录")) {
+                    startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("硫化明细变更")) {
+                    startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("当班产量")) {
+                    startActivity(new Intent(FunctionActivity.this, ProductNumActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("硫化取消扫描")) {
+                    startActivity(new Intent(FunctionActivity.this, DeleteVulcanizationActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        gv_jc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HomeBtnBean ho = (HomeBtnBean) gv_ch.getAdapter().getItem(position);
+                //Toast.makeText(FunctionActivity.this, ho.getBtnName(), Toast.LENGTH_LONG).show();
+                if (ho.getBtnName().equals("检测")) {
+                    startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("生产追溯")) {
+                    startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("质检")) {
+                    startActivity(new Intent(FunctionActivity.this, NewCheckActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("热补复检")) {
+                    startActivity(new Intent(FunctionActivity.this, CheckAgainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        gv_ch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HomeBtnBean ho = (HomeBtnBean) gv_ch.getAdapter().getItem(position);
+                //Toast.makeText(FunctionActivity.this, ho.getBtnName(), Toast.LENGTH_LONG).show();
+                if (ho.getBtnName().equals("装车出厂")) {
+                    startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
+                    finish();
+                } else if (ho.getBtnName().equals("退厂扫描")) {
+                    startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(FunctionActivity.this, "您没有操作PDA权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
+
+//    private void initEvent() {
+//        //硫化生产  控件监听事件
+//        vplan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, VulcanizationActivity.class));
+//                finish();
+//            }
+//        });
+//        //装车出厂  控件监听事件
+//        load.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, LoadFactoryActivity.class));
+//                finish();
+//            }
+//        });
+//        //条码更换  控件监听事件
+//        barrep.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, BarcodeReplaceActivity.class));
+//                finish();
+//            }
+//        });
+//        //条码补录  控件监听事件
+//        barsup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, BarcodeSupplementActivity.class));
+//                finish();
+//            }
+//        });
+//        //明细变更  控件监听事件
+//        detch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, DetailChangeActivity.class));
+//                finish();
+//            }
+//        });
+//        //退厂扫描  控件监听事件
+//        loadsc.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, LoadScanningActivity.class));
+//                finish();
+//            }
+//        });
+//        //规格交替  控件监听事件
+//        repl.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, SwitchPlanActivity.class));
+//                finish();
+//            }
+//        });
+//        //检测  控件监听事件
+//        check.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, CheckActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型生产
+//        forming.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, FormingActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型规格切换
+//        switchforming.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, SwitchFormingActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型明细变更
+//        formingchange.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, FormingDetailChangeActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型胚胎报废
+//        formingbarcode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, FormingBarCodeActivity.class));
+//                finish();
+//            }
+//        });
+//        //条码追溯
+//        barcodedetail.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, BarCodeDetailActivity.class));
+//                finish();
+//            }
+//        });
+//        //查看成型计划
+//        selectformingplan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, SelectFormingPlanActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型取消扫描
+//        delectformingcode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, DeleteFormingVreCordActivity.class));
+//                finish();
+//            }
+//        });
+//        //硫化当班产量
+//        ProductNum.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, ProductNumActivity.class));
+//                finish();
+//            }
+//        });
+//        //硫化取消扫描
+//        deletevulcanization.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, DeleteVulcanizationActivity.class));
+//                finish();
+//            }
+//        });
+//        //成型条码补录
+//        formingsupplement.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, FormingSupplementActivity.class));
+//                finish();
+//            }
+//        });
+//        //新改质检
+//        newcheck.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, NewCheckActivity.class));
+//                finish();
+//            }
+//        });
+//        //热补复检
+//        checkagain.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FunctionActivity.this, CheckAgainActivity.class));
+//                finish();
+//            }
+//        });
+//
+//    }
 
     //菜单权限管理
     class TeamTask extends AsyncTask<String, Void, String> {
@@ -411,75 +542,181 @@ public class FunctionActivity extends BaseActivity {
                         }
 
                     } else if (map.size() > 1) {
+                        List<HomeBtnBean> chList = new ArrayList<>();
+                        List<HomeBtnBean> lhList = new ArrayList<>();
+                        List<HomeBtnBean> jcList = new ArrayList<>();
+                        List<HomeBtnBean> zcList = new ArrayList<>();
+
                         for (int i = 0; i < map.size(); i++) {
                             if (map.get(i).get("m_CNAME") == null) {
                                 continue;
                             }
                             if (map.get(i).get("m_CNAME").equals("硫化生产")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view1.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("硫化生产");
+                                lh.setImaResId(R.mipmap.t1);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view1.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("条码补录")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view2.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("条码补录");
+                                lh.setImaResId(R.mipmap.t2);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view2.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("条码更换")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view3.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("条码更换");
+                                lh.setImaResId(R.mipmap.t3);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view3.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("硫化明细变更")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view4.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("硫化明细变更");
+                                lh.setImaResId(R.mipmap.t4);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view4.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("硫化规格交替")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view5.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("硫化规格交替");
+                                lh.setImaResId(R.mipmap.t5);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view5.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("检测")) {
-                                jc.setVisibility(View.VISIBLE);
-                                view6.setVisibility(View.VISIBLE);
+                                HomeBtnBean jc = new HomeBtnBean();
+                                jc.setBtnName("检测");
+                                jc.setImaResId(R.mipmap.t6);
+                                jcList.add(jc);
+                                ll_jc.setVisibility(View.VISIBLE);
+//                                view6.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("装车出厂")) {
-                                zc.setVisibility(View.VISIBLE);
-                                view7.setVisibility(View.VISIBLE);
+                                HomeBtnBean zc = new HomeBtnBean();
+                                zc.setBtnName("装车出厂");
+                                zc.setImaResId(R.mipmap.t7);
+                                zcList.add(zc);
+                                ll_zc.setVisibility(View.VISIBLE);
+//                                view7.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("退厂扫描")) {
-                                zc.setVisibility(View.VISIBLE);
-                                view8.setVisibility(View.VISIBLE);
+                                HomeBtnBean zc = new HomeBtnBean();
+                                zc.setBtnName("退厂扫描");
+                                zc.setImaResId(R.mipmap.t8);
+                                zcList.add(zc);
+                                ll_zc.setVisibility(View.VISIBLE);
+//                                view8.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型生产")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view9.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型生产");
+                                ch.setImaResId(R.mipmap.t9);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view9.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型规格切换")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view10.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型规格切换");
+                                ch.setImaResId(R.mipmap.t10);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view10.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型胎胚报废")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view11.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型胎胚报废");
+                                ch.setImaResId(R.mipmap.t11);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view11.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型生产变更")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view12.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型生产变更");
+                                ch.setImaResId(R.mipmap.t12);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view12.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("生产追溯")) {
-                                jc.setVisibility(View.VISIBLE);
-                                view13.setVisibility(View.VISIBLE);
+                                HomeBtnBean jc = new HomeBtnBean();
+                                jc.setBtnName("生产追溯");
+                                jc.setImaResId(R.mipmap.t1);
+                                jcList.add(jc);
+                                ll_jc.setVisibility(View.VISIBLE);
+//                                view13.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("查看成型计划")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view14.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("查看成型计划");
+                                ch.setImaResId(R.mipmap.t2);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view14.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型取消扫描")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view15.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型取消扫描");
+                                ch.setImaResId(R.mipmap.t3);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view15.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("当班产量")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view16.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("当班产量");
+                                lh.setImaResId(R.mipmap.t4);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view16.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("硫化取消扫描")) {
-                                lh.setVisibility(View.VISIBLE);
-                                view17.setVisibility(View.VISIBLE);
+                                HomeBtnBean lh = new HomeBtnBean();
+                                lh.setBtnName("硫化取消扫描");
+                                lh.setImaResId(R.mipmap.t5);
+                                lhList.add(lh);
+                                ll_lh.setVisibility(View.VISIBLE);
+//                                view17.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("成型条码补录")) {
-                                cx.setVisibility(View.VISIBLE);
-                                view18.setVisibility(View.VISIBLE);
+                                HomeBtnBean ch = new HomeBtnBean();
+                                ch.setBtnName("成型条码补录");
+                                ch.setImaResId(R.mipmap.t6);
+                                chList.add(ch);
+                                ll_ch.setVisibility(View.VISIBLE);
+//                                view18.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("质检")) {
-                                jc.setVisibility(View.VISIBLE);
-                                view20.setVisibility(View.VISIBLE);
+                                HomeBtnBean jc = new HomeBtnBean();
+                                jc.setBtnName("质检");
+                                jc.setImaResId(R.mipmap.t7);
+                                jcList.add(jc);
+                                ll_jc.setVisibility(View.VISIBLE);
+//                                view20.setVisibility(View.VISIBLE);
                             } else if (map.get(i).get("m_CNAME").equals("热补复检")) {
-                                jc.setVisibility(View.VISIBLE);
-                                view21.setVisibility(View.VISIBLE);
+                                HomeBtnBean jc = new HomeBtnBean();
+                                jc.setBtnName("热补复检");
+                                jc.setImaResId(R.mipmap.t8);
+                                jcList.add(jc);
+                                ll_jc.setVisibility(View.VISIBLE);
+//                                view21.setVisibility(View.VISIBLE);
                             } else {
 //                                Toast.makeText(FunctionActivity.this, map.get(i).get("m_CNAME")
 //                                        + "此功能未在PDA当中", Toast.LENGTH_LONG).show();
                             }
                         }
+                        if (chList != null && chList.size() > 0) {
+                            chAdapter = new HomeGridAdapter(FunctionActivity.this, chList);
+                            gv_ch.setAdapter(chAdapter);
+                            chAdapter.notifyDataSetChanged();
+                        }
+                        if (lhList != null && lhList.size() > 0) {
+                            lhAdapter = new HomeGridAdapter(FunctionActivity.this, lhList);
+                            gv_lh.setAdapter(lhAdapter);
+                            lhAdapter.notifyDataSetChanged();
+                        }
+                        if (jcList != null && jcList.size() > 0) {
+                            jcAdapter = new HomeGridAdapter(FunctionActivity.this, jcList);
+                            gv_jc.setAdapter(jcAdapter);
+                            jcAdapter.notifyDataSetChanged();
+                        }
+                        if (zcList != null && zcList.size() > 0) {
+                            zcAdapter = new HomeGridAdapter(FunctionActivity.this, zcList);
+                            gv_zc.setAdapter(zcAdapter);
+                            zcAdapter.notifyDataSetChanged();
+                        }
+
                         for (int u = 0; u < map.size(); u++) {
                             if (map.get(u).get("moduleid").equals("0")) {
                                 App.username = map.get(u).get("m_CNAME");

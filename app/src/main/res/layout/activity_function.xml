@@ -8,19 +8,122 @@
     <!-- 标题 功能菜单 -->
     <include layout="@layout/titel_update"/>
 
-    <ScrollView android:layout_width="match_parent"
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    >
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:id="@+id/ll_ch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成型"
+                        android:textSize="@dimen/text_head"/>
+
+                <com.hsproduce.util.MyGridView
+                        android:id="@+id/gv_ch"
+                        android:numColumns="3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/ll_lh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="硫化"
+                        android:textSize="@dimen/text_head"/>
+
+                <com.hsproduce.util.MyGridView
+                        android:id="@+id/gv_lh"
+                        android:numColumns="3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/ll_jc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="检测与其他"
+                        android:textSize="@dimen/text_head"/>
+
+                <com.hsproduce.util.MyGridView
+                        android:id="@+id/gv_jc"
+                        android:numColumns="3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/ll_zc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="装车"
+                        android:textSize="@dimen/text_head"/>
+
+                <com.hsproduce.util.MyGridView
+                        android:id="@+id/gv_zc"
+                        android:numColumns="3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
+            android:visibility="gone"
+            android:layout_width="match_parent"
                 android:layout_height="match_parent">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="360dp"
                     android:layout_marginTop="0dp"
                     android:id="@+id/cx"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -205,7 +308,7 @@
                     android:layout_height="360dp"
                     android:id="@+id/lh"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -393,7 +496,7 @@
                     android:layout_height="250dp"
                     android:id="@+id/jc"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -413,7 +516,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/check"
@@ -438,7 +541,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/barcodeDetail"
@@ -463,7 +566,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="125dp"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/newcheck"
@@ -488,7 +591,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="230dp"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/checkagain"
@@ -514,7 +617,7 @@
                     android:layout_height="150dp"
                     android:id="@+id/zc"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -534,7 +637,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/load"
@@ -558,7 +661,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="125dp"
                         android:layout_marginTop="50dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/loadsc"
