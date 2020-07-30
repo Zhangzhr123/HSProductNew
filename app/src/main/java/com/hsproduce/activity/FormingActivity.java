@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
+import com.honeywell.aidc.BarcodeReadEvent;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingItemAdapter;
@@ -64,16 +65,48 @@ public class FormingActivity extends BaseActivity {
     private String preEndCode = "";//上一个计划的开始条码
     private String endCode = "";//当前结束条码
     private String cxjy = "";//成型验证校验
+    private Integer inDialog = 0;//判断在那个弹窗中
+
+    public String tvBarcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_forming);
+
         //加载控件
         initView();
         //设置控件事件
         initEvent();
+    }
+
+    public void onBarcodeEvent(final BarcodeReadEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "Enter onBarcodeEvent ==> " + event.getBarcodeData());
+                String barcodeDate = new String(event.getBarcodeData().getBytes(event.getCharset()));
+                Log.d(TAG, "Enter onBarcodeEvent ==> " + barcodeDate);
+                tvBarcode = barcodeDate;
+//                Toast.makeText(FormingActivity.this, "条码为===" + tvBarcode, Toast.LENGTH_SHORT).show();
+                if (inDialog != null) {
+                    if(inDialog == 1){
+                        next.setText("");
+                        next.setText(tvBarcode);
+//                        Toast.makeText(FormingActivity.this, "开始计划条码为===" + tvBarcode, Toast.LENGTH_SHORT).show();
+                    }else if(inDialog == 2){
+                        ed_EndCode.setText("");
+                        ed_EndCode.setText(tvBarcode);
+                    }else if(inDialog == 3){
+                        end_EndCode.setText("");
+                        end_EndCode.setText(tvBarcode);
+                    }else{
+                        Toast.makeText(FormingActivity.this, "请选择您要点击的操作按钮", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
     }
 
     public void initView() {
@@ -218,13 +251,11 @@ public class FormingActivity extends BaseActivity {
         if (isNull == 1) {
             //开始计划
             dialogToStart();
-        }
-        else if (isNull == 2) {
+        } else if (isNull == 2) {
             //完成计划
             //执行结束上一计划
             dialogToFinish();
-        }
-        else if (isNull == 3) {
+        } else if (isNull == 3) {
             Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
         } else {
@@ -324,21 +355,32 @@ public class FormingActivity extends BaseActivity {
         }
     }
 
+    private MaterialDialog startDialog;
+    private View customeView;
+    private EditText next;
+    private EditText startNumber;
+
     //开始当前计划
     public void dialogToStart() {
+        inDialog = 1;
         //显示弹窗
-        final MaterialDialog dialog = new MaterialDialog.Builder(FormingActivity.this)
+        startDialog = new MaterialDialog.Builder(FormingActivity.this)
                 .customView(R.layout.dialog_product, true)
                 .show();
         //控件
-        View customeView = dialog.getCustomView();
-        final EditText next = dialog.findViewById(R.id.input);
-        final EditText number = dialog.findViewById(R.id.input2);
+        customeView = startDialog.getCustomView();
+        next = startDialog.findViewById(R.id.input);
+        startNumber = startDialog.findViewById(R.id.input2);
+        //设置扫描框输入字符数
+        next.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        //获取焦点
+        next.requestFocus();
+
         Button returnDialog = customeView.findViewById(R.id.finish);
         returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                startDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startAlarm(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -355,10 +397,10 @@ public class FormingActivity extends BaseActivity {
                 String jt = mchid;
                 jt = jt.substring(jt.length() - 2, jt.length());
                 String nextCode = next.getText().toString();
-                num = number.getText().toString();
+                num = startNumber.getText().toString();
 
                 //成型验证校验
-                if(!StringUtil.isNullOrEmpty(cxjy)) {
+                if (!StringUtil.isNullOrEmpty(cxjy)) {
                     if (cxjy.equals("1")) {
                         //如果为空则进行操作
                         if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
@@ -406,7 +448,7 @@ public class FormingActivity extends BaseActivity {
                         btFinish.setEnabled(true);
                         btOut.setEnabled(true);
 
-                    }else{
+                    } else {
                         //如果为空则进行操作
                         if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
                             Toast.makeText(FormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_SHORT).show();
@@ -453,12 +495,12 @@ public class FormingActivity extends BaseActivity {
                         btFinish.setEnabled(true);
                         btOut.setEnabled(true);
                     }
-                }else{
+                } else {
                     Toast.makeText(FormingActivity.this, "成型验校验为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                dialog.dismiss();
+                startDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -466,17 +508,25 @@ public class FormingActivity extends BaseActivity {
         });
     }
 
+    private MaterialDialog finishDialog;
+    private View finishCustomeView;
+    private TextView itnbr;
+    private TextView itdec;
+    private EditText ed_StartCode;
+    private EditText ed_EndCode;
     //开始按钮中的完成上一计划
     public void dialogToFinish() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(FormingActivity.this)
+        inDialog = 2;
+
+        finishDialog = new MaterialDialog.Builder(FormingActivity.this)
                 .customView(R.layout.dialog_prefinish, true)
                 .show();
         //控件
-        View customeView = dialog.getCustomView();
-        final TextView itnbr = customeView.findViewById(R.id.input);
-        final TextView itdec = customeView.findViewById(R.id.input4);
-        final EditText ed_StartCode = customeView.findViewById(R.id.input2);
-        final EditText ed_EndCode = dialog.findViewById(R.id.input3);
+        finishCustomeView = finishDialog.getCustomView();
+        itnbr = finishCustomeView.findViewById(R.id.input);
+        itdec = finishCustomeView.findViewById(R.id.input4);
+        ed_StartCode = finishCustomeView.findViewById(R.id.input2);
+        ed_EndCode = finishCustomeView.findViewById(R.id.input3);
         //设置扫描框输入字符数
         ed_StartCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         ed_EndCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
@@ -488,17 +538,19 @@ public class FormingActivity extends BaseActivity {
             ed_StartCode.setText(vplan.getBarcodestart());
             ed_EndCode.setText("");
         }
-        Button returnDialog = customeView.findViewById(R.id.finish);
+        Toast.makeText(FormingActivity.this, "条码为===" + tvBarcode, Toast.LENGTH_SHORT).show();
+
+        Button returnDialog = finishCustomeView.findViewById(R.id.finish);
         returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                finishDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startAlarm(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
             }
         });
-        Button ok = customeView.findViewById(R.id.ok);
+        Button ok = finishCustomeView.findViewById(R.id.ok);
         //取消焦点
         ok.setFocusable(false);
         returnDialog.setFocusable(false);
@@ -510,8 +562,8 @@ public class FormingActivity extends BaseActivity {
                 String endCode = ed_EndCode.getText().toString();
 
                 //成型验证校验
-                if(!StringUtil.isNullOrEmpty(cxjy)){
-                    if(cxjy.equals("1")){
+                if (!StringUtil.isNullOrEmpty(cxjy)) {
+                    if (cxjy.equals("1")) {
                         //如果为空则进行操作
                         if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
                             Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
@@ -583,7 +635,7 @@ public class FormingActivity extends BaseActivity {
                             new PRESTARTTask().execute(param);
                         }
 
-                    }else{
+                    } else {
                         //如果为空则进行操作
                         if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
                             Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
@@ -656,12 +708,12 @@ public class FormingActivity extends BaseActivity {
                         }
                     }
 
-                }else{
+                } else {
                     Toast.makeText(FormingActivity.this, "成型验校验为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                dialog.dismiss();
+                finishDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -669,43 +721,52 @@ public class FormingActivity extends BaseActivity {
         });
     }
 
+    private MaterialDialog endDialog;
+    private View endCustomeView;
+    private TextView endItnbr;
+    private TextView endItdec;
+    private EditText end_StartCode;
+    private EditText end_EndCode;
     //完成操作
     public void finishPlan() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(FormingActivity.this)
+        inDialog = 3;
+
+        endDialog = new MaterialDialog.Builder(FormingActivity.this)
                 .customView(R.layout.dialog_finish, true)
                 .show();
         //控件
-        View customeView = dialog.getCustomView();
-        final TextView itnbr = customeView.findViewById(R.id.input);
-        final TextView itdec = customeView.findViewById(R.id.input4);
-        final EditText ed_StartCode = customeView.findViewById(R.id.input2);
-        final EditText ed_EndCode = dialog.findViewById(R.id.input3);
+        endCustomeView = endDialog.getCustomView();
+        endItnbr = endCustomeView.findViewById(R.id.input);
+        endItdec = endCustomeView.findViewById(R.id.input4);
+        end_StartCode = endCustomeView.findViewById(R.id.input2);
+        end_EndCode = endCustomeView.findViewById(R.id.input3);
         //设置扫描框输入字符数
-        ed_StartCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
-        ed_EndCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        end_StartCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        end_EndCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         //获取焦点
-        ed_EndCode.requestFocus();
+        end_EndCode.requestFocus();
+
         if (vplan != null) {
-            itnbr.setText(v.getItnbr());
-            itdec.setText(v.getItdsc());
+            endItnbr.setText(v.getItnbr());
+            endItdec.setText(v.getItdsc());
             if (v.getBarcodestart() == null) {
-                ed_StartCode.setText(startCode);
+                end_StartCode.setText(startCode);
             } else {
-                ed_StartCode.setText(v.getBarcodestart());
+                end_StartCode.setText(v.getBarcodestart());
             }
-            ed_EndCode.setText(v.getBarcodeend());
+            end_EndCode.setText(v.getBarcodeend());
         }
-        Button returnDialog = customeView.findViewById(R.id.finish);
+        Button returnDialog = endCustomeView.findViewById(R.id.finish);
         returnDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                endDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startAlarm(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
             }
         });
-        Button ok = customeView.findViewById(R.id.ok);
+        Button ok = endCustomeView.findViewById(R.id.ok);
         //取消焦点
         ok.setFocusable(false);
         returnDialog.setFocusable(false);
@@ -718,30 +779,30 @@ public class FormingActivity extends BaseActivity {
                 if (!StringUtil.isNullOrEmpty(endCode)) {
                     endCode = "";
                 }
-                endCode = ed_EndCode.getText().toString();
+                endCode = end_EndCode.getText().toString();
 
                 //成型验证校验
-                if(!StringUtil.isNullOrEmpty(cxjy)){
-                    if(cxjy.equals("1")){
+                if (!StringUtil.isNullOrEmpty(cxjy)) {
+                    if (cxjy.equals("1")) {
                         //如果为空则进行操作
-                        if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
+                        if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(end_StartCode.getText().toString())) {
                             Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
+                        if (endCode.length() != 12 || end_StartCode.getText().toString().length() != 12) {
                             Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String endjt = endCode.substring(4, 6);
-                        String startjt = ed_StartCode.getText().toString().substring(4, 6);
+                        String startjt = end_StartCode.getText().toString().substring(4, 6);
                         if (!jt.equals(endjt) || !jt.equals(startjt)) {
                             Toast.makeText(FormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         //判断条码是否跨年
-                        String startYear = ed_StartCode.getText().toString().substring(0, 4);
+                        String startYear = end_StartCode.getText().toString().substring(0, 4);
                         String endYear = endCode.substring(0, 4);
                         if (!startYear.equals(endYear)) {
                             Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
@@ -749,17 +810,17 @@ public class FormingActivity extends BaseActivity {
                         }
 
                         //判断是否超过500
-                        Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
+                        Integer startNum = Integer.valueOf(end_StartCode.getText().toString().substring(6, 12));
                         Integer endNum = Integer.valueOf(endCode.substring(6, 12));
                         if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
                             final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
                             normalDialog.setTitle("提示");
-                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setMessage("开始条码为：" + end_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
                             normalDialog.setPositiveButton("确定",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ed_EndCode.setText("");
+                                            end_EndCode.setText("");
                                             //提示音
                                             SoundPlayUtils.startNoti(FormingActivity.this);
                                             SoundPlayUtils.stopAlarm();
@@ -769,7 +830,7 @@ public class FormingActivity extends BaseActivity {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ed_EndCode.setText("");
+                                            end_EndCode.setText("");
                                             //提示音
                                             SoundPlayUtils.startAlarm(FormingActivity.this);
                                             SoundPlayUtils.stopAlarm();
@@ -782,9 +843,9 @@ public class FormingActivity extends BaseActivity {
                         //判断当前计划是刚开始还是已经开始，根据获取对象中有无开始条码来判断
                         if (!StringUtil.isNullOrEmpty(v.getBarcodestart())) {
                             //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                            if (!ed_StartCode.getText().toString().equals(v.getBarcodestart())) {
+                            if (!end_StartCode.getText().toString().equals(v.getBarcodestart())) {
                                 //执行开始计划接口更新开始条码
-                                String param = "VPLANID=" + currid + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                                String param = "VPLANID=" + currid + "&StartBarcode=" + end_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                                 new THISSTARTTask().execute(param);
                             } else {
                                 //执行结束当前计划
@@ -793,7 +854,7 @@ public class FormingActivity extends BaseActivity {
                             }
                         } else {
                             //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                            if (!ed_StartCode.getText().toString().equals(startCode)) {
+                            if (!end_StartCode.getText().toString().equals(startCode)) {
                                 //执行开始计划接口更新开始条码
                                 String param = "VPLANID=" + currid + "&StartBarcode=" + startCode + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                                 new THISSTARTTask().execute(param);
@@ -805,7 +866,7 @@ public class FormingActivity extends BaseActivity {
                         }
                         //设置数量
                         Integer pNum = 0;
-                        pNum = Integer.valueOf(endCode.substring(6, 12)) - Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12)) + 1;
+                        pNum = Integer.valueOf(endCode.substring(6, 12)) - Integer.valueOf(end_StartCode.getText().toString().substring(6, 12)) + 1;
                         //清空数据
                         startCode = "";
                         //设置状态
@@ -819,26 +880,26 @@ public class FormingActivity extends BaseActivity {
                         btFinish.setEnabled(false);
                         btOut.setEnabled(true);
 
-                    }else{
+                    } else {
                         //如果为空则进行操作
-                        if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
+                        if (StringUtil.isNullOrEmpty(endCode) || StringUtil.isNullOrEmpty(end_StartCode.getText().toString())) {
                             Toast.makeText(FormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
+                        if (endCode.length() != 12 || end_StartCode.getText().toString().length() != 12) {
                             Toast.makeText(FormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String endjt = endCode.substring(4, 6);
-                        String startjt = ed_StartCode.getText().toString().substring(4, 6);
+                        String startjt = end_StartCode.getText().toString().substring(4, 6);
                         if (!endjt.equals(startjt)) {
                             Toast.makeText(FormingActivity.this, "开始条码与结束条码机台不一致，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         //判断条码是否跨年
-                        String startYear = ed_StartCode.getText().toString().substring(0, 4);
+                        String startYear = end_StartCode.getText().toString().substring(0, 4);
                         String endYear = endCode.substring(0, 4);
                         if (!startYear.equals(endYear)) {
                             Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
@@ -846,17 +907,17 @@ public class FormingActivity extends BaseActivity {
                         }
 
                         //判断是否超过500
-                        Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
+                        Integer startNum = Integer.valueOf(end_StartCode.getText().toString().substring(6, 12));
                         Integer endNum = Integer.valueOf(endCode.substring(6, 12));
                         if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
                             final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
                             normalDialog.setTitle("提示");
-                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setMessage("开始条码为：" + end_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
                             normalDialog.setPositiveButton("确定",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ed_EndCode.setText("");
+                                            end_EndCode.setText("");
                                             //提示音
                                             SoundPlayUtils.startNoti(FormingActivity.this);
                                             SoundPlayUtils.stopAlarm();
@@ -866,7 +927,7 @@ public class FormingActivity extends BaseActivity {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ed_EndCode.setText("");
+                                            end_EndCode.setText("");
                                             //提示音
                                             SoundPlayUtils.startAlarm(FormingActivity.this);
                                             SoundPlayUtils.stopAlarm();
@@ -879,9 +940,9 @@ public class FormingActivity extends BaseActivity {
                         //判断当前计划是刚开始还是已经开始，根据获取对象中有无开始条码来判断
                         if (!StringUtil.isNullOrEmpty(v.getBarcodestart())) {
                             //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                            if (!ed_StartCode.getText().toString().equals(v.getBarcodestart())) {
+                            if (!end_StartCode.getText().toString().equals(v.getBarcodestart())) {
                                 //执行开始计划接口更新开始条码
-                                String param = "VPLANID=" + currid + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                                String param = "VPLANID=" + currid + "&StartBarcode=" + end_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                                 new THISSTARTTask().execute(param);
                             } else {
                                 //执行结束当前计划
@@ -890,7 +951,7 @@ public class FormingActivity extends BaseActivity {
                             }
                         } else {
                             //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                            if (!ed_StartCode.getText().toString().equals(startCode)) {
+                            if (!end_StartCode.getText().toString().equals(startCode)) {
                                 //执行开始计划接口更新开始条码
                                 String param = "VPLANID=" + currid + "&StartBarcode=" + startCode + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                                 new THISSTARTTask().execute(param);
@@ -902,7 +963,7 @@ public class FormingActivity extends BaseActivity {
                         }
                         //设置数量
                         Integer pNum = 0;
-                        pNum = Integer.valueOf(endCode.substring(6, 12)) - Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12)) + 1;
+                        pNum = Integer.valueOf(endCode.substring(6, 12)) - Integer.valueOf(end_StartCode.getText().toString().substring(6, 12)) + 1;
                         //清空数据
                         startCode = "";
                         //设置状态
@@ -916,12 +977,12 @@ public class FormingActivity extends BaseActivity {
                         btFinish.setEnabled(false);
                         btOut.setEnabled(true);
                     }
-                }else{
+                } else {
                     Toast.makeText(FormingActivity.this, "成型验校验为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                dialog.dismiss();
+                endDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(FormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -1380,8 +1441,8 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         cxjy = map.get(0).get("itemname");
-                        System.out.println("成型验证校验==="+cxjy);
-                    }  else {
+                        System.out.println("成型验证校验===" + cxjy);
+                    } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     }
 

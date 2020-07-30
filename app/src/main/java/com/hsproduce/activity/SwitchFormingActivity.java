@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import com.google.gson.reflect.TypeToken;
+import com.honeywell.aidc.BarcodeReadEvent;
 import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingReplAdapter;
@@ -58,6 +59,7 @@ public class SwitchFormingActivity extends BaseActivity {
     private Boolean isShow = true;
     private String preEndCode = "";//上一计划结束条码
     private String cxjy = "";//成型验证校验
+    private Integer inDialog = 0;//判断在那个弹窗中
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,29 @@ public class SwitchFormingActivity extends BaseActivity {
         initView();
         //设置控件事件
         initEvent();
+    }
+
+    public void onBarcodeEvent(final BarcodeReadEvent event) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "Enter onBarcodeEvent ==> " + event.getBarcodeData());
+                String barcodeDate = new String(event.getBarcodeData().getBytes(event.getCharset()));
+                Log.d(TAG, "Enter onBarcodeEvent ==> " + barcodeDate);
+                String tvBarcode = barcodeDate;
+                if (inDialog != null) {
+                    if(inDialog == 1){
+                        next.setText("");
+                        next.setText(tvBarcode);
+                    }else if(inDialog == 2){
+                        ed_EndCode.setText("");
+                        ed_EndCode.setText(tvBarcode);
+                    }else{
+                        Toast.makeText(SwitchFormingActivity.this, "请选择您要点击的操作按钮", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
     }
 
     public void initView() {
@@ -193,21 +218,27 @@ public class SwitchFormingActivity extends BaseActivity {
         }
     }
 
+    private MaterialDialog stratDialog;
+    private View customeView;
+    private EditText next;
+    private EditText number;
     //开始计划
     public void dialogToStart() {
+        inDialog = 1;
         //显示弹窗
-        final MaterialDialog dialog = new MaterialDialog.Builder(SwitchFormingActivity.this)
+        stratDialog = new MaterialDialog.Builder(SwitchFormingActivity.this)
                 .customView(R.layout.dialog_product, true)
                 .show();
         //控件
-        View customeView = dialog.getCustomView();
-        final EditText next = dialog.findViewById(R.id.input);
-        final EditText number = dialog.findViewById(R.id.input2);
+        customeView = stratDialog.getCustomView();
+        next = customeView.findViewById(R.id.input);
+        number = customeView.findViewById(R.id.input2);
+
         Button finish = customeView.findViewById(R.id.finish);
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                stratDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -315,7 +346,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     return;
                 }
 
-                dialog.dismiss();
+                stratDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(SwitchFormingActivity.this);
                 SoundPlayUtils.stopAlarm();
@@ -324,17 +355,26 @@ public class SwitchFormingActivity extends BaseActivity {
 
     }
 
+    private MaterialDialog finishDialog;
+    private View finishCustomeView;
+    private TextView itnbr;
+    private TextView itdec;
+    private EditText ed_StartCode;
+    private EditText ed_EndCode;
+
     //开始按钮中的完成上一计划
     public void dialogToFinish() {
-        final MaterialDialog dialog = new MaterialDialog.Builder(SwitchFormingActivity.this)
+        inDialog = 2;
+
+        finishDialog = new MaterialDialog.Builder(SwitchFormingActivity.this)
                 .customView(R.layout.dialog_prefinish, true)
                 .show();
         //控件
-        View customeView = dialog.getCustomView();
-        final TextView itnbr = customeView.findViewById(R.id.input);
-        final TextView itdec = customeView.findViewById(R.id.input4);
-        final EditText ed_StartCode = customeView.findViewById(R.id.input2);
-        final EditText ed_EndCode = dialog.findViewById(R.id.input3);
+        finishCustomeView = finishDialog.getCustomView();
+        itnbr = finishCustomeView.findViewById(R.id.input);
+        itdec = finishCustomeView.findViewById(R.id.input4);
+        ed_StartCode = finishCustomeView.findViewById(R.id.input2);
+        ed_EndCode = finishCustomeView.findViewById(R.id.input3);
         //设置扫描框输入字符数
         ed_StartCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         ed_EndCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
@@ -347,17 +387,17 @@ public class SwitchFormingActivity extends BaseActivity {
             ed_StartCode.setText(vplan.getBarcodestart());
             ed_EndCode.setText("");
         }
-        Button finish = customeView.findViewById(R.id.finish);
+        Button finish = finishCustomeView.findViewById(R.id.finish);
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                finishDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
                 SoundPlayUtils.stopAlarm();
             }
         });
-        Button ok = customeView.findViewById(R.id.ok);
+        Button ok = finishCustomeView.findViewById(R.id.ok);
         //取消焦点
         ok.setFocusable(false);
         finish.setFocusable(false);
@@ -519,7 +559,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     return;
                 }
 
-                dialog.dismiss();
+                finishDialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(SwitchFormingActivity.this);
                 SoundPlayUtils.stopAlarm();
