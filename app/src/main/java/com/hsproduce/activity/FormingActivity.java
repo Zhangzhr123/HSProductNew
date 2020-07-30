@@ -538,7 +538,6 @@ public class FormingActivity extends BaseActivity {
             ed_StartCode.setText(vplan.getBarcodestart());
             ed_EndCode.setText("");
         }
-        Toast.makeText(FormingActivity.this, "条码为===" + tvBarcode, Toast.LENGTH_SHORT).show();
 
         Button returnDialog = finishCustomeView.findViewById(R.id.finish);
         returnDialog.setOnClickListener(new View.OnClickListener() {
