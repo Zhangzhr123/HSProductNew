@@ -273,7 +273,7 @@ public class FunctionActivity extends BaseActivity {
             }
         });
 
-        gv_ch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gv_zc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HomeBtnBean ho = (HomeBtnBean) gv_ch.getAdapter().getItem(position);
